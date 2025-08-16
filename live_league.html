@@ -16,7 +16,7 @@
             --rank-down: #ff4d4d;
         }
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
@@ -35,8 +35,9 @@
         }
         #header-controls {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 10px;
             margin-bottom: 20px;
         }
         #last-updated {
@@ -47,19 +48,26 @@
             background-color: var(--secondary-color);
             color: var(--bg-color);
             border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
+            padding: 10px 15px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
+            transition: background-color: 0.3s;
+        }
+        .update-button:hover {
+            background-color: #00e075;
         }
         #league-table {
             width: 100%;
             max-width: 900px;
             border-collapse: collapse;
             margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border-radius: 8px;
+            overflow: hidden;
         }
         #league-table th, #league-table td {
-            padding: 12px;
+            padding: 15px;
             text-align: left;
             border-bottom: 1px solid var(--border-color);
         }
@@ -78,6 +86,15 @@
         }
         .rank-up { color: var(--rank-up); }
         .rank-down { color: var(--rank-down); }
+        .chip-active {
+            font-size: 0.8em;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-left: 5px;
+            background-color: rgba(0, 255, 133, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
         .details-row {
             display: none;
         }
@@ -87,7 +104,7 @@
         }
         .details-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
         }
         .details-section h3 {
@@ -103,7 +120,11 @@
         .player-list li {
             display: flex;
             justify-content: space-between;
-            padding: 4px 0;
+            padding: 5px 0;
+            border-bottom: 1px solid #333;
+        }
+        .player-list li:last-child {
+            border-bottom: none;
         }
         .player-name { font-weight: bold; }
         .captain-icon { color: yellow; }
@@ -119,8 +140,8 @@
 
     <h1 id="league-name">Loading League...</h1>
     <div id="header-controls">
-        <p id="last-updated"></p>
         <button id="global-update-button" class="update-button">Refresh Points</button>
+        <p id="last-updated"></p>
     </div>
 
     <div id="loading-spinner">Fetching live data... ⏳</div>
@@ -141,9 +162,8 @@
     <script>
         // --- CONFIGURATION ---
         const LEAGUE_ID = 70625; // Replace with your actual league ID
-        const TEAM_IDS = [1657645, 2571219, 6638986, 7142734, 2060541, 4650304, 300075, 6118502]; // Replace with actual team IDs
-        const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/'; // These will need to be changed to host proxy if CORS issues arise
-        const API_BASE_URL = `${CORS_PROXY}https://fantasy.premierleague.com/api/`; // These will need to be changed to host proxy if CORS issues arise
+        const CORS_PROXY = 'https://corsproxy.io/?'; // Change to your host proxy if CORS issues arise
+        const API_BASE_URL = `${CORS_PROXY}https://fantasy.premierleague.com/api/`; // Change to your host proxy if CORS issues arise
 
         // --- DOM ELEMENTS ---
         const leagueNameEl = document.getElementById('league-name');
@@ -174,17 +194,12 @@
             return staticData.elements.find(p => p.id === playerId);
         }
 
-        function getPlayerName(playerId) {
-            const player = getPlayer(playerId);
-            return player ? player.web_name : 'Unknown';
-        }
-
         async function toggleDetailsRow(managerId, row) {
             const existingDetailsRow = document.querySelector('.details-row');
             if (existingDetailsRow) {
                 const wasMyRow = existingDetailsRow.id === `details-${managerId}`;
                 existingDetailsRow.remove();
-                if (wasMyRow) return; // Just close if it was already open
+                if (wasMyRow) return;
             }
 
             const detailsRow = document.createElement('tr');
@@ -212,18 +227,17 @@
             picksData.picks.forEach(pick => {
                 const player = getPlayer(pick.element);
                 const livePlayer = liveData.elements.find(p => p.id === pick.element);
-                const points = livePlayer?.stats?.total_points || 0;
-                const minutes = livePlayer?.stats?.minutes || 0;
-                const bonus = livePlayer?.stats?.bonus || 0;
+                const points = livePlayer?.stats?.total_points ?? 0;
+                const minutes = livePlayer?.stats?.minutes ?? 0;
                 
                 let captaincy = '';
                 if (pick.is_captain) captaincy = ' <span class="captain-icon">(C)</span>';
                 if (pick.is_vice_captain) captaincy = ' <span class="vice-captain-icon">(V)</span>';
-
+                
                 const playerHtml = `
                     <li>
                         <span class="player-name">${player.web_name}${captaincy}</span>
-                        <span>Pts: ${points * pick.multiplier} | Mins: ${minutes} | Bonus: ${bonus}</span>
+                        <span>Pts: ${points * pick.multiplier} | Mins: ${minutes}</span>
                     </li>
                 `;
                 if (pick.position <= 11) startingXIHtml += playerHtml;
@@ -232,7 +246,6 @@
             
             const chip = picksData.active_chip ? picksData.active_chip.replace(/_/g, ' ').toUpperCase() : 'None';
             const transfersCost = picksData.entry_history.event_transfers_cost;
-            const gwPoints = picksData.entry_history.points - transfersCost;
 
             const contentHtml = `
                 <div class="details-grid">
@@ -247,7 +260,6 @@
                     <div class="details-section">
                         <h3>Gameweek Info</h3>
                         <ul class="player-list">
-                            <li><span>GW Points (pre-subs):</span> <span>${gwPoints}</span></li>
                             <li><span>Points Hit:</span> <span>-${transfersCost}</span></li>
                             <li><span>Chip Played:</span> <span>${chip}</span></li>
                         </ul>
@@ -259,53 +271,80 @@
         }
 
         async function buildLeagueTable() {
-            loadingSpinner.innerText = 'Fetching live data... ⏳';
+            loadingSpinner.innerText = 'Fetching league data... ⏳';
             loadingSpinner.style.display = 'block';
             leagueTable.style.display = 'none';
 
             const leagueData = await fetchData(`${API_BASE_URL}leagues-classic/${LEAGUE_ID}/standings/`);
-            if (!leagueData) return;
+            if (!leagueData || !leagueData.standings || !leagueData.standings.results) {
+                loadingSpinner.innerText = 'Could not fetch league data. Check the League ID.';
+                return;
+            }
             leagueNameEl.innerText = leagueData.league.name;
 
             const liveData = await fetchData(`${API_BASE_URL}event/${liveGameweekId}/live/`);
             if (!liveData) return;
 
-            const managersPromises = TEAM_IDS.map(async (teamId) => {
+            const managersPromises = leagueData.standings.results.map(async (managerInfo) => {
+                const teamId = managerInfo.entry;
+                
                 const picksData = await fetchData(`${API_BASE_URL}entry/${teamId}/event/${liveGameweekId}/picks/`);
                 const historyData = await fetchData(`${API_BASE_URL}entry/${teamId}/history/`);
-                const managerInfo = leagueData.standings.results.find(r => r.entry === teamId);
                 
-                if (!picksData || !managerInfo || !historyData) return null;
-                
-                const activePicks = picksData.picks.filter(p => p.position <= 11);
-                let livePoints = 0;
-                let playersPlayed = 0;
-                
-                activePicks.forEach(pick => {
-                    const livePlayer = liveData.elements.find(p => p.id === pick.element);
-                    if (livePlayer) {
-                        livePoints += livePlayer.stats.total_points * pick.multiplier;
-                        if (livePlayer.stats.minutes > 0) playersPlayed++;
-                    }
-                });
+                if (!picksData || !historyData) return null;
 
-                const pointsHit = picksData.entry_history.event_transfers_cost;
-                const finalLivePoints = livePoints - pointsHit;
+                // *** CORRECT LOGIC: A DIRECT TRANSLATION OF THE PYTHON BOT'S LOGIC ***
+                const activeChip = picksData.active_chip;
+                let playersToScore;
 
-                let scoreBeforeThisWeek = 0;
-                if (liveGameweekId > 1) {
-                    const lastWeekHistory = historyData.current.find(gw => gw.event === liveGameweekId - 1);
-                    if (lastWeekHistory) scoreBeforeThisWeek = lastWeekHistory.total_points;
+                // 1. Determine which players to score. The API chip name is 'bboost'.
+                if (activeChip === 'bboost') {
+                    playersToScore = picksData.picks; // On bench boost, score all 15 players.
+                } else {
+                    playersToScore = picksData.picks.filter(p => p.position <= 11); // Otherwise, only score the starting 11.
                 }
+
+                // 2. Calculate points using the API's multiplier for the selected players.
+                const liveGwPoints = playersToScore.reduce((total, pick) => {
+                    const livePlayer = liveData.elements.find(p => p.id === pick.element);
+                    const points = livePlayer?.stats?.total_points ?? 0;
+                    return total + (points * pick.multiplier);
+                }, 0);
+
+                const transferCost = picksData.entry_history.event_transfers_cost;
+                const finalGwPoints = liveGwPoints - transferCost;
                 
-                const totalPoints = scoreBeforeThisWeek + finalLivePoints;
+                // 3. Calculate total overall points.
+                let preGwTotal = 0;
+                if (liveGameweekId > 1) {
+                    const prevGwHistory = historyData.current.find(gw => gw.event === liveGameweekId - 1);
+                    if (prevGwHistory) {
+                        preGwTotal = prevGwHistory.total_points;
+                    }
+                }
+                const liveTotalPoints = preGwTotal + finalGwPoints;
+
+                // 4. Calculate players played count for display (always based on starting XI).
+                const starters = picksData.picks.filter(p => p.position <= 11);
+                const playersPlayedCount = starters.reduce((count, p) => {
+                    const livePlayer = liveData.elements.find(player => player.id === p.element);
+                    return count + ((livePlayer?.stats?.minutes ?? 0) > 0 ? 1 : 0);
+                }, 0);
+                
+                let chipAbbreviation = '';
+                if (activeChip) {
+                    const chipMap = { 'bboost': 'BB', '3xc': 'TC', 'freehit': 'FH', 'wildcard': 'WC' };
+                    chipAbbreviation = chipMap[activeChip] || activeChip.toUpperCase();
+                }
 
                 return {
                     id: teamId,
                     name: managerInfo.player_name,
-                    livePoints: finalLivePoints,
-                    totalPoints: totalPoints,
-                    playersPlayed: playersPlayed,
+                    livePoints: finalGwPoints,
+                    totalPoints: liveTotalPoints,
+                    playersPlayed: playersPlayedCount,
+                    totalPlayersOnPitch: activeChip === 'bboost' ? 15 : 11,
+                    chip: chipAbbreviation,
                     originalRank: managerInfo.rank
                 };
             });
@@ -322,12 +361,14 @@
                 if (rankChange > 0) rankHtml += ` <span class="rank-up">(+${rankChange})</span>`;
                 if (rankChange < 0) rankHtml += ` <span class="rank-down">(${rankChange})</span>`;
                 
+                const chipHtml = manager.chip ? `<span class="chip-active">${manager.chip}</span>` : '';
+
                 const row = document.createElement('tr');
                 row.className = 'manager-row';
                 row.innerHTML = `
                     <td>${rankHtml}</td>
                     <td>${manager.name}</td>
-                    <td>${manager.livePoints}</td>
+                    <td>${manager.livePoints} ${chipHtml}</td>
                     <td>${manager.totalPoints}</td>
                     <td>${manager.playersPlayed} / 11</td>
                 `;
@@ -346,8 +387,10 @@
 
             liveGameweekId = staticData.events.find(event => event.is_current)?.id;
             if (!liveGameweekId) {
-                 liveGameweekId = staticData.events.find(event => event.is_next)?.id;
-                 if (!liveGameweekId) {
+                 const nextEvent = staticData.events.find(event => event.is_next);
+                 if (nextEvent) {
+                    liveGameweekId = nextEvent.id;
+                 } else {
                     loadingSpinner.innerText = 'No current or next gameweek found.';
                     return;
                  }
