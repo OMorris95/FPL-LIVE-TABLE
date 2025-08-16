@@ -14,6 +14,7 @@
             --border-color: #444;
             --rank-up: #00ff85;
             --rank-down: #ff4d4d;
+            --input-bg: #2c2c2c;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -33,6 +34,33 @@
             font-size: 2em;
             margin-bottom: 10px;
         }
+        #league-input-container {
+            background-color: var(--card-bg);
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        #league-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        #league-id-input {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 1em;
+            text-align: center;
+        }
+        #league-id-input::placeholder {
+            color: #888;
+        }
         #header-controls {
             display: flex;
             flex-direction: column;
@@ -48,14 +76,16 @@
             background-color: var(--secondary-color);
             color: var(--bg-color);
             border: none;
-            padding: 10px 15px;
+            padding: 12px 20px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
-            transition: background-color: 0.3s;
+            transition: background-color 0.3s, transform 0.2s;
+            font-size: 1em;
         }
         .update-button:hover {
             background-color: #00e075;
+            transform: translateY(-2px);
         }
         #league-table {
             width: 100%;
@@ -138,13 +168,23 @@
 </head>
 <body>
 
-    <h1 id="league-name">Loading League...</h1>
-    <div id="header-controls">
+    <h1>FPL Live League Leaderboard</h1>
+
+    <div id="league-input-container">
+        <h2>Enter your FPL League ID</h2>
+        <form id="league-form">
+            <input type="number" id="league-id-input" placeholder="e.g., 314" required>
+            <button type="submit" class="update-button">Load Leaderboard</button>
+        </form>
+    </div>
+
+    <h1 id="league-name" style="display:none;"></h1>
+    <div id="header-controls" style="display:none;">
         <button id="global-update-button" class="update-button">Refresh Points</button>
         <p id="last-updated"></p>
     </div>
 
-    <div id="loading-spinner">Fetching live data... ⏳</div>
+    <div id="loading-spinner" style="display:none;">Fetching live data... ⏳</div>
 
     <table id="league-table" style="display:none;">
         <thead>
@@ -161,9 +201,8 @@
 
     <script>
         // --- CONFIGURATION ---
-        const LEAGUE_ID = 70625; // Replace with your actual league ID
-        const CORS_PROXY = 'https://corsproxy.io/?'; // Change to your host proxy if CORS issues arise
-        const API_BASE_URL = `${CORS_PROXY}https://fantasy.premierleague.com/api/`; // Change to your host proxy if CORS issues arise
+        const CORS_PROXY = 'https://corsproxy.io/?'; // These lines will probably need to be replaced with your own CORS proxy URL if you run into issues.
+        const API_BASE_URL = `${CORS_PROXY}https://fantasy.premierleague.com/api/`; // These lines will probably need to be replaced with your own CORS proxy URL if you run into issues.
 
         // --- DOM ELEMENTS ---
         const leagueNameEl = document.getElementById('league-name');
@@ -172,12 +211,23 @@
         const loadingSpinner = document.getElementById('loading-spinner');
         const leagueTable = document.getElementById('league-table');
         const globalUpdateButton = document.getElementById('global-update-button');
+        const leagueInputContainer = document.getElementById('league-input-container');
+        const leagueForm = document.getElementById('league-form');
+        const leagueIdInput = document.getElementById('league-id-input');
+        const headerControls = document.getElementById('header-controls');
 
         // --- DATA STORE ---
         let staticData = {};
         let liveGameweekId = null;
+        let currentLeagueId = null;
 
         // --- FUNCTIONS ---
+
+        /**
+         * Fetches data from a given URL and handles errors.
+         * @param {string} url - The URL to fetch data from.
+         * @returns {Promise<object|null>} - The JSON response or null if an error occurred.
+         */
         async function fetchData(url) {
             try {
                 const response = await fetch(url);
@@ -186,14 +236,25 @@
             } catch (error) {
                 console.error("Failed to fetch data:", error);
                 loadingSpinner.innerText = `Error fetching data. Try refreshing. (Details: ${error.message})`;
+                loadingSpinner.style.display = 'block';
                 return null;
             }
         }
-
+        
+        /**
+         * Gets a player's static data from their ID.
+         * @param {number} playerId - The ID of the player.
+         * @returns {object} - The player's data object.
+         */
         function getPlayer(playerId) {
             return staticData.elements.find(p => p.id === playerId);
         }
 
+        /**
+         * Toggles the visibility of a detailed player breakdown for a manager.
+         * @param {number} managerId - The manager's team ID.
+         * @param {HTMLElement} row - The table row element that was clicked.
+         */
         async function toggleDetailsRow(managerId, row) {
             const existingDetailsRow = document.querySelector('.details-row');
             if (existingDetailsRow) {
@@ -270,17 +331,35 @@
             cell.innerHTML = `<div class="details-content">${contentHtml}</div>`;
         }
 
-        async function buildLeagueTable() {
+        /**
+         * Fetches all data for a given league ID and builds the leaderboard table.
+         * @param {string} leagueId - The ID of the FPL league to display.
+         */
+        async function loadLeague(leagueId) {
+            if (!leagueId) {
+                // This case should ideally not be hit if the form has 'required'
+                alert("Please provide a League ID.");
+                return;
+            }
+            currentLeagueId = leagueId; // Store for refresh functionality
+
+            // Update UI to show loading state
+            leagueInputContainer.style.display = 'none';
             loadingSpinner.innerText = 'Fetching league data... ⏳';
             loadingSpinner.style.display = 'block';
             leagueTable.style.display = 'none';
+            headerControls.style.display = 'none';
+            leagueNameEl.style.display = 'none';
 
-            const leagueData = await fetchData(`${API_BASE_URL}leagues-classic/${LEAGUE_ID}/standings/`);
+
+            const leagueData = await fetchData(`${API_BASE_URL}leagues-classic/${leagueId}/standings/`);
             if (!leagueData || !leagueData.standings || !leagueData.standings.results) {
-                loadingSpinner.innerText = 'Could not fetch league data. Check the League ID.';
+                loadingSpinner.innerText = 'Could not fetch league data. Check the League ID and try again.';
+                leagueInputContainer.style.display = 'block'; // Show input again on error
                 return;
             }
             leagueNameEl.innerText = leagueData.league.name;
+            leagueNameEl.style.display = 'block';
 
             const liveData = await fetchData(`${API_BASE_URL}event/${liveGameweekId}/live/`);
             if (!liveData) return;
@@ -293,18 +372,9 @@
                 
                 if (!picksData || !historyData) return null;
 
-                // *** CORRECT LOGIC: A DIRECT TRANSLATION OF THE PYTHON BOT'S LOGIC ***
                 const activeChip = picksData.active_chip;
-                let playersToScore;
+                let playersToScore = activeChip === 'bboost' ? picksData.picks : picksData.picks.filter(p => p.position <= 11);
 
-                // 1. Determine which players to score. The API chip name is 'bboost'.
-                if (activeChip === 'bboost') {
-                    playersToScore = picksData.picks; // On bench boost, score all 15 players.
-                } else {
-                    playersToScore = picksData.picks.filter(p => p.position <= 11); // Otherwise, only score the starting 11.
-                }
-
-                // 2. Calculate points using the API's multiplier for the selected players.
                 const liveGwPoints = playersToScore.reduce((total, pick) => {
                     const livePlayer = liveData.elements.find(p => p.id === pick.element);
                     const points = livePlayer?.stats?.total_points ?? 0;
@@ -314,7 +384,6 @@
                 const transferCost = picksData.entry_history.event_transfers_cost;
                 const finalGwPoints = liveGwPoints - transferCost;
                 
-                // 3. Calculate total overall points.
                 let preGwTotal = 0;
                 if (liveGameweekId > 1) {
                     const prevGwHistory = historyData.current.find(gw => gw.event === liveGameweekId - 1);
@@ -324,7 +393,6 @@
                 }
                 const liveTotalPoints = preGwTotal + finalGwPoints;
 
-                // 4. Calculate players played count for display (always based on starting XI).
                 const starters = picksData.picks.filter(p => p.position <= 11);
                 const playersPlayedCount = starters.reduce((count, p) => {
                     const livePlayer = liveData.elements.find(player => player.id === p.element);
@@ -343,7 +411,6 @@
                     livePoints: finalGwPoints,
                     totalPoints: liveTotalPoints,
                     playersPlayed: playersPlayedCount,
-                    totalPlayersOnPitch: activeChip === 'bboost' ? 15 : 11,
                     chip: chipAbbreviation,
                     originalRank: managerInfo.rank
                 };
@@ -376,14 +443,19 @@
                 leagueBodyEl.appendChild(row);
             });
 
+            // Update UI to show the results
             lastUpdatedEl.innerText = `Last Updated: ${new Date().toLocaleTimeString()}`;
             loadingSpinner.style.display = 'none';
             leagueTable.style.display = 'table';
+            headerControls.style.display = 'flex';
         }
 
+        /**
+         * Initializes the application, fetches static data, and checks for a league ID in the URL.
+         */
         async function initialize() {
             staticData = await fetchData(`${API_BASE_URL}bootstrap-static/`);
-            if (!staticData) return;
+            if (!staticData) return; // Error message is handled in fetchData
 
             liveGameweekId = staticData.events.find(event => event.is_current)?.id;
             if (!liveGameweekId) {
@@ -391,15 +463,41 @@
                  if (nextEvent) {
                     liveGameweekId = nextEvent.id;
                  } else {
-                    loadingSpinner.innerText = 'No current or next gameweek found.';
+                    leagueInputContainer.innerHTML = '<h2>No current or next gameweek found. Please check back later.</h2>';
                     return;
                  }
             }
-            await buildLeagueTable();
+            
+            // Check URL for a league ID on page load
+            const params = new URLSearchParams(window.location.search);
+            const leagueIdFromUrl = params.get('league');
+            
+            if (leagueIdFromUrl) {
+                leagueIdInput.value = leagueIdFromUrl;
+                loadLeague(leagueIdFromUrl);
+            }
         }
 
         // --- Event Listeners ---
-        globalUpdateButton.addEventListener('click', buildLeagueTable);
+        
+        // Handle form submission to load a new league
+        leagueForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const leagueId = leagueIdInput.value;
+            if (leagueId) {
+                 // Update URL without reloading the page for easy sharing
+                const newUrl = `${window.location.pathname}?league=${leagueId}`;
+                history.pushState({ path: newUrl }, '', newUrl);
+                loadLeague(leagueId);
+            }
+        });
+
+        // Handle the refresh button click
+        globalUpdateButton.addEventListener('click', () => {
+            if (currentLeagueId) {
+                loadLeague(currentLeagueId);
+            }
+        });
 
         // --- Initialization ---
         initialize();
