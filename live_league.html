@@ -425,8 +425,6 @@
                 const liveRank = index + 1;
                 const rankChange = manager.originalRank - liveRank;
                 let rankHtml = `${liveRank}`;
-                if (rankChange > 0) rankHtml += ` <span class="rank-up">(+${rankChange})</span>`;
-                if (rankChange < 0) rankHtml += ` <span class="rank-down">(${rankChange})</span>`;
                 
                 const chipHtml = manager.chip ? `<span class="chip-active">${manager.chip}</span>` : '';
 
