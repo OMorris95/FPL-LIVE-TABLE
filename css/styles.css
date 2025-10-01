@@ -761,3 +761,102 @@ select.form-input {
     color: var(--text-secondary);
     font-weight: 700;
 }
+
+/* ===================================
+   MY STATS PAGE - COMPACT LAYOUT
+   =================================== */
+
+.my-stats-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--spacing-sm);
+}
+
+.my-stats-container .card {
+    margin-top: 0.75rem;
+    padding: 1rem;
+}
+
+.my-stats-container .card:first-child {
+    margin-top: 0;
+}
+
+.my-stats-container .card-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.my-stats-container .card-header {
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.my-stats-container h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.my-stats-container h4 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.my-stats-container .stat-card {
+    padding: 0.75rem 1rem;
+}
+
+.my-stats-container .stat-value {
+    font-size: 1.8rem;
+    line-height: 1.2;
+}
+
+.my-stats-container .stat-label {
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+/* 6-column grid for main stats */
+.grid-6 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem;
+}
+
+/* Compact spacing utilities */
+.mb-1 {
+    margin-bottom: 0.75rem;
+}
+
+.mt-1 {
+    margin-top: 0.75rem;
+}
+
+/* Gameweek table compact */
+.gameweek-table-compact {
+    font-size: 0.85rem;
+}
+
+.gameweek-table-compact td,
+.gameweek-table-compact th {
+    padding: 0.4rem 0.6rem;
+}
+
+.gameweek-table-compact th {
+    font-size: 0.8rem;
+}
+
+/* Compact chip display */
+.my-stats-container .grid-4 .stat-card {
+    padding: 0.75rem;
+    text-align: center;
+}
+
+.my-stats-container .grid-4 .stat-card > div:first-child {
+    font-size: 1.5rem;
+}
+
+/* Hide empty sections */
+.my-stats-container .card.empty-section {
+    display: none;
+}
