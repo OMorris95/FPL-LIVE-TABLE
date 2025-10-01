@@ -97,9 +97,6 @@ function renderFDRMatrix(bootstrapData, fixturesData, currentGw) {
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">Fixture Difficulty Rating (FDR)</h2>
-                    <p class="subtitle text-base-sm mt-xs">
-                        Next ${gwRange.length} gameweeks • Color-coded by difficulty
-                    </p>
                 </div>
 
                 <!-- FDR Legend -->
@@ -136,7 +133,7 @@ function renderFDRMatrix(bootstrapData, fixturesData, currentGw) {
                                 return `
                                     <tr>
                                         <td class="team-name">
-                                            <strong>${team.short_name}</strong>
+                                            <strong>${team.name}</strong>
                                         </td>
                                         ${gwRange.map(gw => {
                                             const fixture = teamFixtures[team.id][gw];
@@ -146,12 +143,12 @@ function renderFDRMatrix(bootstrapData, fixturesData, currentGw) {
 
                                             const difficultyClass = getFDRClass(fixture.difficulty);
                                             const homeAwayBadge = fixture.isHome ? 'H' : 'A';
-                                            const opponentShort = fixture.opponent ? fixture.opponent.short_name : '???';
+                                            const opponentName = fixture.opponent ? fixture.opponent.name : '???';
 
                                             return `
                                                 <td class="fdr-cell ${difficultyClass}">
                                                     <div class="fdr-content">
-                                                        <span class="fdr-opponent">${opponentShort}</span>
+                                                        <span class="fdr-opponent">${opponentName}</span>
                                                         <span class="fdr-location ${fixture.isHome ? 'home' : 'away'}">${homeAwayBadge}</span>
                                                     </div>
                                                 </td>
@@ -163,10 +160,6 @@ function renderFDRMatrix(bootstrapData, fixturesData, currentGw) {
                         </tbody>
                     </table>
                 </div>
-
-                <p class="note-text mt-sm">
-                    FDR based on official FPL difficulty ratings • H = Home, A = Away
-                </p>
             </div>
         </div>
     `;

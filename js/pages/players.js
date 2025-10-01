@@ -86,9 +86,6 @@ function renderPlayerSearchHub() {
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">Player Stats Hub</h2>
-                    <p class="subtitle text-base-sm mt-xs">
-                        Search and filter ${allPlayers.length} FPL players
-                    </p>
                 </div>
 
                 <!-- Filters Section -->

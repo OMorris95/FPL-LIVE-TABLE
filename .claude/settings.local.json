@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "WebSearch",
-      "WebFetch(domain:fantasy.premierleague.com)"
+      "WebFetch(domain:fantasy.premierleague.com)",
+      "WebFetch(domain:www.oliverlooney.com)",
+      "WebFetch(domain:medium.com)",
+      "WebFetch(domain:www.game-change.co.uk)"
     ],
     "deny": [],
     "ask": []

@@ -48,7 +48,6 @@ function renderComparisonTool(allPlayers, teamMap, currentGw) {
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">Player Comparison Tool</h2>
-                    <p class="subtitle m-0">Compare up to ${MAX_PLAYERS} players side-by-side</p>
                 </div>
 
                 <!-- Player Search -->

@@ -130,13 +130,6 @@ function renderPricePredictorHub(predictions) {
                     </div>
                 </div>
 
-                <!-- Disclaimer -->
-                <div class="price-disclaimer">
-                    <strong>⚠️ Disclaimer:</strong> Price predictions are estimates based on transfer data.
-                    The actual FPL price change algorithm is proprietary and more complex.
-                    Use these predictions as a guide, not a guarantee.
-                </div>
-
                 <!-- Summary Stats -->
                 <div class="price-summary">
                     <div class="summary-stat stat-risers">

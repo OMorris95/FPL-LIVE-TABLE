@@ -46,10 +46,10 @@
     --shadow-glow: 0 0 20px rgba(255, 197, 0, 0.3);
 
     /* Border Radius */
-    --radius-sm: 6px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
-    --radius-xl: 16px;
+    --radius-sm: 3px;
+    --radius-md: 4px;
+    --radius-lg: 6px;
+    --radius-xl: 8px;
     --radius-round: 50%;
 
     /* Container Widths */
@@ -132,6 +132,14 @@ body {
     font-weight: 700;
     text-shadow: none;
     white-space: nowrap;
+}
+
+.nav-brand img.nav-logo {
+    height: 65px;
+    width: auto;
+    display: block;
+    margin-top: -10px;
+    margin-bottom: -10px;
 }
 
 .nav-links {
@@ -1165,7 +1173,7 @@ select.form-input {
 }
 
 .fdr-hard {
-    background: rgba(255, 152, 0, 0.15);
+    background: rgba(255, 94, 0, 0.15);
     color: #ff9800;
 }
 
@@ -1174,7 +1182,7 @@ select.form-input {
 }
 
 .fdr-very-hard {
-    background: rgba(244, 67, 54, 0.15);
+    background: rgba(255, 17, 0, 0.15);
     color: #f44336;
 }
 
@@ -1672,7 +1680,7 @@ select.form-input {
    ============================================ */
 
 .planner-container {
-    max-width: var(--container-xl);
+    max-width: var(--container-max);
     margin: 0 auto;
 }
 
@@ -1939,7 +1947,7 @@ select.form-input {
    ============================================ */
 
 .price-predictor-container {
-    max-width: var(--container-xl);
+    max-width: var(--container-max);
     margin: 0 auto;
     padding: var(--spacing-sm);
 }

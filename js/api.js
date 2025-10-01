@@ -196,6 +196,16 @@ function getChipAbbreviation(chip) {
     return chipMap[chip] || chip.toUpperCase();
 }
 
+/**
+ * Gets position label from element type
+ * @param {number} elementType - Element type (1-4)
+ * @returns {string} - Position label (GKP, DEF, MID, FWD)
+ */
+function getPositionLabel(elementType) {
+    const positionNames = ['', 'GKP', 'DEF', 'MID', 'FWD'];
+    return positionNames[elementType] || '???';
+}
+
 // Export functions for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
@@ -211,6 +221,7 @@ if (typeof module !== 'undefined' && module.exports) {
         createTeamMap,
         calculateLivePoints,
         getChipAbbreviation,
+        getPositionLabel,
         API_BASE_URL,
         CORS_PROXY
     };
