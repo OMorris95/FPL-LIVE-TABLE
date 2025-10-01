@@ -36,7 +36,7 @@ async function renderFixturesPage() {
         console.error('Error loading Fixtures:', error);
         app.innerHTML = `
             <div class="card text-center">
-                <h2 style="color: var(--rank-down);">Error Loading Fixtures</h2>
+                <h2 class="text-error">Error Loading Fixtures</h2>
                 <p>${error.message}</p>
                 <button class="btn-primary" onclick="router.navigate('/')">
                     Go to Home
@@ -97,7 +97,7 @@ function renderFDRMatrix(bootstrapData, fixturesData, currentGw) {
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">Fixture Difficulty Rating (FDR)</h2>
-                    <p style="color: #aaa; margin: 0.5rem 0 0 0; font-size: 0.875rem;">
+                    <p class="subtitle text-base-sm mt-xs">
                         Next ${gwRange.length} gameweeks • Color-coded by difficulty
                     </p>
                 </div>
@@ -164,7 +164,7 @@ function renderFDRMatrix(bootstrapData, fixturesData, currentGw) {
                     </table>
                 </div>
 
-                <p style="font-size: 0.7rem; color: #666; font-style: italic; text-align: center; margin-top: 1rem;">
+                <p class="note-text mt-sm">
                     FDR based on official FPL difficulty ratings • H = Home, A = Away
                 </p>
             </div>

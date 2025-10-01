@@ -20,11 +20,11 @@ async function renderPlannerPage() {
 
     if (!storedManagerId) {
         app.innerHTML = `
-            <div class="card text-center" style="max-width: 600px; margin: 2rem auto;">
+            <div class="card text-center container-sm mt-lg">
                 <div class="card-header">
                     <h2 class="card-title">Transfer Planner</h2>
                 </div>
-                <p style="color: #aaa; margin-bottom: 1.5rem;">
+                <p class="subtitle mb-md">
                     Import your squad from My Stats to start planning transfers.
                 </p>
                 <button class="btn-primary" onclick="router.navigate('/my-stats')">
@@ -71,7 +71,7 @@ async function renderPlannerPage() {
         console.error('Error loading transfer planner:', error);
         app.innerHTML = `
             <div class="card text-center">
-                <h2 style="color: var(--rank-down);">Error Loading Planner</h2>
+                <h2 class="text-error">Error Loading Planner</h2>
                 <p>${error.message}</p>
                 <button class="btn-primary" onclick="router.navigate('/my-stats');">Go to My Stats</button>
             </div>
@@ -115,7 +115,7 @@ function renderPlannerTool(playerMap, teamMap, currentGw, managerData) {
                 <div class="card-header">
                     <div>
                         <h2 class="card-title">Transfer Planner</h2>
-                        <p style="color: #aaa; margin: 0;">${managerData.player_first_name} ${managerData.player_last_name}</p>
+                        <p class="subtitle m-0">${managerData.player_first_name} ${managerData.player_last_name}</p>
                     </div>
                 </div>
 
@@ -140,19 +140,19 @@ function renderPlannerTool(playerMap, teamMap, currentGw, managerData) {
                 </div>
 
                 <!-- Current Squad -->
-                <h3 style="color: var(--secondary-color); margin-bottom: 0.75rem;">Current Squad</h3>
+                <h3 class="section-header">Current Squad</h3>
                 ${renderSquadByPosition(squadByPosition, teamMap)}
 
                 <!-- Planned Transfers -->
                 ${plannerState.transfers.length > 0 ? `
                     <div class="mt-2">
-                        <h3 style="color: var(--secondary-color); margin-bottom: 0.75rem;">Planned Transfers</h3>
+                        <h3 class="section-header">Planned Transfers</h3>
                         ${renderPlannedTransfers(playerMap, teamMap)}
                     </div>
                 ` : ''}
 
                 <!-- Actions -->
-                <div class="mt-2" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <div class="mt-2 flex gap-md flex-wrap">
                     <button id="plan-transfer-btn" class="btn-primary">
                         Plan Transfer
                     </button>
@@ -196,7 +196,7 @@ function renderSquadByPosition(squadByPosition, teamMap) {
 
     return Object.entries(squadByPosition).map(([position, players]) => `
         <div class="position-group mb-1">
-            <h4 style="color: var(--accent-gold); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            <h4 class="text-gold text-base-sm mb-xs">
                 ${positionLabels[position]} (${players.length})
             </h4>
             <div class="squad-grid">
@@ -211,14 +211,14 @@ function renderSquadPlayerCard(player, teamMap) {
 
     return `
         <div class="squad-player-card">
-            <div style="display: flex; justify-content: space-between; align-items: start;">
+            <div class="flex justify-between items-start">
                 <div style="flex: 1;">
                     <div class="player-name">${player.first_name.charAt(0)}. ${player.second_name}</div>
-                    <div style="font-size: 0.7rem; color: #888;">${team.short_name}</div>
+                    <div class="text-xs text-tertiary">${team.short_name}</div>
                 </div>
-                <div style="text-align: right;">
-                    <div style="font-weight: 700; color: var(--secondary-color);">£${(player.now_cost / 10).toFixed(1)}m</div>
-                    <div style="font-size: 0.7rem; color: #888;">${player.total_points} pts</div>
+                <div class="text-right">
+                    <div class="section-header" style="font-weight: 700;">£${(player.now_cost / 10).toFixed(1)}m</div>
+                    <div class="text-xs text-tertiary">${player.total_points} pts</div>
                 </div>
             </div>
         </div>
@@ -239,15 +239,15 @@ function renderPlannedTransfers(playerMap, teamMap) {
                         <div class="transfer-week">GW${transfer.week}</div>
                         <div class="transfer-details">
                             <div class="transfer-player transfer-out">
-                                <span style="color: var(--rank-down);">OUT:</span>
+                                <span class="text-error">OUT:</span>
                                 <strong>${playerOut.first_name.charAt(0)}. ${playerOut.second_name}</strong>
-                                <span style="font-size: 0.75rem; color: #888;">${teamOut.short_name}</span>
+                                <span class="text-sm text-tertiary">${teamOut.short_name}</span>
                                 <span style="font-weight: 600;">£${(playerOut.now_cost / 10).toFixed(1)}m</span>
                             </div>
                             <div class="transfer-player transfer-in">
-                                <span style="color: var(--rank-up);">IN:</span>
+                                <span class="text-success">IN:</span>
                                 <strong>${playerIn.first_name.charAt(0)}. ${playerIn.second_name}</strong>
-                                <span style="font-size: 0.75rem; color: #888;">${teamIn.short_name}</span>
+                                <span class="text-sm text-tertiary">${teamIn.short_name}</span>
                                 <span style="font-weight: 600;">£${(playerIn.now_cost / 10).toFixed(1)}m</span>
                             </div>
                         </div>
@@ -263,7 +263,7 @@ async function showTransferModal(playerMap, teamMap, currentGw) {
     const modal = document.createElement('div');
     modal.className = 'modal-overlay';
     modal.innerHTML = `
-        <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-content container-md">
             <div class="modal-header">
                 <h3>Plan a Transfer</h3>
                 <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">×</button>
@@ -296,7 +296,7 @@ async function showTransferModal(playerMap, teamMap, currentGw) {
                     <div id="player-in-results" class="search-results-dropdown"></div>
                 </div>
 
-                <div id="selected-player-in" style="margin-top: 1rem;"></div>
+                <div id="selected-player-in" class="mt-sm"></div>
             </div>
             <div class="modal-footer">
                 <button class="btn-secondary" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
@@ -350,11 +350,11 @@ async function showTransferModal(playerMap, teamMap, currentGw) {
                     <div class="search-result-item" data-player-id="${player.id}">
                         <div>
                             <div style="font-weight: 600;">${player.first_name.charAt(0)}. ${player.second_name}</div>
-                            <div style="font-size: 0.75rem; color: #888;">${team.short_name} - ${getPositionLabel(player.element_type)}</div>
+                            <div class="text-sm text-tertiary">${team.short_name} - ${getPositionLabel(player.element_type)}</div>
                         </div>
-                        <div style="text-align: right;">
+                        <div class="text-right">
                             <div style="font-weight: 600;">£${(player.now_cost / 10).toFixed(1)}m</div>
-                            <div style="font-size: 0.75rem; color: #888;">${player.total_points} pts</div>
+                            <div class="text-sm text-tertiary">${player.total_points} pts</div>
                         </div>
                     </div>
                 `;

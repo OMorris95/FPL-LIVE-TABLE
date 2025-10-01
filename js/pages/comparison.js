@@ -17,7 +17,7 @@ function renderLeagueNavButtons(currentPage, leagueId) {
         buttons.push(`<button class="btn-primary" onclick="router.navigate('/comparison', {leagueId: '${leagueId}'})">Manager Comparison</button>`);
     }
 
-    return `<div style="display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">${buttons.join('')}</div>`;
+    return `<div class="flex gap-md mb-sm flex-wrap">${buttons.join('')}</div>`;
 }
 
 async function renderComparisonPage(leagueId) {
@@ -60,7 +60,7 @@ async function renderComparisonPage(leagueId) {
         console.error('Error loading comparison page:', error);
         app.innerHTML = `
             <div class="card text-center">
-                <h2 style="color: var(--rank-down);">Error Loading Comparison</h2>
+                <h2 class="text-error">Error Loading Comparison</h2>
                 <p>${error.message}</p>
                 <button class="btn-primary" onclick="router.navigate('/')">Go to Home</button>
             </div>
@@ -186,7 +186,7 @@ async function compareManagers(manager1Id, manager2Id, leagueData) {
         console.error('Error comparing managers:', error);
         resultsDiv.innerHTML = `
             <div class="card text-center">
-                <h2 style="color: var(--rank-down);">Error</h2>
+                <h2 class="text-error">Error</h2>
                 <p>${error.message}</p>
             </div>
         `;
@@ -259,27 +259,27 @@ function renderComparisonResults(manager1Info, manager2Info, history1, history2,
 
     resultsDiv.innerHTML = `
         <div class="card mt-2">
-            <h3 style="color: var(--secondary-color); margin-bottom: 1.5rem; text-align: center;">
+            <h3 class="section-header text-center mb-md">
                 Comparison Results
             </h3>
 
             <!-- Head-to-Head Stats -->
             <div class="grid-2 mb-2">
                 <div class="stat-card">
-                    <h4 style="color: var(--secondary-color);">${manager1Info.player_name}</h4>
+                    <h4 class="section-header">${manager1Info.player_name}</h4>
                     <div class="stat-value">${m1TotalPoints}</div>
                     <div class="stat-label">Total Points</div>
-                    <div style="margin-top: 1rem; color: #aaa; font-size: 0.9rem;">
+                    <div class="mt-sm subtitle text-base-sm">
                         <div>Rank: ${m1Rank}</div>
                         <div>Team: ${manager1Info.entry_name}</div>
                     </div>
                 </div>
 
                 <div class="stat-card">
-                    <h4 style="color: var(--secondary-color);">${manager2Info.player_name}</h4>
+                    <h4 class="section-header">${manager2Info.player_name}</h4>
                     <div class="stat-value">${m2TotalPoints}</div>
                     <div class="stat-label">Total Points</div>
-                    <div style="margin-top: 1rem; color: #aaa; font-size: 0.9rem;">
+                    <div class="mt-sm subtitle text-base-sm">
                         <div>Rank: ${m2Rank}</div>
                         <div>Team: ${manager2Info.entry_name}</div>
                     </div>
@@ -287,8 +287,8 @@ function renderComparisonResults(manager1Info, manager2Info, history1, history2,
             </div>
 
             <!-- Points Difference -->
-            <div class="card mb-2" style="background: ${m1TotalPoints > m2TotalPoints ? 'rgba(0, 255, 133, 0.1)' : 'rgba(255, 77, 77, 0.1)'}; text-align: center;">
-                <h4 style="font-size: 1.5rem; margin: 0;">
+            <div class="card mb-2 text-center" style="background: ${m1TotalPoints > m2TotalPoints ? 'rgba(0, 255, 133, 0.1)' : 'rgba(255, 77, 77, 0.1)'};">
+                <h4 class="text-xl m-0">
                     ${m1TotalPoints > m2TotalPoints ? manager1Info.player_name : manager2Info.player_name} leads by ${Math.abs(m1TotalPoints - m2TotalPoints)} points
                 </h4>
             </div>
@@ -296,7 +296,7 @@ function renderComparisonResults(manager1Info, manager2Info, history1, history2,
             <!-- Current Gameweek Info -->
             <div class="grid-2 mb-2">
                 <div>
-                    <h4 style="color: var(--secondary-color); margin-bottom: 1rem;">GW ${currentGw} Details</h4>
+                    <h4 class="section-header mb-sm">GW ${currentGw} Details</h4>
                     <table class="data-table">
                         <thead>
                             <tr>
@@ -326,7 +326,7 @@ function renderComparisonResults(manager1Info, manager2Info, history1, history2,
                 </div>
 
                 <div>
-                    <h4 style="color: var(--secondary-color); margin-bottom: 1rem;">Squad Overlap</h4>
+                    <h4 class="section-header mb-sm">Squad Overlap</h4>
                     <div class="stat-card">
                         <div class="stat-value">${overlap.overlapPercentage}%</div>
                         <div class="stat-label">${overlap.shared.length} / 15 Shared Players</div>
@@ -337,23 +337,23 @@ function renderComparisonResults(manager1Info, manager2Info, history1, history2,
             <!-- Squad Differences -->
             <div class="grid-3">
                 <div>
-                    <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Shared Players</h4>
-                    <div style="background-color: #1f1f1f; padding: 1rem; border-radius: 8px; max-height: 300px; overflow-y: auto;">
-                        ${overlap.shared.map(p => `<div style="padding: 0.25rem 0;">• ${p.webName}</div>`).join('')}
+                    <h4 class="section-header mb-xs">Shared Players</h4>
+                    <div class="overflow-y-auto p-sm" style="background-color: #1f1f1f; border-radius: 8px; max-height: 300px;">
+                        ${overlap.shared.map(p => `<div class="pt-xs">• ${p.webName}</div>`).join('')}
                     </div>
                 </div>
 
                 <div>
-                    <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Only in ${manager1Info.player_name}'s Squad</h4>
-                    <div style="background-color: #1f1f1f; padding: 1rem; border-radius: 8px; max-height: 300px; overflow-y: auto;">
-                        ${overlap.uniqueToManager1.map(p => `<div style="padding: 0.25rem 0;">• ${p.webName}</div>`).join('')}
+                    <h4 class="section-header mb-xs">Only in ${manager1Info.player_name}'s Squad</h4>
+                    <div class="overflow-y-auto p-sm" style="background-color: #1f1f1f; border-radius: 8px; max-height: 300px;">
+                        ${overlap.uniqueToManager1.map(p => `<div class="pt-xs">• ${p.webName}</div>`).join('')}
                     </div>
                 </div>
 
                 <div>
-                    <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Only in ${manager2Info.player_name}'s Squad</h4>
-                    <div style="background-color: #1f1f1f; padding: 1rem; border-radius: 8px; max-height: 300px; overflow-y: auto;">
-                        ${overlap.uniqueToManager2.map(p => `<div style="padding: 0.25rem 0;">• ${p.webName}</div>`).join('')}
+                    <h4 class="section-header mb-xs">Only in ${manager2Info.player_name}'s Squad</h4>
+                    <div class="overflow-y-auto p-sm" style="background-color: #1f1f1f; border-radius: 8px; max-height: 300px;">
+                        ${overlap.uniqueToManager2.map(p => `<div class="pt-xs">• ${p.webName}</div>`).join('')}
                     </div>
                 </div>
             </div>

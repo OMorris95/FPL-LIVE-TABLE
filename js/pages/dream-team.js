@@ -17,7 +17,7 @@ function renderLeagueNavButtons(currentPage, leagueId) {
         buttons.push(`<button class="btn-primary" onclick="router.navigate('/comparison', {leagueId: '${leagueId}'})">Manager Comparison</button>`);
     }
 
-    return `<div style="display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">${buttons.join('')}</div>`;
+    return `<div class="flex gap-md mb-sm flex-wrap">${buttons.join('')}</div>`;
 }
 
 async function renderDreamTeamPage(leagueId) {
@@ -113,7 +113,7 @@ async function renderDreamTeamPage(leagueId) {
         console.error('Error loading dream team:', error);
         app.innerHTML = `
             <div class="card text-center">
-                <h2 style="color: var(--rank-down);">Error Loading Dream Team</h2>
+                <h2 class="text-error">Error Loading Dream Team</h2>
                 <p>${error.message}</p>
                 <button class="btn-primary" onclick="router.navigate('/')">Go to Home</button>
             </div>
@@ -132,11 +132,11 @@ function renderDreamTeam(positions, playerOfWeek, formation, totalPoints, gamewe
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">${leagueName} - Dream Team GW ${gameweek}</h2>
-                    <div style="text-align: right;">
-                        <p style="font-size: 1.2rem; color: var(--secondary-color); margin: 0;">
+                    <div class="text-right">
+                        <p class="text-lg text-secondary m-0">
                             Formation: ${formation}
                         </p>
-                        <p style="font-size: 1.5rem; font-weight: bold; color: var(--secondary-color); margin: 0;">
+                        <p class="text-xl text-secondary m-0" style="font-weight: 700;">
                             Total: ${totalPoints} pts
                         </p>
                     </div>
@@ -149,7 +149,7 @@ function renderDreamTeam(positions, playerOfWeek, formation, totalPoints, gamewe
                 </div>
 
                 <div class="mt-2">
-                    <h3 style="color: var(--secondary-color); margin-bottom: 1rem;">Top Performers</h3>
+                    <h3 class="text-secondary mb-sm">Top Performers</h3>
                     <div class="grid-3">
                         ${renderTopPerformers(positions)}
                     </div>
@@ -169,7 +169,7 @@ function renderPlayerOfTheWeek(player, teamMap) {
             <div class="potw-content">
                 <div class="potw-player-info">
                     <div class="potw-player-name">${player.fullName}</div>
-                    <p style="color: #666; font-size: 1.1rem; margin: 0;">${teamName}</p>
+                    <p class="text-quaternary text-md m-0">${teamName}</p>
                     <div class="potw-player-stats">
                         <div class="potw-stat">
                             <div class="potw-stat-value">${player.points}</div>
@@ -232,7 +232,7 @@ function renderDreamTeamPlayerCard(player, teamMap) {
     return `
         <div class="dream-team-player-card">
             <div class="player-name">${player.name}</div>
-            <div style="font-size: 0.75rem; color: #666;">${teamShortName}</div>
+            <div class="text-sm text-quaternary">${teamShortName}</div>
             <div class="player-points">${player.points} pts</div>
             <div class="player-stats">
                 ${player.goals > 0 ? `G: ${player.goals}` : ''}
@@ -259,12 +259,12 @@ function renderTopPerformers(positions) {
 
     return top3.map((player, index) => `
         <div class="stat-card" style="background: ${index === 0 ? 'linear-gradient(135deg, #ffd700, #ffed4e)' : 'var(--card-bg)'}">
-            <div style="font-size: 2rem; margin-bottom: 0.5rem;">
+            <div class="text-3xl mb-xs">
                 ${index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
             </div>
             <div class="stat-value">${player.points}</div>
             <div class="stat-label">${player.name}</div>
-            <div style="font-size: 0.85rem; color: #888; margin-top: 0.5rem;">
+            <div class="text-base-sm text-tertiary mt-xs">
                 ${player.goals > 0 ? `${player.goals} Goals ` : ''}
                 ${player.assists > 0 ? `${player.assists} Assists` : ''}
             </div>

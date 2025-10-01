@@ -50,7 +50,7 @@ async function renderPlayersPage() {
         console.error('Error loading Players:', error);
         app.innerHTML = `
             <div class="card text-center">
-                <h2 style="color: var(--rank-down);">Error Loading Players</h2>
+                <h2 class="text-error">Error Loading Players</h2>
                 <p>${error.message}</p>
                 <button class="btn-primary" onclick="router.navigate('/')">
                     Go to Home
@@ -86,7 +86,7 @@ function renderPlayerSearchHub() {
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">Player Stats Hub</h2>
-                    <p style="color: #aaa; margin: 0.5rem 0 0 0; font-size: 0.875rem;">
+                    <p class="subtitle text-base-sm mt-xs">
                         Search and filter ${allPlayers.length} FPL players
                     </p>
                 </div>
@@ -128,10 +128,10 @@ function renderPlayerSearchHub() {
 
                     <!-- Price Range -->
                     <div class="filter-group filter-price">
-                        <label style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;">
+                        <label class="text-sm text-tertiary mb-xs">
                             Price: £${(filters.priceMin / 10).toFixed(1)}m - £${(filters.priceMax / 10).toFixed(1)}m
                         </label>
-                        <div style="display: flex; gap: 0.5rem;">
+                        <div class="flex gap-sm">
                             <input
                                 type="range"
                                 id="price-min"
@@ -169,7 +169,7 @@ function renderPlayerSearchHub() {
 
                     <!-- Clear Filters -->
                     <div class="filter-group">
-                        <button id="clear-filters-btn" class="btn-secondary" style="width: 100%;">
+                        <button id="clear-filters-btn" class="btn-secondary block">
                             Clear Filters
                         </button>
                     </div>
@@ -186,17 +186,17 @@ function renderPlayerSearchHub() {
                 </div>
 
                 ${filteredPlayers.length > displayLimit ? `
-                    <div style="text-align: center; margin-top: 1.5rem;">
-                        <button id="load-more-btn" class="btn-primary" style="padding: 0.75rem 2rem;">
+                    <div class="text-center mt-md">
+                        <button id="load-more-btn" class="btn-primary">
                             Load 50 More Players (${filteredPlayers.length - displayLimit} remaining)
                         </button>
                     </div>
                 ` : ''}
 
                 ${filteredPlayers.length === 0 ? `
-                    <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
-                        <p style="font-size: 1.25rem;">No players found</p>
-                        <p style="font-size: 0.875rem;">Try adjusting your filters</p>
+                    <div class="text-center p-lg text-tertiary">
+                        <p class="text-xl">No players found</p>
+                        <p class="text-base-sm">Try adjusting your filters</p>
                     </div>
                 ` : ''}
             </div>

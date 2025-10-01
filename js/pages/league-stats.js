@@ -17,7 +17,7 @@ function renderLeagueNavButtons(currentPage, leagueId) {
         buttons.push(`<button class="btn-primary" onclick="router.navigate('/comparison', {leagueId: '${leagueId}'})">Manager Comparison</button>`);
     }
 
-    return `<div style="display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">${buttons.join('')}</div>`;
+    return `<div class="flex gap-md mb-sm flex-wrap">${buttons.join('')}</div>`;
 }
 
 async function renderLeagueStatsPage(leagueId) {
@@ -93,7 +93,7 @@ async function renderLeagueStatsPage(leagueId) {
         console.error('Error loading league stats:', error);
         app.innerHTML = `
             <div class="card text-center">
-                <h2 style="color: var(--rank-down);">Error Loading League Stats</h2>
+                <h2 class="text-error">Error Loading League Stats</h2>
                 <p>${error.message}</p>
                 <button class="btn-primary" onclick="router.navigate('/')">Go to Home</button>
             </div>
@@ -224,13 +224,13 @@ function renderLeagueStats(leagueName, gameweek, captainStats, ownershipStats, c
 
                 <!-- Captain Analytics -->
                 <div class="stats-section mb-2">
-                    <h3 style="color: var(--secondary-color); margin-bottom: 1rem;">
+                    <h3 class="text-secondary mb-sm">
                         👤 Captain Picks
                     </h3>
                     <div class="grid-2">
                         <div>
-                            <h4 style="color: #aaa; margin-bottom: 0.5rem;">Most Captained</h4>
-                            <div style="overflow-x: auto;">
+                            <h4 class="subtitle mb-xs">Most Captained</h4>
+                            <div class="overflow-x-auto">
                                 <table class="data-table">
                                     <thead>
                                         <tr>
@@ -252,7 +252,7 @@ function renderLeagueStats(leagueName, gameweek, captainStats, ownershipStats, c
                             </div>
                         </div>
                         <div>
-                            <h4 style="color: #aaa; margin-bottom: 0.5rem;">Captain Distribution</h4>
+                            <h4 class="subtitle mb-xs">Captain Distribution</h4>
                             ${renderCaptainDistribution(captainStats)}
                         </div>
                     </div>
@@ -260,13 +260,13 @@ function renderLeagueStats(leagueName, gameweek, captainStats, ownershipStats, c
 
                 <!-- Ownership Stats -->
                 <div class="stats-section mb-2">
-                    <h3 style="color: var(--secondary-color); margin-bottom: 1rem;">
+                    <h3 class="text-secondary mb-sm">
                         📊 Ownership Statistics
                     </h3>
                     <div class="grid-2">
                         <div>
-                            <h4 style="color: #aaa; margin-bottom: 0.5rem;">Most Owned Players</h4>
-                            <div style="overflow-x: auto;">
+                            <h4 class="subtitle mb-xs">Most Owned Players</h4>
+                            <div class="overflow-x-auto">
                                 <table class="data-table">
                                     <thead>
                                         <tr>
@@ -286,8 +286,8 @@ function renderLeagueStats(leagueName, gameweek, captainStats, ownershipStats, c
                             </div>
                         </div>
                         <div>
-                            <h4 style="color: #aaa; margin-bottom: 0.5rem;">Differentials (Low Ownership)</h4>
-                            <div style="overflow-x: auto;">
+                            <h4 class="subtitle mb-xs">Differentials (Low Ownership)</h4>
+                            <div class="overflow-x-auto">
                                 <table class="data-table">
                                     <thead>
                                         <tr>
@@ -311,7 +311,7 @@ function renderLeagueStats(leagueName, gameweek, captainStats, ownershipStats, c
 
                 <!-- Chip Usage -->
                 <div class="stats-section">
-                    <h3 style="color: var(--secondary-color); margin-bottom: 1rem;">
+                    <h3 class="text-secondary mb-sm">
                         🎴 Chip Usage This Gameweek
                     </h3>
                     <div class="grid-4">
@@ -328,21 +328,21 @@ function renderLeagueStats(leagueName, gameweek, captainStats, ownershipStats, c
 
 function renderCaptainDistribution(captainStats) {
     if (captainStats.length === 0) {
-        return '<p style="color: #aaa;">No captain data available</p>';
+        return '<p class="subtitle">No captain data available</p>';
     }
 
     const top5 = captainStats.slice(0, 5);
     const maxCount = Math.max(...top5.map(c => c.count));
 
     return `
-        <div style="margin-top: 1rem;">
+        <div class="mt-sm">
             ${top5.map(captain => {
                 const percentage = (captain.count / maxCount * 100);
                 return `
-                    <div style="margin-bottom: 1rem;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                            <span style="font-size: 0.9rem;">${captain.webName}</span>
-                            <span style="font-size: 0.9rem; color: var(--secondary-color);">${captain.count}</span>
+                    <div class="mb-sm">
+                        <div class="flex justify-between mb-xs">
+                            <span class="text-base-sm">${captain.webName}</span>
+                            <span class="text-base-sm text-secondary">${captain.count}</span>
                         </div>
                         <div style="background-color: #333; height: 24px; border-radius: 4px; overflow: hidden;">
                             <div style="background-color: var(--secondary-color); height: 100%; width: ${percentage}%; transition: width 0.3s;"></div>
@@ -360,11 +360,11 @@ function renderChipCard(fullName, abbrev, managers) {
 
     return `
         <div class="stat-card">
-            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">${abbrev}</div>
+            <div class="text-3xl mb-xs">${abbrev}</div>
             <div class="stat-value" style="color: ${color};">${count}</div>
             <div class="stat-label">${fullName}</div>
             ${count > 0 ? `
-                <div style="margin-top: 1rem; text-align: left; font-size: 0.85rem; color: #aaa;">
+                <div class="mt-sm text-left text-base-sm subtitle">
                     ${managers.map(m => `<div>• ${m}</div>`).join('')}
                 </div>
             ` : ''}

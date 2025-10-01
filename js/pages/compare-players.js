@@ -33,7 +33,7 @@ async function renderComparePlayersPage(leagueId) {
         console.error('Error loading comparison tool:', error);
         app.innerHTML = `
             <div class="card text-center">
-                <h2 style="color: var(--rank-down);">Error Loading Comparison Tool</h2>
+                <h2 class="text-error">Error Loading Comparison Tool</h2>
                 <p>${error.message}</p>
             </div>
         `;
@@ -48,7 +48,7 @@ function renderComparisonTool(allPlayers, teamMap, currentGw) {
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">Player Comparison Tool</h2>
-                    <p style="color: #aaa; margin: 0;">Compare up to ${MAX_PLAYERS} players side-by-side</p>
+                    <p class="subtitle m-0">Compare up to ${MAX_PLAYERS} players side-by-side</p>
                 </div>
 
                 <!-- Player Search -->
@@ -65,8 +65,8 @@ function renderComparisonTool(allPlayers, teamMap, currentGw) {
                 <!-- Selected Players Cards -->
                 <div id="selected-players-container" class="selected-players-grid">
                     ${selectedPlayers.length === 0 ? `
-                        <div class="text-center" style="grid-column: 1 / -1; padding: 2rem; color: #888;">
-                            <p style="font-size: 1.1rem;">No players selected yet</p>
+                        <div class="text-center p-lg text-tertiary" style="grid-column: 1 / -1;">
+                            <p class="text-md">No players selected yet</p>
                             <p>Search and select up to ${MAX_PLAYERS} players to compare</p>
                         </div>
                     ` : renderSelectedPlayers(selectedPlayers, teamMap)}
@@ -75,7 +75,7 @@ function renderComparisonTool(allPlayers, teamMap, currentGw) {
                 ${selectedPlayers.length >= 2 ? `
                     <!-- Comparison Table -->
                     <div class="mt-2">
-                        <h3 style="color: var(--secondary-color); margin-bottom: 0.75rem;">Detailed Comparison</h3>
+                        <h3 class="section-header">Detailed Comparison</h3>
                         ${renderComparisonTable(selectedPlayers, teamMap, currentGw)}
                     </div>
                 ` : ''}
@@ -96,9 +96,9 @@ function renderSelectedPlayers(players, teamMap) {
             <div class="comparison-player-card">
                 <button class="remove-player-btn" onclick="removePlayer(${player.id})">×</button>
                 <div class="player-name">${player.first_name.charAt(0)}. ${player.second_name}</div>
-                <div style="font-size: 0.75rem; color: #888;">${team.short_name} - ${positionLabel}</div>
+                <div class="text-sm text-tertiary">${team.short_name} - ${positionLabel}</div>
                 <div class="player-price">£${(player.now_cost / 10).toFixed(1)}m</div>
-                <div class="grid-3" style="gap: 0.5rem; margin-top: 0.5rem;">
+                <div class="grid-3 gap-sm mt-xs">
                     <div class="stat-mini">
                         <div class="stat-mini-value">${player.total_points}</div>
                         <div class="stat-mini-label">Points</div>
@@ -138,13 +138,13 @@ function renderComparisonTable(players, teamMap, currentGw) {
     ];
 
     return `
-        <div style="overflow-x: auto;">
+        <div class="overflow-x-auto">
             <table class="data-table comparison-table">
                 <thead>
                     <tr>
-                        <th style="text-align: left;">Statistic</th>
+                        <th class="text-left">Statistic</th>
                         ${players.map(player => `
-                            <th style="text-align: center;">
+                            <th class="text-center">
                                 ${player.first_name.charAt(0)}. ${player.second_name}
                             </th>
                         `).join('')}
@@ -162,7 +162,7 @@ function renderComparisonTable(players, teamMap, currentGw) {
                                     const value = player[stat.key];
                                     const isMax = value === maxValue && value > 0;
                                     return `
-                                        <td style="text-align: center; ${isMax ? 'color: var(--rank-up); font-weight: 700;' : ''}">
+                                        <td class="text-center${isMax ? ' text-success' : ''}" ${isMax ? 'style="font-weight: 700;"' : ''}>
                                             ${stat.format(value)}
                                         </td>
                                     `;
@@ -218,11 +218,11 @@ function setupComparisonEventListeners(allPlayers, teamMap, currentGw) {
                     <div class="search-result-item" data-player-id="${player.id}">
                         <div>
                             <div style="font-weight: 600;">${player.first_name.charAt(0)}. ${player.second_name}</div>
-                            <div style="font-size: 0.75rem; color: #888;">${team.short_name} - ${positionLabel}</div>
+                            <div class="text-sm text-tertiary">${team.short_name} - ${positionLabel}</div>
                         </div>
-                        <div style="text-align: right;">
+                        <div class="text-right">
                             <div style="font-weight: 600;">£${(player.now_cost / 10).toFixed(1)}m</div>
-                            <div style="font-size: 0.75rem; color: #888;">${player.total_points} pts</div>
+                            <div class="text-sm text-tertiary">${player.total_points} pts</div>
                         </div>
                     </div>
                 `;

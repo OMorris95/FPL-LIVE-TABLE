@@ -30,7 +30,7 @@ async function renderTemplatePage() {
         console.error('Error loading template team:', error);
         app.innerHTML = `
             <div class="card text-center">
-                <h2 style="color: var(--rank-down);">Error Loading Template Team</h2>
+                <h2 class="text-error">Error Loading Template Team</h2>
                 <p>${error.message}</p>
             </div>
         `;
@@ -79,7 +79,7 @@ function renderTemplateTracker(allPlayers, teamMap, bootstrapData) {
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">Template Team Tracker</h2>
-                    <p style="color: #aaa; margin: 0;">Most owned players and template analysis</p>
+                    <p class="subtitle">Most owned players and template analysis</p>
                 </div>
 
                 <!-- Summary Stats -->
@@ -99,15 +99,15 @@ function renderTemplateTracker(allPlayers, teamMap, bootstrapData) {
                 </div>
 
                 <!-- Template Squad -->
-                <h3 style="color: var(--secondary-color); margin-bottom: 0.75rem;">Most Owned Template Squad</h3>
-                <p style="color: #888; font-size: 0.85rem; margin-bottom: 1rem;">
+                <h3 class="section-header">Most Owned Template Squad</h3>
+                <p class="text-tertiary text-base-sm mb-sm">
                     Top 2 GK, 5 DEF, 5 MID, 3 FWD by ownership
                 </p>
                 ${renderTemplateSquad(templateTeam, teamMap)}
 
                 <!-- High Ownership Players -->
                 <div class="mt-2">
-                    <h3 style="color: var(--secondary-color); margin-bottom: 0.75rem;">
+                    <h3 class="section-header">
                         High Ownership Players (>${HIGH_OWNERSHIP}%)
                     </h3>
                     ${renderOwnershipTable(templatePlayers, teamMap, 'high')}
@@ -115,7 +115,7 @@ function renderTemplateTracker(allPlayers, teamMap, bootstrapData) {
 
                 <!-- Medium Ownership Players -->
                 <div class="mt-2">
-                    <h3 style="color: var(--secondary-color); margin-bottom: 0.75rem;">
+                    <h3 class="section-header">
                         Medium Ownership Players (${MEDIUM_OWNERSHIP}-${HIGH_OWNERSHIP}%)
                     </h3>
                     ${renderOwnershipTable(
@@ -130,7 +130,7 @@ function renderTemplateTracker(allPlayers, teamMap, bootstrapData) {
 
                 <!-- Differential Players -->
                 <div class="mt-2">
-                    <h3 style="color: var(--secondary-color); margin-bottom: 0.75rem;">
+                    <h3 class="section-header">
                         Top Differential Players (<${MEDIUM_OWNERSHIP}% ownership, 100+ pts)
                     </h3>
                     ${renderOwnershipTable(
@@ -158,7 +158,7 @@ function renderTemplateSquad(templateTeam, teamMap) {
         <div class="template-squad">
             ${Object.entries(templateTeam).map(([position, players]) => `
                 <div class="template-position-group">
-                    <h4 style="color: var(--accent-gold); font-size: 0.85rem; margin-bottom: 0.5rem;">
+                    <h4 class="text-gold text-base-sm mb-xs">
                         ${positionLabels[position]}
                     </h4>
                     <div class="template-players-grid">
@@ -176,22 +176,22 @@ function renderTemplatePlayerCard(player, teamMap) {
 
     return `
         <div class="template-player-card">
-            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+            <div class="flex justify-between items-start mb-xs">
                 <div style="flex: 1;">
                     <div class="player-name">${player.first_name.charAt(0)}. ${player.second_name}</div>
-                    <div style="font-size: 0.7rem; color: #888;">${team.short_name}</div>
+                    <div class="text-xs text-tertiary">${team.short_name}</div>
                 </div>
-                <div style="text-align: right;">
-                    <div style="font-weight: 700; color: var(--secondary-color); font-size: 0.9rem;">
+                <div class="text-right">
+                    <div class="text-secondary text-base-sm" style="font-weight: 700;">
                         £${(player.now_cost / 10).toFixed(1)}m
                     </div>
                 </div>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="flex justify-between items-center">
                 <div class="ownership-badge ${getOwnershipClass(ownership)}">
                     ${ownership}% owned
                 </div>
-                <div style="font-size: 0.85rem; color: #888;">
+                <div class="text-base-sm text-tertiary">
                     ${player.total_points} pts
                 </div>
             </div>
@@ -201,16 +201,16 @@ function renderTemplatePlayerCard(player, teamMap) {
 
 function renderOwnershipTable(players, teamMap, type) {
     if (players.length === 0) {
-        return `<p style="text-align: center; color: #888; padding: 1rem;">No players in this category</p>`;
+        return `<p class="text-center text-tertiary p-sm">No players in this category</p>`;
     }
 
     return `
-        <div style="overflow-x: auto;">
+        <div class="overflow-x-auto">
             <table class="data-table ownership-table">
                 <thead>
                     <tr>
-                        <th style="text-align: left;">Player</th>
-                        <th style="text-align: left;">Team</th>
+                        <th class="text-left">Player</th>
+                        <th class="text-left">Team</th>
                         <th>Position</th>
                         <th>Price</th>
                         <th>Ownership</th>
@@ -228,16 +228,16 @@ function renderOwnershipTable(players, teamMap, type) {
                             <tr>
                                 <td style="font-weight: 600;">${player.first_name.charAt(0)}. ${player.second_name}</td>
                                 <td>${team.short_name}</td>
-                                <td style="text-align: center;">${getPositionLabel(player.element_type)}</td>
-                                <td style="text-align: center;">£${(player.now_cost / 10).toFixed(1)}m</td>
-                                <td style="text-align: center;">
+                                <td class="text-center">${getPositionLabel(player.element_type)}</td>
+                                <td class="text-center">£${(player.now_cost / 10).toFixed(1)}m</td>
+                                <td class="text-center">
                                     <span class="ownership-badge ${getOwnershipClass(ownership)}">
                                         ${ownership}%
                                     </span>
                                 </td>
-                                <td style="text-align: center; font-weight: 600;">${player.total_points}</td>
-                                <td style="text-align: center;">${player.form}</td>
-                                <td style="text-align: center;">${player.points_per_game}</td>
+                                <td class="text-center" style="font-weight: 600;">${player.total_points}</td>
+                                <td class="text-center">${player.form}</td>
+                                <td class="text-center">${player.points_per_game}</td>
                             </tr>
                         `;
                     }).join('')}

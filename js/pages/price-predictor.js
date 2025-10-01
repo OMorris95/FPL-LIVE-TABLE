@@ -39,7 +39,7 @@ async function renderPricePredictorPage() {
         console.error('Error loading Price Predictor:', error);
         app.innerHTML = `
             <div class="card text-center">
-                <h2 style="color: var(--rank-down);">Error Loading Price Predictor</h2>
+                <h2 class="text-error">Error Loading Price Predictor</h2>
                 <p>${error.message}</p>
                 <button class="btn-primary" onclick="router.navigate('/')">
                     Go to Home
@@ -124,7 +124,7 @@ function renderPricePredictorHub(predictions) {
                 <div class="card-header">
                     <div>
                         <h2 class="card-title">Price Change Predictor</h2>
-                        <p style="color: #aaa; margin: 0.5rem 0 0 0; font-size: 0.875rem;">
+                        <p class="subtitle text-base-sm mt-xs">
                             Predicted price changes for tonight • Last updated: ${lastUpdated}
                         </p>
                     </div>

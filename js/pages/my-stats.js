@@ -15,18 +15,18 @@ async function renderMyStatsPage(paramManagerId) {
     if (!managerIdToLoad) {
         // Show manager ID input form
         app.innerHTML = `
-            <div class="card text-center" style="max-width: 600px; margin: 2rem auto;">
+            <div class="card text-center container-sm" style="margin: 2rem auto;">
                 <div class="card-header">
                     <h2 class="card-title">Enter Your Manager ID</h2>
                 </div>
-                <p style="color: #aaa; margin-bottom: 1.5rem;">
+                <p class="subtitle mb-md">
                     Find your Manager ID in the URL of your FPL team page:<br>
                     <code style="background: #1a1a1a; padding: 0.25rem 0.5rem; border-radius: 4px;">
-                        https://fantasy.premierleague.com/entry/<span style="color: var(--accent-gold);">YOUR_ID</span>/
+                        https://fantasy.premierleague.com/entry/<span class="text-gold">YOUR_ID</span>/
                     </code>
                 </p>
                 <form id="manager-id-form">
-                    <div class="form-group" style="margin-bottom: 1rem;">
+                    <div class="form-group mb-sm">
                         <input
                             type="number"
                             id="manager-id-input"
@@ -104,7 +104,7 @@ async function renderMyStatsPage(paramManagerId) {
         console.error('Error loading My Stats:', error);
         app.innerHTML = `
             <div class="card text-center">
-                <h2 style="color: var(--rank-down);">Error Loading Stats</h2>
+                <h2 class="text-error">Error Loading Stats</h2>
                 <p>${error.message}</p>
                 <button class="btn-primary" onclick="localStorage.removeItem('fpl_manager_id'); router.navigate('/my-stats');">
                     Try Different Manager ID
@@ -205,13 +205,13 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
         <div class="my-stats-container">
             <!-- Header Card -->
             <div class="card">
-                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div class="card-header flex-header">
                     <div>
                         <h2 class="card-title">${managerData.player_first_name} ${managerData.player_last_name}</h2>
-                        <p style="color: #aaa; margin: 0;">${managerData.name}</p>
-                        ${!isOwnStats ? `<p style="color: var(--accent-gold); margin: 0.5rem 0 0 0; font-size: 0.875rem;">Viewing League Manager</p>` : ''}
+                        <p class="subtitle m-0">${managerData.name}</p>
+                        ${!isOwnStats ? `<p class="text-gold mt-xs text-base-sm">Viewing League Manager</p>` : ''}
                     </div>
-                    <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                    <div class="flex gap-sm items-center flex-wrap">
                         ${leagueManagers ? `
                             <select id="league-manager-selector" class="form-select" style="min-width: 200px;">
                                 <option value="">View League Manager...</option>
@@ -242,14 +242,14 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
                     <div class="stat-card">
                         <div class="stat-value">${currentRank.toLocaleString()}</div>
                         <div class="stat-label">Overall Rank</div>
-                        <div style="font-size: 0.7rem; color: #888; margin-top: 0.25rem;">
+                        <div class="text-xs text-tertiary mt-xs">
                             Top ${((currentRank / 11500000) * 100).toFixed(2)}%
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value">£${squadValue}m</div>
                         <div class="stat-label">Squad Value*</div>
-                        <div style="font-size: 0.7rem; color: #888; margin-top: 0.25rem;">
+                        <div class="text-xs text-tertiary mt-xs">
                             Bank: £${bank}m
                         </div>
                     </div>
@@ -258,23 +258,23 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
                         <div class="stat-label">GW${currentGw} Points</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" style="color: var(--rank-up);">${bestGw ? bestGw.points : 0}</div>
+                        <div class="stat-value text-success">${bestGw ? bestGw.points : 0}</div>
                         <div class="stat-label">Best GW${bestGw ? bestGw.event : ''}</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" style="color: var(--rank-down);">${worstGw ? worstGw.points : 0}</div>
+                        <div class="stat-value text-error">${worstGw ? worstGw.points : 0}</div>
                         <div class="stat-label">Worst GW${worstGw ? worstGw.event : ''}</div>
                     </div>
                 </div>
-                <p style="font-size: 0.7rem; color: #666; font-style: italic; text-align: center; margin-bottom: 0.5rem;">
+                <p class="note-text mb-xs">
                     *Market prices - selling value may differ due to 50% sell-on fee
                 </p>
             </div>
 
             <!-- Gameweek Performance Table - Compact -->
             <div class="card mt-1">
-                <h3 style="color: var(--secondary-color); margin-bottom: 0.75rem;">Gameweek Performance</h3>
-                <div style="overflow-x: auto;">
+                <h3 class="section-header">Gameweek Performance</h3>
+                <div class="overflow-x-auto">
                     <table class="data-table gameweek-table-compact">
                         <thead>
                             <tr>
@@ -294,11 +294,11 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
                                     <td>${gw.points - gw.event_transfers_cost}</td>
                                     <td>${gw.total_points}</td>
                                     <td>${gw.overall_rank.toLocaleString()}</td>
-                                    <td>${gw.rank ? `<span style="color: ${gw.rank > 0 ? 'var(--rank-down)' : 'var(--rank-up)'}">
+                                    <td>${gw.rank ? `<span class="${gw.rank > 0 ? 'text-error' : 'text-success'}">
                                         ${gw.rank > 0 ? '▼' : '▲'} ${Math.abs(gw.rank).toLocaleString()}
                                     </span>` : '-'}</td>
                                     <td>${gw.event_transfers_cost > 0 ?
-                                        `<span style="color: var(--rank-down)">-${gw.event_transfers_cost}</span>` :
+                                        `<span class="text-error">-${gw.event_transfers_cost}</span>` :
                                         '0'}</td>
                                     <td>${gw.active_chip ? getChipAbbreviation(gw.active_chip) : '-'}</td>
                                 </tr>
@@ -310,7 +310,7 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
 
             <!-- Season Statistics - Combined Captain & Transfers -->
             <div class="card mt-1">
-                <h3 style="color: var(--secondary-color); margin-bottom: 0.75rem;">Season Statistics</h3>
+                <h3 class="section-header">Season Statistics</h3>
                 <div class="grid-6 mb-1">
                     <div class="stat-card">
                         <div class="stat-value">${captainStats.totalPoints}</div>
@@ -329,7 +329,7 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
                         <div class="stat-label">Total Transfers</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" style="color: var(--rank-down);">-${currentSeasonHistory.reduce((sum, gw) => sum + gw.event_transfers_cost, 0)}</div>
+                        <div class="stat-value text-error">-${currentSeasonHistory.reduce((sum, gw) => sum + gw.event_transfers_cost, 0)}</div>
                         <div class="stat-label">Hit Points Lost</div>
                     </div>
                     <div class="stat-card">
@@ -341,23 +341,23 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
 
             <!-- Chip Usage - Always visible -->
             <div class="card mt-1">
-                <h3 style="color: var(--secondary-color); margin-bottom: 0.75rem;">Chip Usage</h3>
+                <h3 class="section-header">Chip Usage</h3>
                 <div class="grid-4">
                     ${chipStatus.map(chip => `
-                        <div class="stat-card" style="opacity: ${chip.used ? '1' : '0.5'}; text-align: center;">
-                            <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">
+                        <div class="stat-card text-center" style="opacity: ${chip.used ? '1' : '0.5'};">
+                            <div class="text-xl mb-xs">
                                 ${chip.abbrev}
                             </div>
                             <div class="stat-label">${chip.label}</div>
                             ${chip.used ? `
-                                <div style="color: var(--rank-up); margin-top: 0.25rem; font-weight: 600;">
+                                <div class="text-success mt-xs" style="font-weight: 600;">
                                     GW${chip.gw}
                                 </div>
-                                <div style="font-size: 1rem; color: var(--secondary-color); margin-top: 0.25rem;">
+                                <div class="text-base text-secondary mt-xs">
                                     ${chip.points} pts
                                 </div>
                             ` : `
-                                <div style="color: #666; margin-top: 0.25rem; font-style: italic;">
+                                <div class="text-quaternary mt-xs" style="font-style: italic;">
                                     Available
                                 </div>
                             `}

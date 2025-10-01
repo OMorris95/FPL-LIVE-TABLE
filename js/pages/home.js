@@ -21,7 +21,7 @@ function renderLeagueNavButtons(currentPage, leagueId) {
         buttons.push(`<button class="btn-primary" onclick="router.navigate('/comparison', {leagueId: '${leagueId}'})">Manager Comparison</button>`);
     }
 
-    return `<div style="display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">${buttons.join('')}</div>`;
+    return `<div class="flex gap-md mb-sm flex-wrap">${buttons.join('')}</div>`;
 }
 
 async function renderHomePage() {
@@ -47,14 +47,14 @@ function renderEntryBoxes() {
     const app = document.getElementById('app');
 
     app.innerHTML = `
-        <div class="home-container" style="max-width: 1000px; margin: 0 auto; padding-top: 2rem;">
+        <div class="home-container container-lg pt-lg">
             <div class="grid-2">
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">Enter League ID</h2>
                     </div>
                     <form id="league-form">
-                        <div class="form-group" style="margin-bottom: 1rem;">
+                        <div class="form-group mb-sm">
                             <input
                                 type="number"
                                 id="league-id-input"
@@ -64,7 +64,7 @@ function renderEntryBoxes() {
                             />
                         </div>
 
-                        <button type="submit" class="btn-primary" style="width: 100%;">
+                        <button type="submit" class="btn-primary block">
                             Load League
                         </button>
                     </form>
@@ -75,7 +75,7 @@ function renderEntryBoxes() {
                         <h2 class="card-title">Enter Manager ID</h2>
                     </div>
                     <form id="manager-form">
-                        <div class="form-group" style="margin-bottom: 1rem;">
+                        <div class="form-group mb-sm">
                             <input
                                 type="number"
                                 id="manager-id-input"
@@ -85,7 +85,7 @@ function renderEntryBoxes() {
                             />
                         </div>
 
-                        <button type="submit" class="btn-primary" style="width: 100%;">
+                        <button type="submit" class="btn-primary block">
                             Load Manager Stats
                         </button>
                     </form>
@@ -203,7 +203,7 @@ async function renderHomeWithLiveTable(leagueId) {
         console.error('Error loading live table:', error);
         app.innerHTML = `
             <div class="card text-center">
-                <h2 style="color: var(--rank-down);">Error Loading League</h2>
+                <h2 class="text-error">Error Loading League</h2>
                 <p>${error.message}</p>
                 <p>Please check the League ID and try again.</p>
                 <button class="btn-primary" onclick="changeLeague()">Try Different League</button>
@@ -225,12 +225,12 @@ function renderLiveTable(managers, leagueName, leagueId) {
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">GW ${liveGameweekId} Live Table</h2>
-                    <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-                        <p style="color: #aaa; margin: 0;">${leagueName}</p>
+                    <div class="flex items-center gap-lg flex-wrap">
+                        <p class="subtitle m-0">${leagueName}</p>
                         <button id="change-league-btn" class="btn-secondary-small">
                             Change League
                         </button>
-                        <p style="color: #aaa; font-size: 0.85rem; margin: 0;">
+                        <p class="subtitle text-base-sm m-0">
                             Last Updated: ${lastUpdated}
                         </p>
                         <button id="refresh-btn" class="btn-secondary">
@@ -239,7 +239,7 @@ function renderLiveTable(managers, leagueName, leagueId) {
                     </div>
                 </div>
 
-                <div style="overflow-x: auto;">
+                <div class="overflow-x-auto">
                     <table class="data-table">
                         <thead>
                             <tr>
