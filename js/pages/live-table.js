@@ -59,6 +59,7 @@ async function renderLiveTablePage(leagueId) {
 
         // Update nav with league name
         document.getElementById('nav-league-name').textContent = leagueData.league.name;
+        document.querySelector('.nav-league-info').style.display = 'flex';
 
         const liveData = await getLiveGameweekData(liveGameweekId);
         if (!liveData) {

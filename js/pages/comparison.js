@@ -35,6 +35,7 @@ async function renderComparisonPage(leagueId) {
 
         // Update nav with league name
         document.getElementById('nav-league-name').textContent = leagueData.league.name;
+        document.querySelector('.nav-league-info').style.display = 'flex';
 
         // Render manager selection
         renderManagerSelection(leagueData);

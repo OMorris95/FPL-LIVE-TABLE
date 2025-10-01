@@ -42,6 +42,7 @@ async function renderLeagueStatsPage(leagueId) {
 
         // Update nav with league name
         document.getElementById('nav-league-name').textContent = leagueData.league.name;
+        document.querySelector('.nav-league-info').style.display = 'flex';
 
         const playerMap = createPlayerMap(bootstrapData);
         const liveData = await getLiveGameweekData(currentGw);

@@ -48,6 +48,7 @@ async function renderDreamTeamPage(leagueId) {
 
         // Update nav with league name
         document.getElementById('nav-league-name').textContent = leagueData.league.name;
+        document.querySelector('.nav-league-info').style.display = 'flex';
 
         const completedGwData = await getLiveGameweekData(lastCompletedGw);
         const playerMap = createPlayerMap(bootstrapData);
