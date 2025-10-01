@@ -154,14 +154,22 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
 
     // Get rank history from current season
     const currentSeasonHistory = historyData.current || [];
-    const rankHistory = currentSeasonHistory.map(gw => ({
-        gw: gw.event,
-        rank: gw.overall_rank,
-        points: gw.points,
-        totalPoints: gw.total_points,
-        rankChange: gw.rank - (currentSeasonHistory[gw.event - 2]?.overall_rank || gw.rank),
-        transferCost: gw.event_transfers_cost
-    }));
+    const rankHistory = currentSeasonHistory.map((gw, index) => {
+        // Get previous gameweek from array position
+        const prevGw = index > 0 ? currentSeasonHistory[index - 1] : null;
+        // Simple rank change calculation: current rank - previous rank
+        // Negative = improved (rank went down), Positive = worsened (rank went up)
+        const rankChange = prevGw ? (gw.overall_rank - prevGw.overall_rank) : 0;
+
+        return {
+            gw: gw.event,
+            rank: gw.overall_rank,
+            points: gw.points,
+            totalPoints: gw.total_points,
+            rankChange: rankChange,
+            transferCost: gw.event_transfers_cost
+        };
+    });
 
     // Calculate captain stats
     const captainStats = calculateCaptainStats(currentSeasonHistory);
@@ -288,21 +296,29 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
                             </tr>
                         </thead>
                         <tbody>
-                            ${[...currentSeasonHistory].reverse().map(gw => `
+                            ${[...currentSeasonHistory].reverse().map((gw, index, reversedArray) => {
+                                // Calculate rank change: current rank - previous rank
+                                // Array is reversed (newest first), so we need original array index
+                                const originalIndex = currentSeasonHistory.length - 1 - index;
+                                const prevGw = originalIndex > 0 ? currentSeasonHistory[originalIndex - 1] : null;
+                                const rankChange = prevGw ? (gw.overall_rank - prevGw.overall_rank) : 0;
+
+                                return `
                                 <tr>
                                     <td><strong>GW${gw.event}</strong></td>
                                     <td>${gw.points - gw.event_transfers_cost}</td>
                                     <td>${gw.total_points}</td>
                                     <td>${gw.overall_rank.toLocaleString()}</td>
-                                    <td>${gw.rank ? `<span class="${gw.rank > 0 ? 'text-error' : 'text-success'}">
-                                        ${gw.rank > 0 ? '▼' : '▲'} ${Math.abs(gw.rank).toLocaleString()}
+                                    <td>${rankChange !== 0 ? `<span class="${rankChange < 0 ? 'text-success' : 'text-error'}">
+                                        ${rankChange < 0 ? '▲' : '▼'} ${Math.abs(rankChange).toLocaleString()}
                                     </span>` : '-'}</td>
                                     <td>${gw.event_transfers_cost > 0 ?
                                         `<span class="text-error">-${gw.event_transfers_cost}</span>` :
                                         '0'}</td>
                                     <td>${gw.active_chip ? getChipAbbreviation(gw.active_chip) : '-'}</td>
                                 </tr>
-                            `).join('')}
+                                `;
+                            }).join('')}
                         </tbody>
                     </table>
                 </div>

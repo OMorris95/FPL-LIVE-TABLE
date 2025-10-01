@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { loadOwnershipData, getLatestOwnershipData, loadUpdateMetadata } = require('../services/dataStorage');
 const { getBootstrapData, getCurrentGameweek } = require('../services/fplDataFetcher');
+const { generatePredictions } = require('../services/pricePredictor');
 
 /**
  * GET /api/ownership/:tier/:gameweek
@@ -82,6 +83,48 @@ router.get('/status', async (req, res) => {
         });
     } catch (error) {
         console.error('Error fetching status:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * GET /api/price-predictions
+ * Returns current price change predictions based on daily transfer deltas
+ */
+router.get('/price-predictions', async (req, res) => {
+    try {
+        const predictions = await generatePredictions();
+        res.json(predictions);
+    } catch (error) {
+        console.error('Error generating price predictions:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * GET /api/price-accuracy
+ * Returns historical accuracy data for price predictions
+ */
+router.get('/price-accuracy', async (req, res) => {
+    try {
+        const fs = require('fs').promises;
+        const path = require('path');
+        const filepath = path.join(__dirname, '../data/price_accuracy.json');
+
+        try {
+            const data = await fs.readFile(filepath, 'utf8');
+            res.json(JSON.parse(data));
+        } catch {
+            // No accuracy data yet
+            res.json({
+                overall: { correct: 0, total: 0, accuracy: 0 },
+                risers: { correct: 0, total: 0, accuracy: 0 },
+                fallers: { correct: 0, total: 0, accuracy: 0 },
+                history: []
+            });
+        }
+    } catch (error) {
+        console.error('Error fetching accuracy data:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });

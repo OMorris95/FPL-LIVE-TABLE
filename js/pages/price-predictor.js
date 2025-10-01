@@ -3,6 +3,7 @@
 let priceData = null;
 let bootstrapCache = null;
 let teamCache = null;
+let accuracyData = null;
 
 async function renderPricePredictorPage() {
     const app = document.getElementById('app');
@@ -20,7 +21,7 @@ async function renderPricePredictorPage() {
     `;
 
     try {
-        // Fetch bootstrap data
+        // Fetch bootstrap data for team info
         bootstrapCache = await getBootstrapData();
 
         if (!bootstrapCache) {
@@ -29,11 +30,31 @@ async function renderPricePredictorPage() {
 
         teamCache = createTeamMap(bootstrapCache);
 
-        // Calculate price change predictions
-        const predictions = calculatePriceChangePredictions(bootstrapCache.elements);
+        // Fetch predictions from backend API
+        const predictionsResponse = await fetch('/api/price-predictions');
+        if (!predictionsResponse.ok) {
+            throw new Error('Failed to fetch price predictions from backend');
+        }
+        const predictions = await predictionsResponse.json();
+
+        // Fetch accuracy data
+        try {
+            const accuracyResponse = await fetch('/api/price-accuracy');
+            if (accuracyResponse.ok) {
+                accuracyData = await accuracyResponse.json();
+            }
+        } catch (error) {
+            console.log('Accuracy data not available yet');
+        }
 
         // Render the price predictor interface
         renderPricePredictorHub(predictions);
+
+        // Auto-refresh every 5 minutes
+        setTimeout(() => {
+            console.log('Auto-refreshing price predictions...');
+            renderPricePredictorPage();
+        }, 5 * 60 * 1000);
 
     } catch (error) {
         console.error('Error loading Price Predictor:', error);
@@ -41,6 +62,7 @@ async function renderPricePredictorPage() {
             <div class="card text-center">
                 <h2 class="text-error">Error Loading Price Predictor</h2>
                 <p>${error.message}</p>
+                <p class="text-sm text-tertiary mt-xs">Make sure the backend server is running</p>
                 <button class="btn-primary" onclick="router.navigate('/')">
                     Go to Home
                 </button>
@@ -49,74 +71,16 @@ async function renderPricePredictorPage() {
     }
 }
 
-function calculatePriceChangePredictions(players) {
-    const predictions = {
-        risers: [],
-        fallers: [],
-        stable: []
-    };
-
-    players.forEach(player => {
-        const ownership = parseFloat(player.selected_by_percent) || 0;
-        const transfersIn = player.transfers_in_event || 0;
-        const transfersOut = player.transfers_out_event || 0;
-        const netTransfers = transfersIn - transfersOut;
-
-        // Calculate transfer delta percentage
-        // Formula based on common FPL price change mechanics
-        const transferDelta = ownership > 0 ? (netTransfers / (ownership * 10000)) : 0;
-
-        // Price change thresholds (simplified model)
-        // Real FPL algorithm is more complex and proprietary
-        const riseThreshold = 0.5;  // 50% transfer delta
-        const fallThreshold = -0.5; // -50% transfer delta
-
-        // Determine likelihood (0-100%)
-        let likelihood = 0;
-        let prediction = 'stable';
-
-        if (transferDelta > 0) {
-            likelihood = Math.min(100, (transferDelta / riseThreshold) * 100);
-            if (likelihood >= 80) {
-                prediction = 'rise';
-            }
-        } else if (transferDelta < 0) {
-            likelihood = Math.min(100, (Math.abs(transferDelta) / Math.abs(fallThreshold)) * 100);
-            if (likelihood >= 80) {
-                prediction = 'fall';
-            }
-        }
-
-        const playerData = {
-            ...player,
-            netTransfers,
-            transferDelta,
-            likelihood: Math.round(likelihood),
-            prediction
-        };
-
-        if (prediction === 'rise') {
-            predictions.risers.push(playerData);
-        } else if (prediction === 'fall') {
-            predictions.fallers.push(playerData);
-        } else if (Math.abs(transferDelta) > 0.1) {
-            predictions.stable.push(playerData);
-        }
-    });
-
-    // Sort by likelihood
-    predictions.risers.sort((a, b) => b.likelihood - a.likelihood);
-    predictions.fallers.sort((a, b) => b.likelihood - a.likelihood);
-    predictions.stable.sort((a, b) => Math.abs(b.transferDelta) - Math.abs(a.transferDelta));
-
-    return predictions;
-}
+// Old calculation function removed - now using backend API
 
 function renderPricePredictorHub(predictions) {
     const app = document.getElementById('app');
 
-    const now = new Date();
-    const lastUpdated = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    const lastUpdated = predictions.metadata?.last_data_update
+        ? new Date(predictions.metadata.last_data_update).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+        : 'Unknown';
+
+    const chipDiscount = predictions.metadata?.chip_discount_applied || 'Unknown';
 
     app.innerHTML = `
         <div class="price-predictor-container">
@@ -127,8 +91,40 @@ function renderPricePredictorHub(predictions) {
                         <p class="subtitle text-base-sm mt-xs">
                             Predicted price changes for tonight • Last updated: ${lastUpdated}
                         </p>
+                        <p class="text-xs text-tertiary mt-xs">
+                            Updates every 30 mins • ${chipDiscount} chip discount applied
+                        </p>
                     </div>
                 </div>
+
+                ${accuracyData && accuracyData.overall.total > 0 ? `
+                    <!-- Accuracy Section -->
+                    <div class="mb-1 p-sm" style="background: var(--bg-secondary); border-radius: var(--radius-md); border-left: 3px solid var(--secondary-color);">
+                        <h3 class="text-base" style="color: var(--secondary-color); margin-bottom: 0.5rem;">
+                            📊 Predictor Accuracy
+                        </h3>
+                        <div class="grid-3 gap-sm">
+                            <div class="text-center">
+                                <div class="text-xl" style="font-weight: 700; color: var(--accent-gold);">${accuracyData.overall.accuracy}%</div>
+                                <div class="text-xs text-tertiary">Overall</div>
+                                <div class="text-xs text-quaternary">${accuracyData.overall.correct}/${accuracyData.overall.total}</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-xl" style="font-weight: 700; color: var(--success);">${accuracyData.risers.accuracy}%</div>
+                                <div class="text-xs text-tertiary">Risers</div>
+                                <div class="text-xs text-quaternary">${accuracyData.risers.correct}/${accuracyData.risers.total}</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-xl" style="font-weight: 700; color: var(--error);">${accuracyData.fallers.accuracy}%</div>
+                                <div class="text-xs text-tertiary">Fallers</div>
+                                <div class="text-xs text-quaternary">${accuracyData.fallers.correct}/${accuracyData.fallers.total}</div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-tertiary mt-xs text-center">
+                            Based on ${accuracyData.overall.total} predictions over ${accuracyData.history.length} days • Algorithm uses daily transfer deltas, not cumulative gameweek totals
+                        </p>
+                    </div>
+                ` : ''}
 
                 <!-- Summary Stats -->
                 <div class="price-summary">
@@ -155,7 +151,7 @@ function renderPricePredictorHub(predictions) {
                         Fallers (${predictions.fallers.length})
                     </button>
                     <button class="price-tab" data-tab="watch">
-                        Watch List (${predictions.stable.length})
+                        Watch List (${predictions.watchlist.length})
                     </button>
                 </div>
 
@@ -170,6 +166,7 @@ function renderPricePredictorHub(predictions) {
                         ` : `
                             <div class="empty-state">
                                 <p>No players predicted to rise tonight</p>
+                                <p class="text-xs text-tertiary">Check back later or wait for transfer tracking to accumulate data</p>
                             </div>
                         `}
                     </div>
@@ -183,19 +180,21 @@ function renderPricePredictorHub(predictions) {
                         ` : `
                             <div class="empty-state">
                                 <p>No players predicted to fall tonight</p>
+                                <p class="text-xs text-tertiary">Check back later or wait for transfer tracking to accumulate data</p>
                             </div>
                         `}
                     </div>
 
                     <!-- Watch List -->
                     <div class="tab-pane" data-pane="watch">
-                        ${predictions.stable.length > 0 ? `
+                        ${predictions.watchlist.length > 0 ? `
                             <div class="price-players-list">
-                                ${predictions.stable.slice(0, 30).map(player => renderPricePlayerRow(player, 'watch')).join('')}
+                                ${predictions.watchlist.slice(0, 30).map(player => renderPricePlayerRow(player, 'watch')).join('')}
                             </div>
                         ` : `
                             <div class="empty-state">
                                 <p>No players on watch list</p>
+                                <p class="text-xs text-tertiary">Players with moderate transfer activity will appear here</p>
                             </div>
                         `}
                     </div>
@@ -209,17 +208,15 @@ function renderPricePredictorHub(predictions) {
 }
 
 function renderPricePlayerRow(player, type) {
-    const team = teamCache[player.team];
+    // Get player data from bootstrap for team info
+    const playerData = bootstrapCache.elements.find(p => p.id === player.id);
+    const team = playerData ? teamCache[playerData.team] : null;
     const positionNames = ['', 'GKP', 'DEF', 'MID', 'FWD'];
-    const position = positionNames[player.element_type] || '???';
-    const price = (player.now_cost / 10).toFixed(1);
-    const newPrice = type === 'rise'
-        ? ((player.now_cost + 1) / 10).toFixed(1)
-        : type === 'fall'
-            ? ((player.now_cost - 1) / 10).toFixed(1)
-            : price;
+    const position = playerData ? positionNames[playerData.element_type] : '???';
 
-    const ownership = parseFloat(player.selected_by_percent).toFixed(1);
+    const price = (player.now_cost / 10).toFixed(1);
+    const predictedPrice = (player.predicted_price / 10).toFixed(1);
+    const ownership = player.ownership.toFixed(1);
 
     // Get arrow and color based on type
     let arrow = '';
@@ -235,14 +232,20 @@ function renderPricePlayerRow(player, type) {
         colorClass = 'price-watch';
     }
 
+    // Confidence badge
+    const confidenceBadge = player.confidence === 'high' ? '🔥 High'
+        : player.confidence === 'medium' ? '⚠️ Medium'
+        : '📊 Low';
+
     return `
         <div class="price-player-row ${colorClass}">
             <div class="price-player-info">
                 <div class="price-player-name">
                     <strong>${player.web_name}</strong>
                     <span class="price-player-meta">
-                        <span class="player-position position-${player.element_type}">${position}</span>
+                        <span class="player-position position-${playerData?.element_type || 0}">${position}</span>
                         <span>${team ? team.short_name : '???'}</span>
+                        <span style="color: var(--text-quaternary); font-size: 0.7rem;">• ${confidenceBadge}</span>
                     </span>
                 </div>
             </div>
@@ -251,13 +254,13 @@ function renderPricePlayerRow(player, type) {
                 <div class="price-stat">
                     <span class="price-stat-label">Price</span>
                     <span class="price-stat-value">
-                        £${price}m ${arrow} £${newPrice}m
+                        £${price}m ${arrow} £${predictedPrice}m
                     </span>
                 </div>
                 <div class="price-stat">
-                    <span class="price-stat-label">Net Transfers</span>
-                    <span class="price-stat-value ${player.netTransfers > 0 ? 'positive' : 'negative'}">
-                        ${player.netTransfers > 0 ? '+' : ''}${player.netTransfers.toLocaleString()}
+                    <span class="price-stat-label">Daily Net</span>
+                    <span class="price-stat-value ${player.effective_net_transfers > 0 ? 'positive' : 'negative'}">
+                        ${player.effective_net_transfers > 0 ? '+' : ''}${player.effective_net_transfers.toLocaleString()}
                     </span>
                 </div>
                 <div class="price-stat">

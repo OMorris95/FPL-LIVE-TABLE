@@ -27,5 +27,7 @@ app.listen(PORT, () => {
     console.log(`API available at http://localhost:${PORT}/api`);
 });
 
-// Start cron job for automated updates
-require('./cron/updateOwnership');
+// Start cron jobs
+require('./cron/updateOwnership');      // Top 10k ownership (Saturdays 2 AM)
+require('./cron/trackTransfers');       // Transfer tracking (Every 30 mins)
+require('./cron/verifyPriceChanges');   // Price verification & reset (Daily 3 AM)
