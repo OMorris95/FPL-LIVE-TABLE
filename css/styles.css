@@ -860,3 +860,211 @@ select.form-input {
 .my-stats-container .card.empty-section {
     display: none;
 }
+
+/* ============================================
+   FIXTURES PAGE - FDR MATRIX
+   ============================================ */
+
+.fixtures-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--spacing-sm);
+}
+
+.fixtures-container .card {
+    padding: 1rem;
+}
+
+/* FDR Legend */
+.fdr-legend {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    flex-wrap: wrap;
+}
+
+.fdr-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.fdr-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.fdr-legend-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* FDR Table Container */
+.fdr-table-container {
+    overflow-x: auto;
+    border-radius: 8px;
+    background: var(--bg-secondary);
+}
+
+.fdr-matrix {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.fdr-matrix thead {
+    background: var(--card-bg-elevated);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.fdr-matrix th {
+    padding: 0.75rem 0.5rem;
+    text-align: center;
+    font-weight: 600;
+    color: var(--accent-gold);
+    border-bottom: 2px solid var(--border-color);
+    white-space: nowrap;
+}
+
+.fdr-matrix th.team-column {
+    text-align: left;
+    padding-left: 1rem;
+    min-width: 120px;
+}
+
+.fdr-matrix tbody tr {
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s ease;
+}
+
+.fdr-matrix tbody tr:hover {
+    background: rgba(255, 197, 0, 0.05);
+}
+
+.fdr-matrix td {
+    padding: 0.75rem 0.5rem;
+    text-align: center;
+}
+
+.fdr-matrix td.team-name {
+    text-align: left;
+    padding-left: 1rem;
+    font-weight: 500;
+}
+
+/* FDR Cell Content */
+.fdr-cell {
+    position: relative;
+}
+
+.fdr-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.fdr-opponent {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.fdr-location {
+    font-size: 0.7rem;
+    padding: 0.125rem 0.35rem;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+.fdr-location.home {
+    background: rgba(0, 230, 118, 0.2);
+    color: var(--success);
+}
+
+.fdr-location.away {
+    background: rgba(255, 171, 0, 0.2);
+    color: var(--warning);
+}
+
+/* FDR Difficulty Colors */
+.fdr-easy {
+    background: rgba(0, 230, 118, 0.15);
+    color: #00e676;
+}
+
+.fdr-easy .fdr-opponent {
+    color: #00e676;
+}
+
+.fdr-medium {
+    background: rgba(255, 193, 7, 0.15);
+    color: #ffc107;
+}
+
+.fdr-medium .fdr-opponent {
+    color: #ffc107;
+}
+
+.fdr-hard {
+    background: rgba(255, 152, 0, 0.15);
+    color: #ff9800;
+}
+
+.fdr-hard .fdr-opponent {
+    color: #ff9800;
+}
+
+.fdr-very-hard {
+    background: rgba(244, 67, 54, 0.15);
+    color: #f44336;
+}
+
+.fdr-very-hard .fdr-opponent {
+    color: #f44336;
+}
+
+.fdr-blank {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .fdr-matrix {
+        font-size: 0.75rem;
+    }
+
+    .fdr-matrix th,
+    .fdr-matrix td {
+        padding: 0.5rem 0.25rem;
+    }
+
+    .fdr-matrix th.team-column,
+    .fdr-matrix td.team-name {
+        padding-left: 0.5rem;
+        min-width: 80px;
+    }
+
+    .fdr-opponent {
+        font-size: 0.75rem;
+    }
+
+    .fdr-location {
+        font-size: 0.65rem;
+        padding: 0.1rem 0.25rem;
+    }
+
+    .fdr-legend {
+        gap: 1rem;
+        font-size: 0.75rem;
+    }
+}
