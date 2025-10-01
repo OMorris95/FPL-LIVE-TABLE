@@ -196,26 +196,26 @@ function renderFormation(positions, teamMap) {
 
     return `
         <div class="formation-row">
-            ${forwards.map(p => renderPlayerCard(p, teamMap)).join('')}
+            ${forwards.map(p => renderDreamTeamPlayerCard(p, teamMap)).join('')}
         </div>
         <div class="formation-row">
-            ${midfielders.map(p => renderPlayerCard(p, teamMap)).join('')}
+            ${midfielders.map(p => renderDreamTeamPlayerCard(p, teamMap)).join('')}
         </div>
         <div class="formation-row">
-            ${defenders.map(p => renderPlayerCard(p, teamMap)).join('')}
+            ${defenders.map(p => renderDreamTeamPlayerCard(p, teamMap)).join('')}
         </div>
         <div class="formation-row">
-            ${goalkeepers.map(p => renderPlayerCard(p, teamMap)).join('')}
+            ${goalkeepers.map(p => renderDreamTeamPlayerCard(p, teamMap)).join('')}
         </div>
     `;
 }
 
-function renderPlayerCard(player, teamMap) {
+function renderDreamTeamPlayerCard(player, teamMap) {
     const team = teamMap[player.team];
     const teamShortName = team ? team.short_name : '';
 
     return `
-        <div class="player-card">
+        <div class="dream-team-player-card">
             <div class="player-name">${player.name}</div>
             <div style="font-size: 0.75rem; color: #666;">${teamShortName}</div>
             <div class="player-points">${player.points} pts</div>

@@ -130,12 +130,22 @@ class Router {
      */
     setLeagueId(leagueId) {
         this.currentLeagueId = leagueId;
+        // Persist to localStorage
+        if (leagueId) {
+            localStorage.setItem('fpl_league_id', leagueId);
+        }
     }
 
     /**
      * Initialize router with current path
      */
     init() {
+        // Try to restore league ID from localStorage
+        const storedLeagueId = localStorage.getItem('fpl_league_id');
+        if (storedLeagueId) {
+            this.currentLeagueId = storedLeagueId;
+        }
+
         if (this.useHashRouting) {
             // Hash-based routing
             if (window.location.hash) {
@@ -151,6 +161,7 @@ class Router {
 
             if (leagueId) {
                 this.currentLeagueId = leagueId;
+                localStorage.setItem('fpl_league_id', leagueId);
             }
 
             this.loadRoute(window.location.pathname, leagueId);

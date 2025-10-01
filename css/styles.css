@@ -77,10 +77,13 @@ body {
 }
 
 .nav-brand h1 {
-    color: #ffffff;
+    background: var(--fire-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     font-size: 1.75rem;
     font-weight: 700;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    text-shadow: none;
     white-space: nowrap;
 }
 
@@ -459,45 +462,33 @@ select.form-input {
     margin-bottom: var(--spacing-sm);
 }
 
-.player-card {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(245, 245, 245, 0.95));
+.dream-team-player-card {
+    background-color: rgba(255, 255, 255, 0.95);
     border-radius: 8px;
-    padding: 8px 12px;
-    min-width: 100px;
+    padding: 0.75rem;
+    min-width: 120px;
     text-align: center;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.5), 0 0 0 2px var(--accent-gold);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
 
-.player-card:hover {
-    transform: translateY(-3px) scale(1.03);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.6), 0 0 0 2px var(--accent-orange);
+.dream-team-player-card .player-name {
+    font-weight: bold;
+    color: #000000 !important;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+    text-align: center;
 }
 
-.player-card .player-name {
-    font-weight: 700;
-    color: #1a1a1a;
-    font-size: 0.85rem;
-    margin-bottom: 3px;
-    text-transform: uppercase;
-    letter-spacing: 0.2px;
+.dream-team-player-card .player-points {
+    color: #00a656;
+    font-weight: bold;
+    font-size: 1.1rem;
 }
 
-.player-card .player-points {
-    background: var(--fire-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-weight: 700;
-    font-size: 1rem;
-    margin: 3px 0;
-}
-
-.player-card .player-stats {
-    font-size: 0.7rem;
-    color: #444;
-    margin-top: 3px;
-    font-weight: 600;
+.dream-team-player-card .player-stats {
+    font-size: 0.75rem;
+    color: #666;
+    margin-top: 0.25rem;
 }
 
 /* ============================================
@@ -1066,5 +1057,623 @@ select.form-input {
     .fdr-legend {
         gap: 1rem;
         font-size: 0.75rem;
+    }
+}
+
+/* ============================================
+   PLAYERS PAGE - PLAYER STATS HUB
+   ============================================ */
+
+.players-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--spacing-sm);
+}
+
+.players-container .card {
+    padding: 1rem;
+}
+
+/* Filters Section */
+.players-filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-search {
+    grid-column: span 2;
+}
+
+.filter-price {
+    grid-column: span 2;
+}
+
+.form-input,
+.form-select {
+    padding: 0.5rem 0.75rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-color);
+    font-size: 0.875rem;
+    transition: border-color 0.2s ease;
+}
+
+.form-input:focus,
+.form-select:focus {
+    outline: none;
+    border-color: var(--accent-gold);
+}
+
+.price-slider {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border-color);
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.price-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent-gold);
+    cursor: pointer;
+}
+
+.price-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent-gold);
+    cursor: pointer;
+    border: none;
+}
+
+/* Results Count */
+.players-results-count {
+    text-align: center;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background: var(--bg-secondary);
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.players-results-count strong {
+    color: var(--accent-gold);
+}
+
+/* Players Grid */
+.players-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+/* Player Card */
+.player-card {
+    background: var(--card-bg);
+    border: 1px solid #ffffff;
+    border-radius: 8px;
+    padding: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.player-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-gold);
+}
+
+.player-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.player-name-section {
+    flex: 1;
+}
+
+.player-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color) !important;
+    margin-bottom: 0.25rem;
+    text-align: left;
+}
+
+.player-meta {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.player-position {
+    font-size: 0.7rem;
+    padding: 0.125rem 0.4rem;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+.position-1 {
+    background: rgba(255, 152, 0, 0.2);
+    color: #ff9800;
+}
+
+.position-2 {
+    background: rgba(0, 230, 118, 0.2);
+    color: #00e676;
+}
+
+.position-3 {
+    background: rgba(33, 150, 243, 0.2);
+    color: #2196f3;
+}
+
+.position-4 {
+    background: rgba(244, 67, 54, 0.2);
+    color: #f44336;
+}
+
+.player-team {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.player-price {
+    text-align: right;
+}
+
+.price-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+}
+
+.price-change {
+    font-size: 0.7rem;
+    margin-top: 0.125rem;
+}
+
+.price-up {
+    color: var(--success);
+}
+
+.price-down {
+    color: var(--error);
+}
+
+/* Status Badges */
+.player-status-badges {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.player-status-badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.player-status-badge.injury {
+    background: rgba(255, 152, 0, 0.2);
+    color: #ff9800;
+}
+
+.player-status-badge.news {
+    background: rgba(33, 150, 243, 0.2);
+    color: #2196f3;
+}
+
+.player-news-text {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    width: 100%;
+    margin-top: 0.25rem;
+}
+
+/* Player Stats Grid */
+.player-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.player-stats-grid .stat-item {
+    text-align: center;
+}
+
+.player-stats-grid .stat-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--accent-gold) !important;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: var(--accent-gold) !important;
+}
+
+.player-stats-grid .stat-label {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    margin-top: 0.125rem;
+}
+
+/* Performance Stats */
+.player-performance-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    padding: 0.75rem;
+    background: var(--bg-secondary);
+    border-radius: 6px;
+}
+
+.perf-stat {
+    display: flex;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+}
+
+.perf-label {
+    color: var(--text-secondary);
+}
+
+.perf-value {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* Card Footer */
+.player-card-footer {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.75rem;
+}
+
+.footer-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    text-align: center;
+}
+
+.footer-stat span {
+    color: var(--text-secondary);
+}
+
+.footer-stat strong {
+    color: var(--text-color);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .players-filters {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-search,
+    .filter-price {
+        grid-column: span 1;
+    }
+
+    .players-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .player-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ============================================
+   PRICE PREDICTOR PAGE
+   ============================================ */
+
+.price-predictor-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-sm);
+}
+
+.price-predictor-container .card {
+    padding: 1rem;
+}
+
+/* Disclaimer */
+.price-disclaimer {
+    background: rgba(255, 152, 0, 0.1);
+    border-left: 3px solid var(--warning);
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.price-disclaimer strong {
+    color: var(--warning);
+}
+
+/* Summary Stats */
+.price-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.summary-stat {
+    text-align: center;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+}
+
+.summary-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+}
+
+.stat-risers .summary-value {
+    color: var(--success);
+}
+
+.stat-fallers .summary-value {
+    color: var(--error);
+}
+
+.summary-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+}
+
+/* Tabs */
+.price-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.price-tab {
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.price-tab:hover {
+    color: var(--text-color);
+    background: rgba(255, 197, 0, 0.05);
+}
+
+.price-tab.active {
+    color: var(--accent-gold);
+    border-bottom-color: var(--accent-gold);
+}
+
+/* Tab Content */
+.price-tab-content {
+    min-height: 400px;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-secondary);
+}
+
+.empty-state p {
+    font-size: 1rem;
+}
+
+/* Price Players List */
+.price-players-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.price-player-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.price-player-row:hover {
+    border-color: var(--accent-gold);
+    transform: translateX(4px);
+}
+
+.price-player-row.price-rise {
+    border-left: 3px solid var(--success);
+}
+
+.price-player-row.price-fall {
+    border-left: 3px solid var(--error);
+}
+
+.price-player-row.price-watch {
+    border-left: 3px solid var(--warning);
+}
+
+.price-player-info {
+    flex: 1;
+}
+
+.price-player-name {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.price-player-name strong {
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+.price-player-meta {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* Price Stats */
+.price-stats {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.price-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.price-stat-label {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+.price-stat-value {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.price-stat-value.positive {
+    color: var(--success);
+}
+
+.price-stat-value.negative {
+    color: var(--error);
+}
+
+/* Likelihood Bar */
+.likelihood-bar {
+    position: relative;
+    width: 100px;
+    height: 24px;
+    background: var(--bg-secondary);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.likelihood-fill {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.likelihood-fill.price-rise {
+    background: var(--success);
+}
+
+.likelihood-fill.price-fall {
+    background: var(--error);
+}
+
+.likelihood-fill.price-watch {
+    background: var(--warning);
+}
+
+.likelihood-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-color);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .price-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .price-tabs {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .price-tab {
+        border-bottom: 1px solid var(--border-color);
+        border-left: 3px solid transparent;
+    }
+
+    .price-tab.active {
+        border-bottom-color: var(--border-color);
+        border-left-color: var(--accent-gold);
+    }
+
+    .price-player-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .price-stats {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .likelihood-bar {
+        width: 100%;
     }
 }
