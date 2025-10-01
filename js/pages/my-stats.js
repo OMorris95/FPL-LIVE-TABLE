@@ -1,16 +1,18 @@
 // My Stats Page - Personal Manager Dashboard
 
-async function renderMyStatsPage() {
+async function renderMyStatsPage(paramManagerId) {
     const app = document.getElementById('app');
     const nav = document.getElementById('main-nav');
 
     // Show navigation
     nav.style.display = 'block';
 
-    // Check if manager ID is stored
+    // Determine which manager ID to use
+    // Priority: URL parameter > localStorage
     const storedManagerId = localStorage.getItem('fpl_manager_id');
+    const managerIdToLoad = paramManagerId || storedManagerId;
 
-    if (!storedManagerId) {
+    if (!managerIdToLoad) {
         // Show manager ID input form
         app.innerHTML = `
             <div class="card text-center" style="max-width: 600px; margin: 2rem auto;">
@@ -66,9 +68,23 @@ async function renderMyStatsPage() {
 
     try {
         // Fetch manager data
-        const managerId = parseInt(storedManagerId);
+        const managerId = parseInt(managerIdToLoad);
         const bootstrapData = await getBootstrapData();
         const currentGw = getCurrentGameweek(bootstrapData);
+
+        // Check if we have a league ID to fetch league managers
+        const leagueId = router.getLeagueId();
+        let leagueManagers = null;
+        if (leagueId) {
+            try {
+                const leagueData = await getLeagueData(leagueId);
+                if (leagueData && leagueData.standings && leagueData.standings.results) {
+                    leagueManagers = leagueData.standings.results;
+                }
+            } catch (err) {
+                console.log('Could not fetch league data for manager selector:', err);
+            }
+        }
 
         // Fetch all required data
         const [managerData, historyData, currentPicks] = await Promise.all([
@@ -82,7 +98,7 @@ async function renderMyStatsPage() {
         }
 
         // Render dashboard
-        renderManagerDashboard(managerData, historyData, currentPicks, bootstrapData, currentGw, managerId);
+        renderManagerDashboard(managerData, historyData, currentPicks, bootstrapData, currentGw, managerId, storedManagerId, leagueManagers);
 
     } catch (error) {
         console.error('Error loading My Stats:', error);
@@ -108,8 +124,11 @@ async function getManagerHistory(managerId) {
     return await fetchData(`${API_BASE_URL}entry/${managerId}/history/`);
 }
 
-function renderManagerDashboard(managerData, historyData, currentPicks, bootstrapData, currentGw, managerId) {
+function renderManagerDashboard(managerData, historyData, currentPicks, bootstrapData, currentGw, managerId, ownManagerId, leagueManagers) {
     const app = document.getElementById('app');
+
+    // Check if viewing own stats or another manager
+    const isOwnStats = (!ownManagerId) || (managerId == ownManagerId);
 
     // Calculate stats
     const currentRank = managerData.summary_overall_rank;
@@ -186,14 +205,32 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
         <div class="my-stats-container">
             <!-- Header Card -->
             <div class="card">
-                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                     <div>
                         <h2 class="card-title">${managerData.player_first_name} ${managerData.player_last_name}</h2>
                         <p style="color: #aaa; margin: 0;">${managerData.name}</p>
+                        ${!isOwnStats ? `<p style="color: var(--accent-gold); margin: 0.5rem 0 0 0; font-size: 0.875rem;">Viewing League Manager</p>` : ''}
                     </div>
-                    <button class="btn-secondary-small" onclick="localStorage.removeItem('fpl_manager_id'); router.navigate('/my-stats');">
-                        Change Manager
-                    </button>
+                    <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                        ${leagueManagers ? `
+                            <select id="league-manager-selector" class="form-select" style="min-width: 200px;">
+                                <option value="">View League Manager...</option>
+                                ${leagueManagers.map(mgr => `
+                                    <option value="${mgr.entry}" ${mgr.entry == managerId ? 'selected' : ''}>
+                                        ${mgr.player_name} (${mgr.entry_name})
+                                    </option>
+                                `).join('')}
+                            </select>
+                        ` : ''}
+                        ${!isOwnStats && ownManagerId ? `
+                            <button class="btn-secondary-small" onclick="router.navigate('/my-stats');">
+                                View My Stats
+                            </button>
+                        ` : ''}
+                        <button class="btn-secondary-small" onclick="localStorage.removeItem('fpl_manager_id'); router.navigate('/my-stats');">
+                            Change Manager
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Key Stats Grid - Compact 6 Column -->
@@ -330,6 +367,17 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
             </div>
         </div>
     `;
+
+    // Add event listener for league manager selector
+    const managerSelector = document.getElementById('league-manager-selector');
+    if (managerSelector) {
+        managerSelector.addEventListener('change', (e) => {
+            const selectedManagerId = e.target.value;
+            if (selectedManagerId) {
+                renderMyStatsPage(selectedManagerId);
+            }
+        });
+    }
 }
 
 // Helper function to calculate captain stats
