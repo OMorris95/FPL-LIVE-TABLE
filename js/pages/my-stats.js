@@ -374,7 +374,7 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
         managerSelector.addEventListener('change', (e) => {
             const selectedManagerId = e.target.value;
             if (selectedManagerId) {
-                renderMyStatsPage(selectedManagerId);
+                viewManagerStats(selectedManagerId);
             }
         });
     }
@@ -395,5 +395,10 @@ function calculateCaptainStats(seasonHistory) {
     };
 }
 
-// Register route
-router.addRoute('/my-stats', renderMyStatsPage);
+// Global function to view specific manager stats
+window.viewManagerStats = function(managerId) {
+    renderMyStatsPage(managerId);
+};
+
+// Register route - wrapped to prevent league ID from being passed as manager ID
+router.addRoute('/my-stats', () => renderMyStatsPage());

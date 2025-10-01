@@ -1,5 +1,25 @@
 // League Stats Page - Captain analytics, ownership, chip tracking
 
+// League navigation buttons helper
+function renderLeagueNavButtons(currentPage, leagueId) {
+    const buttons = [];
+
+    if (currentPage !== 'table') {
+        buttons.push(`<button class="btn-primary" onclick="router.navigate('/', {leagueId: '${leagueId}'})">League Table</button>`);
+    }
+    if (currentPage !== 'dream-team') {
+        buttons.push(`<button class="btn-primary" onclick="router.navigate('/dream-team', {leagueId: '${leagueId}'})">Dream Team</button>`);
+    }
+    if (currentPage !== 'league-stats') {
+        buttons.push(`<button class="btn-primary" onclick="router.navigate('/league-stats', {leagueId: '${leagueId}'})">League Stats</button>`);
+    }
+    if (currentPage !== 'comparison') {
+        buttons.push(`<button class="btn-primary" onclick="router.navigate('/comparison', {leagueId: '${leagueId}'})">Manager Comparison</button>`);
+    }
+
+    return `<div style="display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">${buttons.join('')}</div>`;
+}
+
 async function renderLeagueStatsPage(leagueId) {
     const app = document.getElementById('app');
     const nav = document.getElementById('main-nav');
@@ -40,10 +60,6 @@ async function renderLeagueStatsPage(leagueId) {
             throw new Error('Could not fetch league data');
         }
 
-        // Update nav with league name
-        document.getElementById('nav-league-name').textContent = leagueData.league.name;
-        document.querySelector('.nav-league-info').style.display = 'flex';
-
         const playerMap = createPlayerMap(bootstrapData);
         const liveData = await getLiveGameweekData(currentGw);
 
@@ -69,7 +85,8 @@ async function renderLeagueStatsPage(leagueId) {
             currentGw,
             captainStats,
             ownershipStats,
-            chipStats
+            chipStats,
+            leagueId
         );
 
     } catch (error) {
@@ -82,11 +99,6 @@ async function renderLeagueStatsPage(leagueId) {
             </div>
         `;
     }
-
-    // Change league button handler
-    document.getElementById('nav-change-league').addEventListener('click', () => {
-        router.navigate('/');
-    });
 }
 
 function analyzeCaptainPicks(allPicksData, managers, playerMap, liveData) {
@@ -197,11 +209,14 @@ function analyzeChipUsage(allPicksData, managers) {
     return chipUsage;
 }
 
-function renderLeagueStats(leagueName, gameweek, captainStats, ownershipStats, chipStats) {
+function renderLeagueStats(leagueName, gameweek, captainStats, ownershipStats, chipStats, leagueId) {
     const app = document.getElementById('app');
 
     app.innerHTML = `
         <div class="league-stats-container">
+            <!-- League Navigation Buttons -->
+            ${renderLeagueNavButtons('league-stats', leagueId)}
+
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">${leagueName} - Statistics GW ${gameweek}</h2>

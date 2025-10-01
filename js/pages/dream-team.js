@@ -1,5 +1,25 @@
 // Dream Team Page - Shows optimal XI from league
 
+// League navigation buttons helper
+function renderLeagueNavButtons(currentPage, leagueId) {
+    const buttons = [];
+
+    if (currentPage !== 'table') {
+        buttons.push(`<button class="btn-primary" onclick="router.navigate('/', {leagueId: '${leagueId}'})">League Table</button>`);
+    }
+    if (currentPage !== 'dream-team') {
+        buttons.push(`<button class="btn-primary" onclick="router.navigate('/dream-team', {leagueId: '${leagueId}'})">Dream Team</button>`);
+    }
+    if (currentPage !== 'league-stats') {
+        buttons.push(`<button class="btn-primary" onclick="router.navigate('/league-stats', {leagueId: '${leagueId}'})">League Stats</button>`);
+    }
+    if (currentPage !== 'comparison') {
+        buttons.push(`<button class="btn-primary" onclick="router.navigate('/comparison', {leagueId: '${leagueId}'})">Manager Comparison</button>`);
+    }
+
+    return `<div style="display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">${buttons.join('')}</div>`;
+}
+
 async function renderDreamTeamPage(leagueId) {
     const app = document.getElementById('app');
     const nav = document.getElementById('main-nav');
@@ -46,10 +66,6 @@ async function renderDreamTeamPage(leagueId) {
             throw new Error('Could not fetch league data');
         }
 
-        // Update nav with league name
-        document.getElementById('nav-league-name').textContent = leagueData.league.name;
-        document.querySelector('.nav-league-info').style.display = 'flex';
-
         const completedGwData = await getLiveGameweekData(lastCompletedGw);
         const playerMap = createPlayerMap(bootstrapData);
         const teamMap = createTeamMap(bootstrapData);
@@ -89,7 +105,8 @@ async function renderDreamTeamPage(leagueId) {
             totalPoints,
             lastCompletedGw,
             leagueData.league.name,
-            teamMap
+            teamMap,
+            leagueId
         );
 
     } catch (error) {
@@ -102,18 +119,16 @@ async function renderDreamTeamPage(leagueId) {
             </div>
         `;
     }
-
-    // Change league button handler
-    document.getElementById('nav-change-league').addEventListener('click', () => {
-        router.navigate('/');
-    });
 }
 
-function renderDreamTeam(positions, playerOfWeek, formation, totalPoints, gameweek, leagueName, teamMap) {
+function renderDreamTeam(positions, playerOfWeek, formation, totalPoints, gameweek, leagueName, teamMap, leagueId) {
     const app = document.getElementById('app');
 
     app.innerHTML = `
         <div class="dream-team-container">
+            <!-- League Navigation Buttons -->
+            ${renderLeagueNavButtons('dream-team', leagueId)}
+
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">${leagueName} - Dream Team GW ${gameweek}</h2>

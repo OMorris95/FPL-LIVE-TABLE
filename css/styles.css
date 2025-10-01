@@ -144,8 +144,8 @@ body {
    ============================================ */
 
 .btn-primary {
-    background: var(--fire-gradient);
-    color: #ffffff;
+    background: #ffc500;
+    color: #1a1a1a;
     border: none;
     padding: 14px 32px;
     border-radius: 10px;
@@ -159,7 +159,7 @@ body {
 }
 
 .btn-primary:hover {
-    background: var(--fire-gradient-hover);
+    background: #ffdb4d;
     transform: translateY(-3px);
     box-shadow: var(--shadow-glow);
 }
