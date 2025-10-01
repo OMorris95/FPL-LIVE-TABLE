@@ -5,7 +5,9 @@
       "WebFetch(domain:fantasy.premierleague.com)",
       "WebFetch(domain:www.oliverlooney.com)",
       "WebFetch(domain:medium.com)",
-      "WebFetch(domain:www.game-change.co.uk)"
+      "WebFetch(domain:www.game-change.co.uk)",
+      "WebFetch(domain:allaboutfpl.com)",
+      "WebFetch(domain:www.fiso.co.uk)"
     ],
     "deny": [],
     "ask": []

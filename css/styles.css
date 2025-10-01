@@ -981,14 +981,7 @@ select.form-input {
     gap: 0.75rem;
 }
 
-/* Compact spacing utilities */
-.mb-1 {
-    margin-bottom: 0.75rem;
-}
-
-.mt-1 {
-    margin-top: 0.75rem;
-}
+/* Compact spacing utilities - using legacy support classes defined above */
 
 /* Gameweek table compact */
 .gameweek-table-compact {
@@ -1940,6 +1933,36 @@ select.form-input {
 .ownership-table th,
 .ownership-table td {
     padding: 0.5rem;
+}
+
+/* Tier Selector Buttons */
+.tier-btn {
+    padding: 0.75rem 1.5rem;
+    background: var(--card-bg-elevated);
+    color: var(--text-color);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: var(--font-base-sm);
+    transition: all 0.2s ease;
+}
+
+.tier-btn:hover:not(:disabled) {
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+    transform: translateY(-2px);
+}
+
+.tier-btn.active {
+    background: var(--accent-gold);
+    color: var(--bg-color);
+    border-color: var(--accent-gold);
+}
+
+.tier-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 /* ============================================
