@@ -7,7 +7,8 @@
       "WebFetch(domain:medium.com)",
       "WebFetch(domain:www.game-change.co.uk)",
       "WebFetch(domain:allaboutfpl.com)",
-      "WebFetch(domain:www.fiso.co.uk)"
+      "WebFetch(domain:www.fiso.co.uk)",
+      "Bash(node -e \"console.log([''100'', ''100_test'', ''1k'', ''10k''].includes(''100_test''))\")"
     ],
     "deny": [],
     "ask": []

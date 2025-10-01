@@ -14,8 +14,8 @@ router.get('/ownership/:tier/:gameweek', async (req, res) => {
         const { tier, gameweek } = req.params;
 
         // Validate tier
-        if (!['100', '1k', '10k'].includes(tier)) {
-            return res.status(400).json({ error: 'Invalid tier. Must be 100, 1k, or 10k' });
+        if (!['100', '100_test', '1k', '10k'].includes(tier)) {
+            return res.status(400).json({ error: 'Invalid tier. Must be 100, 100_test, 1k, or 10k' });
         }
 
         // Validate gameweek
@@ -46,8 +46,8 @@ router.get('/ownership/:tier/latest', async (req, res) => {
         const { tier } = req.params;
 
         // Validate tier
-        if (!['100', '1k', '10k'].includes(tier)) {
-            return res.status(400).json({ error: 'Invalid tier. Must be 100, 1k, or 10k' });
+        if (!['100', '100_test', '1k', '10k'].includes(tier)) {
+            return res.status(400).json({ error: 'Invalid tier. Must be 100, 100_test, 1k, or 10k' });
         }
 
         // Get current gameweek

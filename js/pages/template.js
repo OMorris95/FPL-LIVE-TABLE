@@ -6,6 +6,20 @@ let cachedBootstrapData = null;
 let cachedPlayerMap = null;
 let cachedTeamMap = null;
 
+// Sorting state for tables
+let tableSortState = {
+    high: { column: 'ownership', direction: 'desc' },
+    medium: { column: 'ownership', direction: 'desc' },
+    differential: { column: 'ownership', direction: 'desc' }
+};
+
+// Store player data for re-sorting
+let tablePlayerData = {
+    high: [],
+    medium: [],
+    differential: []
+};
+
 async function renderTemplatePage() {
     const app = document.getElementById('app');
     const nav = document.getElementById('main-nav');
@@ -129,6 +143,7 @@ function getTierDisplayName(tier) {
     const names = {
         'overall': 'Overall',
         '100': 'Top 100',
+        '100_test': 'Top 100 (Test)',
         '1k': 'Top 1k',
         '10k': 'Top 10k'
     };
@@ -175,6 +190,16 @@ function renderTemplateTracker(allPlayers, teamMap, bootstrapData) {
     });
     templateCost = templateCost / 10;
 
+    // Store player data for each table (for sorting)
+    tablePlayerData.high = templatePlayers;
+    tablePlayerData.medium = allPlayers.filter(p =>
+        getOwnership(p) >= MEDIUM_OWNERSHIP &&
+        getOwnership(p) < HIGH_OWNERSHIP
+    ).slice(0, 20);
+    tablePlayerData.differential = allPlayers
+        .filter(p => getOwnership(p) < MEDIUM_OWNERSHIP && parseFloat(p.points_per_game) >= 5.0)
+        .slice(0, 20);
+
     // Backend status indicator
     const backendIndicator = backendStatus ? `
         <div class="mb-1 p-sm" style="background: var(--bg-secondary); border-radius: var(--radius-md); font-size: var(--font-base-sm);">
@@ -208,6 +233,9 @@ function renderTemplateTracker(allPlayers, teamMap, bootstrapData) {
                         <button class="tier-btn ${currentTier === '100' ? 'active' : ''}" onclick="loadAndRenderTier('100')" ${!backendStatus ? 'disabled' : ''}>
                             Top 100
                         </button>
+                        <button class="tier-btn ${currentTier === '100_test' ? 'active' : ''}" onclick="loadAndRenderTier('100_test')" ${!backendStatus ? 'disabled' : ''}>
+                            Top 100 (Test)
+                        </button>
                     </div>
                     ${!backendStatus ? '<p class="text-xs text-tertiary mt-xs">Backend data not available. Showing overall ownership.</p>' : ''}
                 </div>
@@ -240,7 +268,7 @@ function renderTemplateTracker(allPlayers, teamMap, bootstrapData) {
                     <h3 class="section-header">
                         High Ownership Players (>${HIGH_OWNERSHIP}%)
                     </h3>
-                    ${renderOwnershipTable(templatePlayers, teamMap, 'high')}
+                    ${renderOwnershipTable(tablePlayerData.high, teamMap, 'high')}
                 </div>
 
                 <!-- Medium Ownership Players -->
@@ -248,14 +276,7 @@ function renderTemplateTracker(allPlayers, teamMap, bootstrapData) {
                     <h3 class="section-header">
                         Medium Ownership Players (${MEDIUM_OWNERSHIP}-${HIGH_OWNERSHIP}%)
                     </h3>
-                    ${renderOwnershipTable(
-                        allPlayers.filter(p =>
-                            getOwnership(p) >= MEDIUM_OWNERSHIP &&
-                            getOwnership(p) < HIGH_OWNERSHIP
-                        ).slice(0, 20),
-                        teamMap,
-                        'medium'
-                    )}
+                    ${renderOwnershipTable(tablePlayerData.medium, teamMap, 'medium')}
                 </div>
 
                 <!-- Differential Players -->
@@ -263,13 +284,7 @@ function renderTemplateTracker(allPlayers, teamMap, bootstrapData) {
                     <h3 class="section-header">
                         Top Differential Players (<${MEDIUM_OWNERSHIP}% ownership, 5+ PPG)
                     </h3>
-                    ${renderOwnershipTable(
-                        allPlayers
-                            .filter(p => getOwnership(p) < MEDIUM_OWNERSHIP && parseFloat(p.points_per_game) >= 5.0)
-                            .slice(0, 20),
-                        teamMap,
-                        'differential'
-                    )}
+                    ${renderOwnershipTable(tablePlayerData.differential, teamMap, 'differential')}
                 </div>
             </div>
         </div>
@@ -334,19 +349,27 @@ function renderOwnershipTable(players, teamMap, type) {
         return `<p class="text-center text-tertiary p-sm">No players in this category</p>`;
     }
 
+    const state = tableSortState[type];
+    const getSortClass = (col) => {
+        if (state.column === col) {
+            return state.direction === 'asc' ? 'sort-asc' : 'sort-desc';
+        }
+        return '';
+    };
+
     return `
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto" id="${type}-table">
             <table class="data-table ownership-table">
                 <thead>
                     <tr>
-                        <th class="text-left">Player</th>
-                        <th class="text-left">Team</th>
-                        <th>Position</th>
-                        <th>Price</th>
-                        <th>Ownership</th>
-                        <th>Points</th>
-                        <th>Form</th>
-                        <th>PPG</th>
+                        <th class="text-left sortable-header ${getSortClass('player')}" onclick="handleTableSort('${type}', 'player')">Player</th>
+                        <th class="text-left sortable-header ${getSortClass('team')}" onclick="handleTableSort('${type}', 'team')">Team</th>
+                        <th class="sortable-header ${getSortClass('position')}" onclick="handleTableSort('${type}', 'position')">Position</th>
+                        <th class="sortable-header ${getSortClass('price')}" onclick="handleTableSort('${type}', 'price')">Price</th>
+                        <th class="sortable-header ${getSortClass('ownership')}" onclick="handleTableSort('${type}', 'ownership')">Ownership</th>
+                        <th class="sortable-header ${getSortClass('points')}" onclick="handleTableSort('${type}', 'points')">Points</th>
+                        <th class="sortable-header ${getSortClass('form')}" onclick="handleTableSort('${type}', 'form')">Form</th>
+                        <th class="sortable-header ${getSortClass('ppg')}" onclick="handleTableSort('${type}', 'ppg')">PPG</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -382,6 +405,123 @@ function getOwnershipClass(ownership) {
     if (ownership >= 30) return 'ownership-medium';
     if (ownership >= 10) return 'ownership-low';
     return 'ownership-differential';
+}
+
+/**
+ * Multi-level sort function for player tables
+ * Primary: specified column
+ * Secondary: ownership (if not primary)
+ * Tertiary: points (if not primary or secondary)
+ * Quaternary: lowest price
+ */
+function sortPlayers(players, column, direction) {
+    return [...players].sort((a, b) => {
+        const getOwnership = (p) => p.tier_ownership !== undefined ? p.tier_ownership : parseFloat(p.selected_by_percent);
+
+        // Get values for primary sort column
+        let aVal, bVal;
+
+        switch (column) {
+            case 'player':
+                aVal = a.second_name.toLowerCase();
+                bVal = b.second_name.toLowerCase();
+                break;
+            case 'team':
+                aVal = a.team;
+                bVal = b.team;
+                break;
+            case 'position':
+                aVal = a.element_type;
+                bVal = b.element_type;
+                break;
+            case 'price':
+                aVal = a.now_cost;
+                bVal = b.now_cost;
+                break;
+            case 'ownership':
+                aVal = getOwnership(a);
+                bVal = getOwnership(b);
+                break;
+            case 'points':
+                aVal = a.total_points;
+                bVal = b.total_points;
+                break;
+            case 'form':
+                aVal = parseFloat(a.form);
+                bVal = parseFloat(b.form);
+                break;
+            case 'ppg':
+                aVal = parseFloat(a.points_per_game);
+                bVal = parseFloat(b.points_per_game);
+                break;
+            default:
+                aVal = 0;
+                bVal = 0;
+        }
+
+        // Primary comparison
+        let result = 0;
+        if (aVal < bVal) result = -1;
+        else if (aVal > bVal) result = 1;
+
+        // Apply direction
+        if (direction === 'desc') result *= -1;
+
+        // If equal, use secondary sort: ownership (desc)
+        if (result === 0 && column !== 'ownership') {
+            const aOwn = getOwnership(a);
+            const bOwn = getOwnership(b);
+            result = bOwn - aOwn;
+        }
+
+        // If still equal, use tertiary sort: points (desc)
+        if (result === 0 && column !== 'points') {
+            result = b.total_points - a.total_points;
+        }
+
+        // If still equal, use quaternary sort: lowest price (asc)
+        if (result === 0 && column !== 'price') {
+            result = a.now_cost - b.now_cost;
+        }
+
+        return result;
+    });
+}
+
+/**
+ * Handles table header clicks for sorting
+ */
+window.handleTableSort = function(tableType, column) {
+    const state = tableSortState[tableType];
+
+    // Toggle direction if clicking same column, otherwise default to desc
+    if (state.column === column) {
+        state.direction = state.direction === 'desc' ? 'asc' : 'desc';
+    } else {
+        state.column = column;
+        state.direction = 'desc';
+    }
+
+    // Re-sort and re-render the table
+    const sortedPlayers = sortPlayers(tablePlayerData[tableType], column, state.direction);
+    tablePlayerData[tableType] = sortedPlayers;
+
+    // Re-render just this table
+    rerenderTable(tableType, sortedPlayers);
+};
+
+/**
+ * Re-renders a specific table after sorting
+ */
+function rerenderTable(tableType, players) {
+    const tableId = `${tableType}-table`;
+    const tableElement = document.getElementById(tableId);
+
+    if (!tableElement) return;
+
+    // Re-render just the table (not the parent which contains the title)
+    const tableHtml = renderOwnershipTable(players, cachedTeamMap, tableType);
+    tableElement.outerHTML = tableHtml;
 }
 
 // Register route
