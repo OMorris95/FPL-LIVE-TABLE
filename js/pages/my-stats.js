@@ -217,7 +217,6 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
                     <div>
                         <h2 class="card-title">${managerData.player_first_name} ${managerData.player_last_name}</h2>
                         <p class="subtitle m-0">${managerData.name}</p>
-                        ${!isOwnStats ? `<p class="text-gold mt-xs text-base-sm">Viewing League Manager</p>` : ''}
                     </div>
                     <div class="flex gap-sm items-center flex-wrap">
                         ${leagueManagers ? `
@@ -266,11 +265,11 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
                         <div class="stat-label">GW${currentGw} Points</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value text-success">${bestGw ? bestGw.points : 0}</div>
+                        <div class="stat-value">${bestGw ? bestGw.points : 0}</div>
                         <div class="stat-label">Best GW${bestGw ? bestGw.event : ''}</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value text-error">${worstGw ? worstGw.points : 0}</div>
+                        <div class="stat-value">${worstGw ? worstGw.points : 0}</div>
                         <div class="stat-label">Worst GW${worstGw ? worstGw.event : ''}</div>
                     </div>
                 </div>
