@@ -123,13 +123,15 @@ function renderLiveTable(managers, leagueName) {
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">${leagueName} - GW ${liveGameweekId} Live Table</h2>
-                    <button id="refresh-btn" class="btn-secondary">
-                        Refresh Points
-                    </button>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <p style="color: #aaa; font-size: 0.85rem; margin: 0;">
+                            Last Updated: ${lastUpdated}
+                        </p>
+                        <button id="refresh-btn" class="btn-secondary">
+                            Refresh Points
+                        </button>
+                    </div>
                 </div>
-                <p style="text-align: right; color: #aaa; font-size: 0.85rem; margin-bottom: 1rem;">
-                    Last Updated: ${lastUpdated}
-                </p>
 
                 <div style="overflow-x: auto;">
                     <table class="data-table">

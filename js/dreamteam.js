@@ -108,7 +108,7 @@ function findOptimalDreamteam(allSquadPlayers) {
  * Finds the Player of the Week from the dream team
  * @param {array} dreamTeam - Array of player IDs in the dream team
  * @param {object} allSquadPlayers - Map of player ID to player data
- * @returns {object} - Player of the week data
+ * @returns {object} - Player of the week data with proper name structure
  */
 function findPlayerOfTheWeek(dreamTeam, allSquadPlayers) {
     if (!dreamTeam || dreamTeam.length === 0) return null;
@@ -128,7 +128,11 @@ function findPlayerOfTheWeek(dreamTeam, allSquadPlayers) {
 
         if (score > maxScore) {
             maxScore = score;
-            playerOfWeek = playerData;
+            playerOfWeek = {
+                ...playerData,
+                fullName: `${playerData.player_info.first_name} ${playerData.player_info.second_name}`,
+                name: playerData.player_info.web_name
+            };
         }
     }
 

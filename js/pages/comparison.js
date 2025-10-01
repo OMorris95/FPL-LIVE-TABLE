@@ -163,7 +163,8 @@ async function compareManagers(manager1Id, manager2Id, leagueData) {
             manager1Picks,
             manager2Picks,
             squadOverlap,
-            currentGw
+            currentGw,
+            playerMap  // Pass playerMap for captain names
         );
 
     } catch (error) {
@@ -222,7 +223,7 @@ function analyzeSquadOverlap(picks1, picks2, playerMap) {
     };
 }
 
-function renderComparisonResults(manager1Info, manager2Info, history1, history2, picks1, picks2, overlap, currentGw) {
+function renderComparisonResults(manager1Info, manager2Info, history1, history2, picks1, picks2, overlap, currentGw, playerMap) {
     const resultsDiv = document.getElementById('comparison-results');
 
     const m1TotalPoints = manager1Info.total;
@@ -233,6 +234,10 @@ function renderComparisonResults(manager1Info, manager2Info, history1, history2,
 
     const m1Captain = picks1.picks.find(p => p.is_captain);
     const m2Captain = picks2.picks.find(p => p.is_captain);
+
+    // Get captain names from playerMap
+    const m1CaptainName = m1Captain ? playerMap[m1Captain.element].web_name : 'N/A';
+    const m2CaptainName = m2Captain ? playerMap[m2Captain.element].web_name : 'N/A';
 
     const m1Chip = getChipAbbreviation(picks1.active_chip) || 'None';
     const m2Chip = getChipAbbreviation(picks2.active_chip) || 'None';
@@ -288,8 +293,8 @@ function renderComparisonResults(manager1Info, manager2Info, history1, history2,
                         <tbody>
                             <tr>
                                 <td>Captain</td>
-                                <td>${m1Captain ? getPlayerName(m1Captain.element) : 'N/A'}</td>
-                                <td>${m2Captain ? getPlayerName(m2Captain.element) : 'N/A'}</td>
+                                <td>${m1CaptainName}</td>
+                                <td>${m2CaptainName}</td>
                             </tr>
                             <tr>
                                 <td>Chip Used</td>
@@ -339,12 +344,6 @@ function renderComparisonResults(manager1Info, manager2Info, history1, history2,
             </div>
         </div>
     `;
-}
-
-function getPlayerName(playerId) {
-    // This would need access to playerMap - for now return ID
-    // In a real implementation, store playerMap in a higher scope
-    return `Player ${playerId}`;
 }
 
 // Register route
