@@ -177,6 +177,12 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
     // Get chip usage from historyData.chips (not from current array)
     const usedChips = historyData.chips || [];
 
+    // Create chip lookup: gameweek -> chip name
+    const chipByGameweek = {};
+    usedChips.forEach(chip => {
+        chipByGameweek[chip.event] = chip.name;
+    });
+
     // Define all available chips
     const allChips = [
         { name: 'bboost', label: 'Bench Boost', abbrev: 'BB' },
@@ -273,7 +279,34 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
                         <div class="stat-label">Worst GW${worstGw ? worstGw.event : ''}</div>
                     </div>
                 </div>
-                <p class="note-text mb-xs">
+
+                <!-- Chip Usage - Inline -->
+                <div style="border-top: 1px solid var(--border-color); padding-top: 1rem; margin-top: 1rem;">
+                    <h4 style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">Chip Usage</h4>
+                    <div class="grid-4" style="gap: 0.5rem;">
+                        ${chipStatus.map(chip => `
+                            <div class="stat-card text-center" style="opacity: ${chip.used ? '1' : '0.5'}; padding: 0.75rem;">
+                                <div style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.25rem;">
+                                    ${chip.abbrev}
+                                </div>
+                                <div style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">
+                                    ${chip.label}
+                                </div>
+                                ${chip.used ? `
+                                    <div class="text-success" style="font-weight: 600; font-size: 0.85rem; margin-top: 0.25rem;">
+                                        GW${chip.gw} (${chip.points} pts)
+                                    </div>
+                                ` : `
+                                    <div class="text-quaternary" style="font-style: italic; font-size: 0.75rem; margin-top: 0.25rem;">
+                                        Available
+                                    </div>
+                                `}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <p class="note-text mb-xs" style="margin-top: 1rem;">
                     *Market prices - selling value may differ due to 50% sell-on fee
                 </p>
             </div>
@@ -314,7 +347,7 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
                                     <td>${gw.event_transfers_cost > 0 ?
                                         `<span class="text-error">-${gw.event_transfers_cost}</span>` :
                                         '0'}</td>
-                                    <td>${gw.active_chip ? getChipAbbreviation(gw.active_chip) : '-'}</td>
+                                    <td>${chipByGameweek[gw.event] ? getChipAbbreviation(chipByGameweek[gw.event]) : '-'}</td>
                                 </tr>
                                 `;
                             }).join('')}
@@ -351,33 +384,6 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
                         <div class="stat-value">${(currentPoints / currentSeasonHistory.length).toFixed(1)}</div>
                         <div class="stat-label">Avg GW Points</div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Chip Usage - Always visible -->
-            <div class="card mt-1">
-                <h3 class="section-header">Chip Usage</h3>
-                <div class="grid-4">
-                    ${chipStatus.map(chip => `
-                        <div class="stat-card text-center" style="opacity: ${chip.used ? '1' : '0.5'};">
-                            <div class="text-xl mb-xs">
-                                ${chip.abbrev}
-                            </div>
-                            <div class="stat-label">${chip.label}</div>
-                            ${chip.used ? `
-                                <div class="text-success mt-xs" style="font-weight: 600;">
-                                    GW${chip.gw}
-                                </div>
-                                <div class="text-base text-secondary mt-xs">
-                                    ${chip.points} pts
-                                </div>
-                            ` : `
-                                <div class="text-quaternary mt-xs" style="font-style: italic;">
-                                    Available
-                                </div>
-                            `}
-                        </div>
-                    `).join('')}
                 </div>
             </div>
         </div>

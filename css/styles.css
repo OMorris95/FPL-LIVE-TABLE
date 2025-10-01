@@ -26,7 +26,7 @@
     --accent-orange: #f7931e;
     --accent-red: #c21500;
     --secondary-color: #00ff85;
-    --success: #00e676;
+    --success: #00ff37;
     --warning: #ffab00;
     --error: #ff3d00;
 
@@ -736,7 +736,7 @@ select.form-input {
 }
 
 .section-header {
-    color: #02f00e;
+    color: #00ff37;
     margin-bottom: var(--spacing-md);
 }
 
