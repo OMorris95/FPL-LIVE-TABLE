@@ -737,7 +737,8 @@ select.form-input {
 
 .section-header {
     color: #00ff37;
-    margin-bottom: var(--spacing-md);
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
 }
 
 .note-text {
@@ -1929,7 +1930,7 @@ select.form-input {
 
 .ownership-table th,
 .ownership-table td {
-    padding: 0.5rem;
+    padding: 0.3rem 0.5rem;
 }
 
 /* Sortable table headers */

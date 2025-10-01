@@ -240,27 +240,8 @@ function renderTemplateTracker(allPlayers, teamMap, bootstrapData) {
                     ${!backendStatus ? '<p class="text-xs text-tertiary mt-xs">Backend data not available. Showing overall ownership.</p>' : ''}
                 </div>
 
-                <!-- Summary Stats -->
-                <div class="grid-3 mb-1">
-                    <div class="stat-card">
-                        <div class="stat-value">${templatePlayers.length}</div>
-                        <div class="stat-label">High Ownership (>${HIGH_OWNERSHIP}%)</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">£${templateCost.toFixed(1)}m</div>
-                        <div class="stat-label">Template Squad Cost</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">${allPlayers.filter(p => getOwnership(p) >= MEDIUM_OWNERSHIP).length}</div>
-                        <div class="stat-label">Medium Ownership (>${MEDIUM_OWNERSHIP}%)</div>
-                    </div>
-                </div>
-
                 <!-- Template Squad -->
                 <h3 class="section-header">Most Owned Template Squad</h3>
-                <p class="text-tertiary text-base-sm mb-sm">
-                    Top 2 GK, 5 DEF, 5 MID, 3 FWD by ownership
-                </p>
                 ${renderTemplateSquad(templateTeam, teamMap)}
 
                 <!-- High Ownership Players -->
@@ -293,53 +274,68 @@ function renderTemplateTracker(allPlayers, teamMap, bootstrapData) {
 
 function renderTemplateSquad(templateTeam, teamMap) {
     const positionLabels = {
-        gk: 'Goalkeepers',
-        def: 'Defenders',
-        mid: 'Midfielders',
-        fwd: 'Forwards'
+        gk: 'GKP',
+        def: 'DEF',
+        mid: 'MID',
+        fwd: 'FWD'
     };
 
-    return `
-        <div class="template-squad">
-            ${Object.entries(templateTeam).map(([position, players]) => `
-                <div class="template-position-group">
-                    <h4 class="text-gold text-base-sm mb-xs">
-                        ${positionLabels[position]}
-                    </h4>
-                    <div class="template-players-grid">
-                        ${players.map(player => renderTemplatePlayerCard(player, teamMap)).join('')}
-                    </div>
-                </div>
-            `).join('')}
-        </div>
-    `;
-}
+    const positionColors = {
+        'GKP': '#ea5906',
+        'DEF': '#f3d209',
+        'MID': '#2bb000',
+        'FWD': '#007eff'
+    };
 
-function renderTemplatePlayerCard(player, teamMap) {
-    const team = teamMap[player.team];
-    const ownership = player.tier_ownership !== undefined ? player.tier_ownership : parseFloat(player.selected_by_percent);
+    // Flatten all players with their position, tracking position boundaries
+    const allSquadPlayers = [];
+    Object.entries(templateTeam).forEach(([position, players]) => {
+        players.forEach((player, idx) => {
+            const isLastOfPosition = idx === players.length - 1;
+            allSquadPlayers.push({
+                ...player,
+                pos: positionLabels[position],
+                isLastOfPosition
+            });
+        });
+    });
 
     return `
-        <div class="template-player-card">
-            <div class="flex justify-between items-start mb-xs">
-                <div style="flex: 1;">
-                    <div class="player-name">${player.first_name.charAt(0)}. ${player.second_name}</div>
-                    <div class="text-xs text-tertiary">${team.short_name}</div>
-                </div>
-                <div class="text-right">
-                    <div class="text-secondary text-base-sm" style="font-weight: 700;">
-                        £${(player.now_cost / 10).toFixed(1)}m
-                    </div>
-                </div>
-            </div>
-            <div class="flex justify-between items-center">
-                <div class="ownership-badge ${getOwnershipClass(ownership)}">
-                    ${ownership.toFixed(1)}% owned
-                </div>
-                <div class="text-base-sm text-tertiary">
-                    ${player.total_points} pts
-                </div>
-            </div>
+        <div class="overflow-x-auto mb-1">
+            <table class="data-table ownership-table">
+                <thead>
+                    <tr>
+                        <th class="text-left">Pos</th>
+                        <th class="text-left">Player</th>
+                        <th class="text-left">Team</th>
+                        <th>Price</th>
+                        <th>Ownership</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${allSquadPlayers.map(player => {
+                        const team = teamMap[player.team];
+                        const ownership = player.tier_ownership !== undefined ? player.tier_ownership : parseFloat(player.selected_by_percent);
+                        const borderStyle = player.isLastOfPosition ? `box-shadow: inset 0 -2px 0 0 ${positionColors[player.pos]};` : '';
+
+                        return `
+                            <tr>
+                                <td style="${borderStyle}"><strong>${player.pos}</strong></td>
+                                <td style="font-weight: 600; ${borderStyle}">${player.first_name.charAt(0)}. ${player.second_name}</td>
+                                <td style="${borderStyle}">${team.short_name}</td>
+                                <td class="text-center" style="${borderStyle}">£${(player.now_cost / 10).toFixed(1)}m</td>
+                                <td class="text-center" style="${borderStyle}">
+                                    <span class="ownership-badge ${getOwnershipClass(ownership)}">
+                                        ${ownership.toFixed(1)}%
+                                    </span>
+                                </td>
+                                <td class="text-center" style="font-weight: 600; ${borderStyle}">${player.total_points}</td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
         </div>
     `;
 }

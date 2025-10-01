@@ -3,7 +3,7 @@ const { trackTransfers, cleanupOldSnapshots } = require('../services/transferTra
 
 /**
  * Track transfer deltas every 30 minutes
- * Cron: */30 * * * * = Every 30 minutes
+ * Cron expression: Every 30 minutes (0,30 * * * *)
  */
 cron.schedule('*/30 * * * *', async () => {
     console.log('Transfer tracking cron triggered');
