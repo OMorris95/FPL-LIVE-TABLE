@@ -137,7 +137,7 @@ function renderPricePredictorHub(predictions) {
                         <div class="summary-label">Predicted Fallers</div>
                     </div>
                     <div class="summary-stat">
-                        <div class="summary-value">${predictions.stable.length}</div>
+                        <div class="summary-value">${predictions.watchlist.length}</div>
                         <div class="summary-label">Watch List</div>
                     </div>
                 </div>
@@ -216,7 +216,7 @@ function renderPricePlayerRow(player, type) {
 
     const price = (player.now_cost / 10).toFixed(1);
     const predictedPrice = (player.predicted_price / 10).toFixed(1);
-    const ownership = player.ownership.toFixed(1);
+    const ownership = parseFloat(player.ownership).toFixed(1);
 
     // Get arrow and color based on type
     let arrow = '';

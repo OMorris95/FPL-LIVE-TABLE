@@ -6,6 +6,10 @@ let bootstrapDataCache = null;
 let teamMapCache = null;
 let displayLimit = 50; // Number of players to display at once
 
+// Selection state for comparison
+let selectedPlayers = [];
+const MAX_SELECTED = 4;
+
 // Filter state
 let filters = {
     search: '',
@@ -170,11 +174,19 @@ function renderPlayerSearchHub() {
                             Clear Filters
                         </button>
                     </div>
+
+                    <!-- Compare Button -->
+                    <div class="filter-group">
+                        <button id="compare-players-btn" class="btn-primary block" ${selectedPlayers.length < 2 || selectedPlayers.length > MAX_SELECTED ? 'disabled' : ''}>
+                            Compare (${selectedPlayers.length}/${MAX_SELECTED})
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Results Count -->
-                <div class="players-results-count">
-                    Showing <strong>${Math.min(displayLimit, filteredPlayers.length)}</strong> of ${filteredPlayers.length} players
+                <!-- Results Count & Selection Info -->
+                <div class="players-results-count" style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>Showing <strong>${Math.min(displayLimit, filteredPlayers.length)}</strong> of ${filteredPlayers.length} players</span>
+                    ${selectedPlayers.length > 0 ? `<span class="text-secondary"><strong>${selectedPlayers.length}/${MAX_SELECTED}</strong> players selected</span>` : ''}
                 </div>
 
                 <!-- Players Grid -->
@@ -225,8 +237,10 @@ function renderPlayerCard(player) {
     const firstInitial = player.first_name ? player.first_name.charAt(0) : '';
     const displayName = firstInitial ? `${firstInitial}. ${player.second_name}` : player.web_name;
 
+    const isSelected = selectedPlayers.includes(player.id);
+
     return `
-        <div class="player-card">
+        <div class="player-card ${isSelected ? 'selected' : ''}" data-player-id="${player.id}">
             <div class="player-card-header">
                 <div class="player-name-section">
                     <h3 class="player-name">${displayName}</h3>
@@ -456,10 +470,31 @@ function attachFilterListeners() {
                 priceMax: 150,
                 sortBy: 'total_points'
             };
+            selectedPlayers = []; // Clear selected players
             displayLimit = 50; // Reset display limit
             renderPlayerSearchHub();
         });
     }
+
+    // Compare button
+    const compareBtn = document.getElementById('compare-players-btn');
+    if (compareBtn) {
+        compareBtn.addEventListener('click', () => {
+            if (selectedPlayers.length >= 2 && selectedPlayers.length <= MAX_SELECTED) {
+                // Navigate to compare page with selected player IDs
+                router.navigate('/compare-players', { playerIds: selectedPlayers });
+            }
+        });
+    }
+
+    // Player card selection
+    const playerCards = document.querySelectorAll('.player-card');
+    playerCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const playerId = parseInt(card.dataset.playerId);
+            togglePlayerSelection(playerId);
+        });
+    });
 
     // Load more button
     const loadMoreBtn = document.getElementById('load-more-btn');
@@ -469,6 +504,24 @@ function attachFilterListeners() {
             renderPlayerSearchHub();
         });
     }
+}
+
+// Toggle player selection
+function togglePlayerSelection(playerId) {
+    const index = selectedPlayers.indexOf(playerId);
+
+    if (index > -1) {
+        // Player already selected, remove it
+        selectedPlayers.splice(index, 1);
+    } else {
+        // Add player if under limit
+        if (selectedPlayers.length < MAX_SELECTED) {
+            selectedPlayers.push(playerId);
+        }
+    }
+
+    // Re-render to update UI
+    renderPlayerSearchHub();
 }
 
 // Register route

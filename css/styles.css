@@ -1330,12 +1330,21 @@ select.form-input {
     border-radius: var(--radius-md);
     padding: 1rem;
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
 }
 
 .player-card:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
     border-color: var(--accent-gold);
+}
+
+.player-card.selected {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-gold);
+    border-width: 2px;
+    background: var(--card-bg-elevated);
 }
 
 .player-card-header {

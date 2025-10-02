@@ -5,6 +5,37 @@ const { getBootstrapData, getCurrentGameweek } = require('../services/fplDataFet
 const { generatePredictions } = require('../services/pricePredictor');
 
 /**
+ * GET /api/ownership/:tier/latest
+ * Fetches latest available ownership data for a tier
+ * NOTE: This route MUST come before /:tier/:gameweek to match correctly
+ */
+router.get('/ownership/:tier/latest', async (req, res) => {
+    try {
+        const { tier } = req.params;
+
+        // Validate tier
+        if (!['100', '100_test', '1k', '10k'].includes(tier)) {
+            return res.status(400).json({ error: 'Invalid tier. Must be 100, 100_test, 1k, or 10k' });
+        }
+
+        // Get current gameweek
+        const bootstrapData = await getBootstrapData();
+        const currentGw = getCurrentGameweek(bootstrapData);
+
+        const data = await getLatestOwnershipData(tier, currentGw);
+
+        if (!data) {
+            return res.status(404).json({ error: `No ownership data found for tier ${tier}` });
+        }
+
+        res.json(data);
+    } catch (error) {
+        console.error('Error fetching latest ownership data:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
  * GET /api/ownership/:tier/:gameweek
  * Fetches ownership data for a specific tier and gameweek
  * Tiers: 100, 1k, 10k
@@ -33,36 +64,6 @@ router.get('/ownership/:tier/:gameweek', async (req, res) => {
         res.json(data);
     } catch (error) {
         console.error('Error fetching ownership data:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-/**
- * GET /api/ownership/:tier/latest
- * Fetches latest available ownership data for a tier
- */
-router.get('/ownership/:tier/latest', async (req, res) => {
-    try {
-        const { tier } = req.params;
-
-        // Validate tier
-        if (!['100', '100_test', '1k', '10k'].includes(tier)) {
-            return res.status(400).json({ error: 'Invalid tier. Must be 100, 100_test, 1k, or 10k' });
-        }
-
-        // Get current gameweek
-        const bootstrapData = await getBootstrapData();
-        const currentGw = getCurrentGameweek(bootstrapData);
-
-        const data = await getLatestOwnershipData(tier, currentGw);
-
-        if (!data) {
-            return res.status(404).json({ error: `No ownership data found for tier ${tier}` });
-        }
-
-        res.json(data);
-    } catch (error) {
-        console.error('Error fetching latest ownership data:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });

@@ -240,7 +240,7 @@ function renderLiveTable(managers, leagueName, leagueId) {
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="data-table">
+                    <table class="data-table ownership-table">
                         <thead>
                             <tr>
                                 <th>Rank</th>

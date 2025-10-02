@@ -1,6 +1,6 @@
 // Player Comparison Tool - Compare up to 4 players side-by-side
 
-let selectedPlayers = [];
+let comparisonPlayers = [];
 const MAX_PLAYERS = 4;
 
 async function renderComparePlayersPage(leagueId) {
@@ -50,6 +50,13 @@ function renderComparisonTool(allPlayers, teamMap, currentGw) {
                     <h2 class="card-title">Player Comparison Tool</h2>
                 </div>
 
+                <!-- Back Button -->
+                <div class="mb-1">
+                    <button class="btn-secondary" onclick="router.navigate('/players')">
+                        ← Back to Players
+                    </button>
+                </div>
+
                 <!-- Player Search -->
                 <div class="mb-1">
                     <input
@@ -63,19 +70,19 @@ function renderComparisonTool(allPlayers, teamMap, currentGw) {
 
                 <!-- Selected Players Cards -->
                 <div id="selected-players-container" class="selected-players-grid">
-                    ${selectedPlayers.length === 0 ? `
+                    ${comparisonPlayers.length === 0 ? `
                         <div class="text-center p-lg text-tertiary" style="grid-column: 1 / -1;">
                             <p class="text-md">No players selected yet</p>
                             <p>Search and select up to ${MAX_PLAYERS} players to compare</p>
                         </div>
-                    ` : renderSelectedPlayers(selectedPlayers, teamMap)}
+                    ` : renderSelectedPlayers(comparisonPlayers, teamMap)}
                 </div>
 
-                ${selectedPlayers.length >= 2 ? `
+                ${comparisonPlayers.length >= 2 ? `
                     <!-- Comparison Table -->
                     <div class="mt-2">
                         <h3 class="section-header">Detailed Comparison</h3>
-                        ${renderComparisonTable(selectedPlayers, teamMap, currentGw)}
+                        ${renderComparisonTable(comparisonPlayers, teamMap, currentGw)}
                     </div>
                 ` : ''}
             </div>
@@ -97,20 +104,6 @@ function renderSelectedPlayers(players, teamMap) {
                 <div class="player-name">${player.first_name.charAt(0)}. ${player.second_name}</div>
                 <div class="text-sm text-tertiary">${team.short_name} - ${positionLabel}</div>
                 <div class="player-price">£${(player.now_cost / 10).toFixed(1)}m</div>
-                <div class="grid-3 gap-sm mt-xs">
-                    <div class="stat-mini">
-                        <div class="stat-mini-value">${player.total_points}</div>
-                        <div class="stat-mini-label">Points</div>
-                    </div>
-                    <div class="stat-mini">
-                        <div class="stat-mini-value">${player.form}</div>
-                        <div class="stat-mini-label">Form</div>
-                    </div>
-                    <div class="stat-mini">
-                        <div class="stat-mini-value">${player.selected_by_percent}%</div>
-                        <div class="stat-mini-label">Owned</div>
-                    </div>
-                </div>
             </div>
         `;
     }).join('');
@@ -200,7 +193,7 @@ function setupComparisonEventListeners(allPlayers, teamMap, currentGw) {
                     p.first_name.toLowerCase().includes(query) ||
                     p.second_name.toLowerCase().includes(query)
                 )
-                .filter(p => !selectedPlayers.find(sp => sp.id === p.id))
+                .filter(p => !comparisonPlayers.find(sp => sp.id === p.id))
                 .slice(0, 10);
 
             if (matches.length === 0) {
@@ -254,21 +247,21 @@ function setupComparisonEventListeners(allPlayers, teamMap, currentGw) {
 }
 
 function addPlayer(player, allPlayers, teamMap, currentGw) {
-    if (selectedPlayers.length >= MAX_PLAYERS) {
+    if (comparisonPlayers.length >= MAX_PLAYERS) {
         alert(`You can only compare up to ${MAX_PLAYERS} players at a time`);
         return;
     }
 
-    if (selectedPlayers.find(p => p.id === player.id)) {
+    if (comparisonPlayers.find(p => p.id === player.id)) {
         return;
     }
 
-    selectedPlayers.push(player);
+    comparisonPlayers.push(player);
     renderComparisonTool(allPlayers, teamMap, currentGw);
 }
 
 window.removePlayer = function(playerId) {
-    selectedPlayers = selectedPlayers.filter(p => p.id !== playerId);
+    comparisonPlayers = comparisonPlayers.filter(p => p.id !== playerId);
 
     // Need to re-fetch data to re-render
     (async () => {
