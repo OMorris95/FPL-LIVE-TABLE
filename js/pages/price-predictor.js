@@ -4,6 +4,7 @@ let priceData = null;
 let bootstrapCache = null;
 let teamCache = null;
 let accuracyData = null;
+let refreshTimer = null;  // Track the refresh timer to prevent orphaned timers
 
 async function renderPricePredictorPage() {
     const app = document.getElementById('app');
@@ -50,10 +51,20 @@ async function renderPricePredictorPage() {
         // Render the price predictor interface
         renderPricePredictorHub(predictions);
 
-        // Auto-refresh every 5 minutes
-        setTimeout(() => {
-            console.log('Auto-refreshing price predictions...');
-            renderPricePredictorPage();
+        // Auto-refresh every 5 minutes (only if still on this page)
+        // Clear any existing timer first to prevent multiple timers
+        if (refreshTimer) {
+            clearTimeout(refreshTimer);
+        }
+
+        refreshTimer = setTimeout(() => {
+            // Only refresh if user is still on the prices page
+            if (router.currentRoute === '/prices') {
+                console.log('Auto-refreshing price predictions...');
+                renderPricePredictorPage();
+            } else {
+                console.log('User left prices page, canceling auto-refresh');
+            }
         }, 5 * 60 * 1000);
 
     } catch (error) {

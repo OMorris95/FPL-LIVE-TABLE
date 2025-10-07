@@ -10,7 +10,8 @@
       "WebFetch(domain:www.fiso.co.uk)",
       "Bash(node -e \"console.log([''100'', ''100_test'', ''1k'', ''10k''].includes(''100_test''))\")",
       "Bash(curl:*)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

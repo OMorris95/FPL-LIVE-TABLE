@@ -66,15 +66,66 @@ async function triggerManualUpdate() {
     await updateAllOwnership();
 }
 
-// Schedule cron job: Run every Saturday at 2:00 AM
-// Cron format: minute hour day month weekday
-// 0 2 * * 6 = At 02:00 on Saturday
-cron.schedule('0 2 * * 6', async () => {
-    console.log('Scheduled update triggered by cron');
-    await updateAllOwnership();
+/**
+ * Smart ownership update cron
+ * Checks hourly if we should pull ownership data
+ * Triggers 1-2 hours after gameweek deadline for maximum freshness
+ * Works for both Friday and Saturday gameweeks
+ */
+cron.schedule('0 * * * *', async () => {
+    try {
+        console.log('Ownership update check triggered');
+
+        // Get current gameweek info
+        const bootstrapData = await getBootstrapData();
+        const currentEvent = bootstrapData.events.find(e => e.is_current);
+
+        if (!currentEvent) {
+            console.log('No current gameweek active - skipping ownership update');
+            return;
+        }
+
+        const deadline = new Date(currentEvent.deadline_time);
+        const now = new Date();
+        const hoursSinceDeadline = (now - deadline) / (1000 * 60 * 60);
+
+        // Pull ownership 1-2 hours after deadline
+        if (hoursSinceDeadline < 1 || hoursSinceDeadline >= 2) {
+            // Not the right time window
+            return;
+        }
+
+        // Check if we've already pulled for this gameweek
+        const fs = require('fs').promises;
+        const path = require('path');
+        const metadataPath = path.join(__dirname, '../data/update_metadata.json');
+
+        let lastPullGw = null;
+        try {
+            const metaData = JSON.parse(await fs.readFile(metadataPath, 'utf8'));
+            lastPullGw = metaData.gameweek;
+        } catch {
+            // No metadata yet, proceed with pull
+        }
+
+        if (lastPullGw === currentEvent.id) {
+            console.log(`Already pulled ownership for GW${currentEvent.id}`);
+            return;
+        }
+
+        // Trigger ownership pull
+        console.log(`\nTriggering ownership update for GW${currentEvent.id}`);
+        console.log(`${hoursSinceDeadline.toFixed(1)} hours after deadline`);
+
+        await updateAllOwnership();
+
+    } catch (error) {
+        console.error('Ownership update cron failed:', error);
+    }
 });
 
-console.log('Cron job scheduled: Every Saturday at 2:00 AM');
+console.log('Ownership update cron scheduled: Hourly check, pulls 1-2h after gameweek deadline');
+console.log('Works for both Friday and Saturday gameweeks');
 console.log('Run manual update by calling triggerManualUpdate()');
 
 // Export for manual triggering

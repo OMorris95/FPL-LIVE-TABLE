@@ -185,11 +185,12 @@ async function verifyPredictions() {
 }
 
 /**
- * Main cron job - runs at 3 AM daily (after price changes at ~2 AM)
+ * Main cron job - runs at 2:45 AM daily (after price changes at ~2 AM)
  * Cron format: minute hour day month weekday
- * 0 3 * * * = At 03:00 every day
+ * 45 2 * * * = At 02:45 every day
+ * Note: Runs at 2:45 AM to reset BEFORE first transfer snapshot of the new day (at 3:00 AM)
  */
-cron.schedule('0 3 * * *', async () => {
+cron.schedule('45 2 * * *', async () => {
     console.log('Price change verification cron triggered');
 
     try {
@@ -205,7 +206,7 @@ cron.schedule('0 3 * * *', async () => {
     }
 });
 
-console.log('Price change verification cron scheduled: Daily at 3 AM');
+console.log('Price change verification cron scheduled: Daily at 2:45 AM');
 
 // Export for manual triggering
 module.exports = {

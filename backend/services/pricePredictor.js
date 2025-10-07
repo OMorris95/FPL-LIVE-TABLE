@@ -1,40 +1,54 @@
 const { getDailyTransferData } = require('./transferTracker');
+const { loadDGWInfo } = require('./weeklyDataSync');
+const { getBootstrapData, getCurrentGameweek } = require('./fplDataFetcher');
 
-// Price change thresholds (based on research)
-const RISE_THRESHOLD_1 = 70000;   // First rise
-const RISE_THRESHOLD_2 = 140000;  // Second rise
-const RISE_THRESHOLD_3 = 210000;  // Third rise
+// Price change thresholds (calibrated for realistic predictions)
+const RISE_THRESHOLD_1 = 45000;   // First rise (reduced from 70K for more accurate predictions)
+const RISE_THRESHOLD_2 = 90000;   // Second rise
+const RISE_THRESHOLD_3 = 135000;  // Third rise
+
+// Minimum transfer activity to show prediction (filters out noise)
+const MIN_ACTIVITY_THRESHOLD = 1000;
 
 // Chip discount factors
 const CHIP_DISCOUNT_NORMAL = 0.85;  // 15% discount for normal weeks
 const CHIP_DISCOUNT_DGW = 0.70;     // 30% discount for double gameweeks
 
 /**
- * Determines if current gameweek is a DGW/BGW (higher chip usage)
- * In real implementation, check bootstrap-static events for is_dgw flag
+ * Determines if current gameweek is a DGW (double gameweek)
+ * Uses pre-synced fixture data to accurately identify DGWs
  */
-function isDGWWeek() {
-    // Placeholder - would check FPL API for DGW status
-    // For now, assume normal week
-    return false;
+async function isDGWWeek(gameweek) {
+    try {
+        const dgwInfo = await loadDGWInfo();
+        return dgwInfo[gameweek]?.isDGW || false;
+    } catch (error) {
+        console.warn('Could not load DGW info, assuming normal week:', error.message);
+        return false;
+    }
 }
 
 /**
- * Calculates fall threshold based on ownership
- * Fall threshold ≈ 10% of ownership (in number of managers)
+ * Calculates fall threshold using hybrid approach
+ * Base threshold scaled by ownership (prevents extreme values for low-owned players)
  */
 function calculateFallThreshold(ownershipPercent) {
-    // Total FPL managers ≈ 10 million (approximate)
-    const totalManagers = 10000000;
-    const managersOwning = (ownershipPercent / 100) * totalManagers;
-    return -Math.round(managersOwning * 0.1); // Negative for falls
+    // Base fall threshold (symmetric with rise threshold for fairness)
+    const BASE_FALL_THRESHOLD = -35000;
+
+    // Scale by ownership (higher owned = harder to fall)
+    // Divide by 15 so a 15% owned player has factor of 1.0
+    const ownershipFactor = Math.max(1, parseFloat(ownershipPercent) / 15);
+
+    return Math.round(BASE_FALL_THRESHOLD * ownershipFactor);
 }
 
 /**
  * Applies chip discount to raw net transfers
  */
-function applyChipDiscount(netTransfers) {
-    const discountFactor = isDGWWeek() ? CHIP_DISCOUNT_DGW : CHIP_DISCOUNT_NORMAL;
+async function applyChipDiscount(netTransfers, gameweek) {
+    const isDGW = await isDGWWeek(gameweek);
+    const discountFactor = isDGW ? CHIP_DISCOUNT_DGW : CHIP_DISCOUNT_NORMAL;
     return Math.round(netTransfers * discountFactor);
 }
 
@@ -102,6 +116,9 @@ async function generatePredictions() {
 
     try {
         const dailyData = await getDailyTransferData();
+        const bootstrapData = await getBootstrapData();
+        const currentGw = getCurrentGameweek(bootstrapData);
+        const isDGW = await isDGWWeek(currentGw);
 
         if (!dailyData || !dailyData.players) {
             console.log('No daily transfer data available');
@@ -112,7 +129,8 @@ async function generatePredictions() {
                 metadata: {
                     generated_at: new Date().toISOString(),
                     last_data_update: null,
-                    chip_discount_applied: isDGWWeek() ? 'DGW (30%)' : 'Normal (15%)'
+                    chip_discount_applied: isDGW ? 'DGW (30%)' : 'Normal (15%)',
+                    current_gameweek: currentGw
                 }
             };
         }
@@ -124,14 +142,17 @@ async function generatePredictions() {
         };
 
         // Process each player
-        Object.values(dailyData.players).forEach(player => {
+        for (const player of Object.values(dailyData.players)) {
             const rawNetTransfers = player.daily_net_delta || 0;
 
             // Skip players with no transfer activity
-            if (rawNetTransfers === 0) return;
+            if (rawNetTransfers === 0) continue;
 
             // Apply chip discount
-            const effectiveNetTransfers = applyChipDiscount(rawNetTransfers);
+            const effectiveNetTransfers = await applyChipDiscount(rawNetTransfers, currentGw);
+
+            // Skip players with minimal activity (noise filter)
+            if (Math.abs(effectiveNetTransfers) < MIN_ACTIVITY_THRESHOLD) continue;
 
             // Get prediction
             const result = getPrediction(
@@ -159,7 +180,7 @@ async function generatePredictions() {
             } else if (result.prediction === 'watch') {
                 predictions.watchlist.push(playerPrediction);
             }
-        });
+        }
 
         // Sort by likelihood
         predictions.risers.sort((a, b) => b.likelihood - a.likelihood);
@@ -169,7 +190,9 @@ async function generatePredictions() {
         predictions.metadata = {
             generated_at: new Date().toISOString(),
             last_data_update: dailyData.last_updated,
-            chip_discount_applied: isDGWWeek() ? 'DGW (30%)' : 'Normal (15%)',
+            chip_discount_applied: isDGW ? 'DGW (30%)' : 'Normal (15%)',
+            current_gameweek: currentGw,
+            is_double_gameweek: isDGW,
             total_predictions: predictions.risers.length + predictions.fallers.length + predictions.watchlist.length
         };
 
