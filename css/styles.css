@@ -392,7 +392,7 @@ select.form-input {
     transition: all 0.2s ease;
 }
 
-.data-table tbody tr:hover {
+.data-table tbody tr:hover, .data-table tbody tr.expanded {
     background-color: var(--card-bg-elevated);
     transform: scale(1.01);
     box-shadow: var(--shadow-sm);
@@ -437,7 +437,7 @@ select.form-input {
     transition: all 0.3s ease;
 }
 
-.stat-card:hover {
+.stat-card:hover, .stat-card.expanded {
     transform: translateY(-4px);
     box-shadow: var(--shadow-md);
     border-color: var(--accent-gold);
@@ -1668,6 +1668,17 @@ select.form-input {
 
 .comparison-table {
     font-size: var(--font-base-sm);
+    table-layout: fixed;
+}
+
+.comparison-table th:first-child,
+.comparison-table td:first-child {
+    width: 150px;
+}
+
+.comparison-table th:not(:first-child),
+.comparison-table td:not(:first-child) {
+    width: auto;
 }
 
 .comparison-table th,

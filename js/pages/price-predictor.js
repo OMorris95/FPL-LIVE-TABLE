@@ -6,7 +6,7 @@ let teamCache = null;
 let accuracyData = null;
 let refreshTimer = null;  // Track the refresh timer to prevent orphaned timers
 
-async function renderPricePredictorPage() {
+async function renderPricePredictorPage(state = {}) {
     const app = document.getElementById('app');
     const nav = document.getElementById('main-nav');
 

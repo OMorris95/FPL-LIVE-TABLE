@@ -20,9 +20,12 @@ function renderLeagueNavButtons(currentPage, leagueId) {
     return `<div class="flex gap-md mb-sm flex-wrap">${buttons.join('')}</div>`;
 }
 
-async function renderComparisonPage(leagueId) {
+async function renderComparisonPage(state = {}) {
     const app = document.getElementById('app');
     const nav = document.getElementById('main-nav');
+
+    // Extract leagueId from state (backwards compatible)
+    const leagueId = state.leagueId || state || router.getLeagueId();
 
     if (!leagueId) {
         app.innerHTML = `

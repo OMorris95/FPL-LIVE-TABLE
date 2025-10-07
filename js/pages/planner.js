@@ -9,7 +9,7 @@ let plannerState = {
     budget: 0
 };
 
-async function renderPlannerPage() {
+async function renderPlannerPage(state = {}) {
     const app = document.getElementById('app');
     const nav = document.getElementById('main-nav');
 

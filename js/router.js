@@ -52,12 +52,15 @@ class Router {
     navigate(path, state = {}) {
         if (this.useHashRouting) {
             // Use hash-based routing for local files
-            const leagueParam = state.leagueId ? `?league=${state.leagueId}` : '';
-            window.location.hash = `#${path}${leagueParam}`;
+            const params = new URLSearchParams();
+            if (state.leagueId) params.set('league', state.leagueId);
+            if (state.playerIds) params.set('playerIds', state.playerIds.join(','));
+            const queryString = params.toString();
+            window.location.hash = `#${path}${queryString ? '?' + queryString : ''}`;
         } else {
             // Use pushState for servers
             window.history.pushState(state, '', path);
-            this.loadRoute(path, state.leagueId);
+            this.loadRoute(path, state);
         }
     }
 
@@ -68,23 +71,36 @@ class Router {
         const hash = window.location.hash.slice(1); // Remove #
         const [path, search] = hash.split('?');
         const params = new URLSearchParams(search);
-        const leagueId = params.get('league');
 
-        this.loadRoute(path || '/', leagueId);
+        const state = {};
+        if (params.get('league')) state.leagueId = params.get('league');
+        if (params.get('playerIds')) {
+            state.playerIds = params.get('playerIds').split(',').map(id => parseInt(id));
+        }
+
+        this.loadRoute(path || '/', state);
     }
 
     /**
      * Load a route
      * @param {string} path - Path to load
-     * @param {string} leagueId - League ID if applicable
+     * @param {object|string} state - State object or leagueId (for backwards compatibility)
      */
-    async loadRoute(path, leagueId = null) {
+    async loadRoute(path, state = null) {
         // Extract base path (remove query params)
         const basePath = path.split('?')[0];
 
+        // Handle backwards compatibility - if state is a string, treat it as leagueId
+        let stateObj = {};
+        if (typeof state === 'string') {
+            stateObj.leagueId = state;
+        } else if (state && typeof state === 'object') {
+            stateObj = state;
+        }
+
         // Store league ID if provided
-        if (leagueId) {
-            this.currentLeagueId = leagueId;
+        if (stateObj.leagueId) {
+            this.currentLeagueId = stateObj.leagueId;
         }
 
         // Update active nav link
@@ -95,7 +111,7 @@ class Router {
 
         if (handler) {
             this.currentRoute = basePath;
-            await handler(leagueId || this.currentLeagueId);
+            await handler(stateObj);
         }
     }
 

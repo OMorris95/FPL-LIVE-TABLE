@@ -20,7 +20,7 @@ let tablePlayerData = {
     differential: []
 };
 
-async function renderTemplatePage() {
+async function renderTemplatePage(state = {}) {
     const app = document.getElementById('app');
     const nav = document.getElementById('main-nav');
 

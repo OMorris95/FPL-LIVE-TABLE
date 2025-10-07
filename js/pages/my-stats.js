@@ -1,11 +1,14 @@
 // My Stats Page - Personal Manager Dashboard
 
-async function renderMyStatsPage(paramManagerId) {
+async function renderMyStatsPage(state = {}) {
     const app = document.getElementById('app');
     const nav = document.getElementById('main-nav');
 
     // Show navigation
     nav.style.display = 'block';
+
+    // Extract paramManagerId from state (backwards compatible)
+    const paramManagerId = state.managerId || state;
 
     // Determine which manager ID to use
     // Priority: URL parameter > localStorage
@@ -270,14 +273,19 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
                         <div class="stat-value">${managerData.summary_event_points || 0}</div>
                         <div class="stat-label">GW${currentGw} Points</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card clickable-stat" ${bestGw ? `data-gameweek="${bestGw.event}" data-source="gw"` : ''} style="cursor: ${bestGw ? 'pointer' : 'default'};">
                         <div class="stat-value">${bestGw ? bestGw.points : 0}</div>
                         <div class="stat-label">Best GW${bestGw ? bestGw.event : ''}</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card clickable-stat" ${worstGw ? `data-gameweek="${worstGw.event}" data-source="gw"` : ''} style="cursor: ${worstGw ? 'pointer' : 'default'};">
                         <div class="stat-value">${worstGw ? worstGw.points : 0}</div>
                         <div class="stat-label">Worst GW${worstGw ? worstGw.event : ''}</div>
                     </div>
+                </div>
+
+                <!-- GW Details Expansion Container (for Best/Worst GW) -->
+                <div id="gw-details-container" class="hidden" style="margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                    <div class="details-content"></div>
                 </div>
 
                 <!-- Chip Usage - Inline -->
@@ -285,7 +293,9 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
                     <h4 style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">Chip Usage</h4>
                     <div class="grid-4" style="gap: 0.5rem;">
                         ${chipStatus.map(chip => `
-                            <div class="stat-card text-center" style="opacity: ${chip.used ? '1' : '0.5'}; padding: 0.75rem;">
+                            <div class="stat-card text-center ${chip.used ? 'clickable-stat' : ''}"
+                                 ${chip.used ? `data-gameweek="${chip.gw}" data-source="chip"` : ''}
+                                 style="opacity: ${chip.used ? '1' : '0.5'}; padding: 0.75rem; cursor: ${chip.used ? 'pointer' : 'default'};">
                                 <div style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.25rem;">
                                     ${chip.abbrev}
                                 </div>
@@ -304,6 +314,11 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
                             </div>
                         `).join('')}
                     </div>
+                </div>
+
+                <!-- Chip Details Expansion Container (for chip clicks) -->
+                <div id="chip-details-container" class="hidden" style="margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                    <div class="details-content"></div>
                 </div>
 
                 <p class="note-text mb-xs" style="margin-top: 1rem;">
@@ -336,7 +351,7 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
                                 const rankChange = prevGw ? (gw.overall_rank - prevGw.overall_rank) : 0;
 
                                 return `
-                                <tr>
+                                <tr class="gameweek-row clickable-row" data-gameweek="${gw.event}" style="cursor: pointer;">
                                     <td><strong>GW${gw.event}</strong></td>
                                     <td>${gw.points - gw.event_transfers_cost}</td>
                                     <td>${gw.total_points}</td>
@@ -348,6 +363,11 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
                                         `<span class="text-error">-${gw.event_transfers_cost}</span>` :
                                         '0'}</td>
                                     <td>${chipByGameweek[gw.event] ? getChipAbbreviation(chipByGameweek[gw.event]) : '-'}</td>
+                                </tr>
+                                <tr class="details-row hidden" id="details-gw-${gw.event}">
+                                    <td colspan="7">
+                                        <div class="details-content"></div>
+                                    </td>
                                 </tr>
                                 `;
                             }).join('')}
@@ -389,6 +409,38 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
         </div>
     `;
 
+    // Inject matching styles from home page
+    const style = document.createElement('style');
+    style.textContent = `
+        .details-content {
+            background-color: #1f1f1f;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .player-list {
+            list-style: none;
+            padding: 0;
+        }
+        .player-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #333;
+        }
+        .player-list li:last-child {
+            border-bottom: none;
+        }
+        .player-name { font-weight: bold; }
+        .captain-icon { color: yellow; }
+        .vice-captain-icon { color: #ccc; }
+    `;
+    document.head.appendChild(style);
+
     // Add event listener for league manager selector
     const managerSelector = document.getElementById('league-manager-selector');
     if (managerSelector) {
@@ -398,6 +450,195 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
                 viewManagerStats(selectedManagerId);
             }
         });
+    }
+
+    // Add click event listeners for stat cards
+    document.querySelectorAll('.clickable-stat').forEach(card => {
+        card.addEventListener('click', () => {
+            const gameweek = parseInt(card.dataset.gameweek);
+            const source = card.dataset.source || 'gw'; // Read from data-source attribute
+            if (gameweek) {
+                toggleGameweekDetails(gameweek, managerId, bootstrapData, source);
+            }
+        });
+    });
+
+    // Add click event listeners for gameweek table rows
+    document.querySelectorAll('.gameweek-row').forEach(row => {
+        row.addEventListener('click', () => {
+            const gameweek = parseInt(row.dataset.gameweek);
+            if (gameweek) {
+                toggleGameweekDetails(gameweek, managerId, bootstrapData, 'table');
+            }
+        });
+    });
+}
+
+// Toggle gameweek details expansion
+async function toggleGameweekDetails(gameweek, managerId, bootstrapData, clickSource = 'table') {
+    let detailsContainer, detailsContent, clickedElement;
+
+    if (clickSource === 'gw') {
+        // Expanding from Best/Worst GW cards - use gw-details-container
+        detailsContainer = document.getElementById('gw-details-container');
+        detailsContent = detailsContainer.querySelector('.details-content');
+        clickedElement = document.querySelector(`.clickable-stat[data-gameweek="${gameweek}"][data-source="gw"]`);
+
+        // If clicking same gameweek, close it
+        if (!detailsContainer.classList.contains('hidden') &&
+            detailsContainer.dataset.currentGameweek == gameweek) {
+            detailsContainer.classList.add('hidden');
+            // Remove expanded class from all stat cards
+            document.querySelectorAll('.stat-card.expanded').forEach(card => card.classList.remove('expanded'));
+            return;
+        }
+
+        // Close chip details container and all table detail rows
+        const chipContainer = document.getElementById('chip-details-container');
+        if (chipContainer) chipContainer.classList.add('hidden');
+        document.querySelectorAll('.details-row').forEach(r => r.classList.add('hidden'));
+
+        // Remove expanded class from all elements
+        document.querySelectorAll('.stat-card.expanded').forEach(card => card.classList.remove('expanded'));
+        document.querySelectorAll('.gameweek-row.expanded').forEach(row => row.classList.remove('expanded'));
+
+    } else if (clickSource === 'chip') {
+        // Expanding from chip cards - use chip-details-container
+        detailsContainer = document.getElementById('chip-details-container');
+        detailsContent = detailsContainer.querySelector('.details-content');
+        clickedElement = document.querySelector(`.clickable-stat[data-gameweek="${gameweek}"][data-source="chip"]`);
+
+        // If clicking same gameweek, close it
+        if (!detailsContainer.classList.contains('hidden') &&
+            detailsContainer.dataset.currentGameweek == gameweek) {
+            detailsContainer.classList.add('hidden');
+            // Remove expanded class from all stat cards
+            document.querySelectorAll('.stat-card.expanded').forEach(card => card.classList.remove('expanded'));
+            return;
+        }
+
+        // Close gw details container and all table detail rows
+        const gwContainer = document.getElementById('gw-details-container');
+        if (gwContainer) gwContainer.classList.add('hidden');
+        document.querySelectorAll('.details-row').forEach(r => r.classList.add('hidden'));
+
+        // Remove expanded class from all elements
+        document.querySelectorAll('.stat-card.expanded').forEach(card => card.classList.remove('expanded'));
+        document.querySelectorAll('.gameweek-row.expanded').forEach(row => row.classList.remove('expanded'));
+
+    } else {
+        // Expanding from table row click - use table row details
+        const detailsRow = document.getElementById(`details-gw-${gameweek}`);
+        detailsContainer = detailsRow;
+        detailsContent = detailsRow.querySelector('.details-content');
+        clickedElement = document.querySelector(`.gameweek-row[data-gameweek="${gameweek}"]`);
+
+        // If clicking same row, close it
+        if (!detailsRow.classList.contains('hidden')) {
+            detailsRow.classList.add('hidden');
+            // Remove expanded class from all gameweek rows
+            document.querySelectorAll('.gameweek-row.expanded').forEach(row => row.classList.remove('expanded'));
+            return;
+        }
+
+        // Close all other table detail rows and both card containers
+        document.querySelectorAll('.details-row').forEach(r => r.classList.add('hidden'));
+        const gwContainer = document.getElementById('gw-details-container');
+        if (gwContainer) gwContainer.classList.add('hidden');
+        const chipContainer = document.getElementById('chip-details-container');
+        if (chipContainer) chipContainer.classList.add('hidden');
+
+        // Remove expanded class from all elements
+        document.querySelectorAll('.stat-card.expanded').forEach(card => card.classList.remove('expanded'));
+        document.querySelectorAll('.gameweek-row.expanded').forEach(row => row.classList.remove('expanded'));
+    }
+
+    // Add expanded class to clicked element
+    if (clickedElement) {
+        clickedElement.classList.add('expanded');
+    }
+
+    // Show loading
+    detailsContainer.classList.remove('hidden');
+    detailsContainer.dataset.currentGameweek = gameweek;
+    detailsContent.innerHTML = '<p style="text-align: center; padding: 1rem;">Loading GW' + gameweek + ' details...</p>';
+
+    try {
+        // Fetch picks for this specific gameweek
+        const picksData = await getManagerPicks(managerId, gameweek);
+
+        if (!picksData || !picksData.picks) {
+            throw new Error('Could not fetch gameweek picks');
+        }
+
+        // Fetch live gameweek data for points
+        const liveData = await getLiveGameweekData(gameweek);
+        const playerMap = createPlayerMap(bootstrapData);
+
+        const livePointsMap = {};
+        liveData.elements.forEach(p => {
+            livePointsMap[p.id] = p.stats;
+        });
+
+        let startingXIHtml = '';
+        let benchHtml = '';
+
+        picksData.picks.forEach(pick => {
+            const player = playerMap[pick.element];
+            const stats = livePointsMap[pick.element] || {};
+            const points = (stats.total_points || 0) * pick.multiplier;
+            const minutes = stats.minutes || 0;
+
+            let captaincy = '';
+            if (pick.is_captain) captaincy = ' <span class="captain-icon">(C)</span>';
+            if (pick.is_vice_captain) captaincy = ' <span class="vice-captain-icon">(V)</span>';
+
+            const playerHtml = `
+                <li>
+                    <span class="player-name">${player.web_name}${captaincy}</span>
+                    <span>Pts: ${points} | Mins: ${minutes}</span>
+                </li>
+            `;
+
+            if (pick.position <= 11) {
+                startingXIHtml += playerHtml;
+            } else {
+                benchHtml += playerHtml;
+            }
+        });
+
+        const chip = picksData.active_chip ? picksData.active_chip.replace(/_/g, ' ').toUpperCase() : 'None';
+        const transfersCost = picksData.entry_history.event_transfers_cost;
+
+        const contentHtml = `
+            <div class="details-grid">
+                <div class="details-section">
+                    <h3>Starting XI</h3>
+                    <ul class="player-list">${startingXIHtml}</ul>
+                </div>
+                <div class="details-section">
+                    <h3>Bench</h3>
+                    <ul class="player-list">${benchHtml}</ul>
+                </div>
+                <div class="details-section">
+                    <h3>Gameweek Info</h3>
+                    <ul class="player-list">
+                        <li><span>Points Hit:</span> <span>-${transfersCost}</span></li>
+                        <li><span>Chip Played:</span> <span>${chip}</span></li>
+                    </ul>
+                </div>
+            </div>
+        `;
+
+        detailsContent.innerHTML = contentHtml;
+
+    } catch (error) {
+        console.error('Error loading gameweek details:', error);
+        detailsContent.innerHTML = `
+            <p style="text-align: center; padding: 1rem; color: var(--text-error);">
+                Could not load gameweek details. ${error.message}
+            </p>
+        `;
     }
 }
 

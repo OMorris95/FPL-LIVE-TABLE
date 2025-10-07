@@ -1,6 +1,6 @@
 // Fixtures Page - Fixture Difficulty Rating (FDR) Matrix
 
-async function renderFixturesPage() {
+async function renderFixturesPage(state = {}) {
     const app = document.getElementById('app');
     const nav = document.getElementById('main-nav');
 

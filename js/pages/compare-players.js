@@ -3,7 +3,7 @@
 let comparisonPlayers = [];
 const MAX_PLAYERS = 4;
 
-async function renderComparePlayersPage(leagueId) {
+async function renderComparePlayersPage(state = {}) {
     const app = document.getElementById('app');
     const nav = document.getElementById('main-nav');
 
@@ -26,6 +26,13 @@ async function renderComparePlayersPage(leagueId) {
 
         // Get all players as array
         const allPlayers = Object.values(playerMap);
+
+        // Pre-populate comparison players if playerIds were passed from players page
+        if (state.playerIds && Array.isArray(state.playerIds)) {
+            comparisonPlayers = state.playerIds
+                .map(id => playerMap[id])
+                .filter(player => player !== undefined);
+        }
 
         renderComparisonTool(allPlayers, teamMap, currentGw);
 

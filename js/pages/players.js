@@ -20,7 +20,7 @@ let filters = {
     sortBy: 'total_points'
 };
 
-async function renderPlayersPage() {
+async function renderPlayersPage(state = {}) {
     const app = document.getElementById('app');
     const nav = document.getElementById('main-nav');
 

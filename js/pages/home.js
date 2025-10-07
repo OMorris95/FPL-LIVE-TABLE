@@ -24,15 +24,15 @@ function renderLeagueNavButtons(currentPage, leagueId) {
     return `<div class="flex gap-md mb-sm flex-wrap">${buttons.join('')}</div>`;
 }
 
-async function renderHomePage() {
+async function renderHomePage(state = {}) {
     const app = document.getElementById('app');
     const nav = document.getElementById('main-nav');
 
     // Show navigation
     nav.style.display = 'block';
 
-    // Check if we have a stored league ID
-    const storedLeagueId = router.getLeagueId();
+    // Check if we have a stored league ID (from state or router)
+    const storedLeagueId = state.leagueId || router.getLeagueId();
 
     if (storedLeagueId) {
         // Render live table
