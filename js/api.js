@@ -263,13 +263,14 @@ function delay(ms) {
 
 /**
  * Fetches manager picks and history data in batches to avoid rate limiting
+ * Rate limit: 60 requests/second. Each manager = 2 requests (picks + history)
  * @param {array} managers - Array of manager objects with entry ID
  * @param {number} gameweekId - Gameweek ID
- * @param {number} batchSize - Number of managers to fetch per batch (default 10)
- * @param {number} delayMs - Delay in milliseconds between batches (default 50)
+ * @param {number} batchSize - Number of managers to fetch per batch (default 5)
+ * @param {number} delayMs - Delay in milliseconds between batches (default 200)
  * @returns {Promise<array>} - Array of manager data objects
  */
-async function fetchManagerDataInBatches(managers, gameweekId, batchSize = 10, delayMs = 50) {
+async function fetchManagerDataInBatches(managers, gameweekId, batchSize = 5, delayMs = 200) {
     const results = [];
 
     for (let i = 0; i < managers.length; i += batchSize) {
@@ -307,13 +308,14 @@ async function fetchManagerDataInBatches(managers, gameweekId, batchSize = 10, d
 
 /**
  * Fetches manager picks only in batches to avoid rate limiting
+ * Rate limit: 60 requests/second. Each manager = 1 request (picks only)
  * @param {array} managerIds - Array of manager IDs
  * @param {number} gameweekId - Gameweek ID
  * @param {number} batchSize - Number of managers to fetch per batch (default 10)
- * @param {number} delayMs - Delay in milliseconds between batches (default 50)
+ * @param {number} delayMs - Delay in milliseconds between batches (default 200)
  * @returns {Promise<array>} - Array of picks data
  */
-async function fetchManagerPicksInBatches(managerIds, gameweekId, batchSize = 10, delayMs = 50) {
+async function fetchManagerPicksInBatches(managerIds, gameweekId, batchSize = 10, delayMs = 200) {
     const results = [];
 
     for (let i = 0; i < managerIds.length; i += batchSize) {

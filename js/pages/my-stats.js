@@ -221,7 +221,7 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
     app.innerHTML = `
         <div class="my-stats-container">
             <!-- Header Card -->
-            <div class="card">
+            <div class="card card-top">
                 <div class="card-header flex-header">
                     <div>
                         <h2 class="card-title">${managerData.player_first_name} ${managerData.player_last_name}</h2>

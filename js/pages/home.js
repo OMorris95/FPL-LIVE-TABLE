@@ -105,19 +105,6 @@ function analyzeChipUsage(allPicksData, managers) {
     return chipUsage;
 }
 
-// League navigation buttons helper
-function renderLeagueNavButtons(currentPage, leagueId) {
-    const buttons = [];
-
-    if (currentPage !== 'table') {
-        buttons.push(`<button class="btn-primary" onclick="router.navigate('/', {leagueId: '${leagueId}'})">League Table</button>`);
-    }
-    if (currentPage !== 'comparison') {
-        buttons.push(`<button class="btn-primary" onclick="router.navigate('/comparison', {leagueId: '${leagueId}'})">Manager Comparison</button>`);
-    }
-
-    return `<div class="flex gap-md mb-sm flex-wrap">${buttons.join('')}</div>`;
-}
 
 async function renderHomePage(state = {}) {
     const app = document.getElementById('app');
@@ -144,7 +131,7 @@ function renderEntryBoxes() {
     app.innerHTML = `
         <div class="home-container container-lg pt-lg">
             <div class="grid-2">
-                <div class="card">
+                <div class="card card-top">
                     <div class="card-header">
                         <h2 class="card-title">Enter League ID</h2>
                     </div>
@@ -165,7 +152,7 @@ function renderEntryBoxes() {
                     </form>
                 </div>
 
-                <div class="card">
+                <div class="card card-top">
                     <div class="card-header">
                         <h2 class="card-title">Enter Manager ID</h2>
                     </div>
@@ -583,10 +570,7 @@ function renderLiveTable(managers, leagueName, leagueId, captainStats, ownership
 
     app.innerHTML = `
         <div class="live-table-container">
-            <!-- League Navigation Buttons -->
-            ${renderLeagueNavButtons('table', leagueId)}
-
-            <div class="card">
+            <div class="card card-top">
                 <div class="card-header">
                     <div>
                         <h2 class="card-title">GW ${liveGameweekId} Live Table</h2>
@@ -598,6 +582,9 @@ function renderLiveTable(managers, leagueName, leagueId, captainStats, ownership
                     </div>
                     <div class="flex items-center gap-lg flex-wrap">
                         <p class="subtitle m-0">${leagueName}</p>
+                        <button class="btn-primary" onclick="router.navigate('/comparison', {leagueId: '${leagueId}'})">
+                            Manager Comparison
+                        </button>
                         <button id="change-league-btn" class="btn-secondary-small">
                             Change League
                         </button>

@@ -94,7 +94,7 @@ function renderFDRMatrix(bootstrapData, fixturesData, currentGw) {
     // Generate table HTML
     app.innerHTML = `
         <div class="fixtures-container">
-            <div class="card">
+            <div class="card card-top">
                 <div class="card-header">
                     <h2 class="card-title">Fixture Difficulty Rating (FDR)</h2>
                 </div>

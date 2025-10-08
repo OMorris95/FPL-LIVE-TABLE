@@ -52,7 +52,7 @@ function renderComparisonTool(allPlayers, teamMap, currentGw) {
 
     app.innerHTML = `
         <div class="compare-container">
-            <div class="card">
+            <div class="card card-top">
                 <div class="card-header">
                     <h2 class="card-title">Player Comparison Tool</h2>
                 </div>

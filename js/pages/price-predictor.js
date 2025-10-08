@@ -95,7 +95,7 @@ function renderPricePredictorHub(predictions) {
 
     app.innerHTML = `
         <div class="price-predictor-container">
-            <div class="card">
+            <div class="card card-top">
                 <div class="card-header">
                     <div>
                         <h2 class="card-title">Price Change Predictor</h2>

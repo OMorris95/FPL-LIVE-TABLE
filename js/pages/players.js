@@ -87,7 +87,7 @@ function renderPlayerSearchHub() {
 
     app.innerHTML = `
         <div class="players-container">
-            <div class="card">
+            <div class="card card-top">
                 <div class="card-header">
                     <h2 class="card-title">Player Stats Hub</h2>
                 </div>

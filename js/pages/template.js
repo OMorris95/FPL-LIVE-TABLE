@@ -210,7 +210,7 @@ function renderTemplateTracker(allPlayers, teamMap, bootstrapData) {
 
     app.innerHTML = `
         <div class="template-container">
-            <div class="card">
+            <div class="card card-top">
                 <div class="card-header">
                     <h2 class="card-title">Template Team Tracker</h2>
                     <p class="subtitle">Ownership: ${getTierDisplayName(currentTier)}</p>

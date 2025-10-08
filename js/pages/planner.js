@@ -111,7 +111,7 @@ function renderPlannerTool(playerMap, teamMap, currentGw, managerData) {
 
     app.innerHTML = `
         <div class="planner-container">
-            <div class="card">
+            <div class="card card-top">
                 <div class="card-header">
                     <div>
                         <h2 class="card-title">Transfer Planner</h2>

@@ -1,18 +1,5 @@
 // Manager Comparison Page - Head-to-head analysis
 
-// League navigation buttons helper
-function renderLeagueNavButtons(currentPage, leagueId) {
-    const buttons = [];
-
-    if (currentPage !== 'table') {
-        buttons.push(`<button class="btn-primary" onclick="router.navigate('/', {leagueId: '${leagueId}'})">League Table</button>`);
-    }
-    if (currentPage !== 'comparison') {
-        buttons.push(`<button class="btn-primary" onclick="router.navigate('/comparison', {leagueId: '${leagueId}'})">Manager Comparison</button>`);
-    }
-
-    return `<div class="flex gap-md mb-sm flex-wrap">${buttons.join('')}</div>`;
-}
 
 async function renderComparisonPage(state = {}) {
     const app = document.getElementById('app');
@@ -71,12 +58,14 @@ function renderManagerSelection(leagueData, leagueId) {
 
     app.innerHTML = `
         <div class="comparison-container">
-            <!-- League Navigation Buttons -->
-            ${renderLeagueNavButtons('comparison', leagueId)}
-
-            <div class="card">
+            <div class="card card-top">
                 <div class="card-header">
-                    <h2 class="card-title">Manager Comparison</h2>
+                    <div>
+                        <h2 class="card-title">Manager Comparison</h2>
+                    </div>
+                    <button class="btn-primary" onclick="router.navigate('/', {leagueId: '${leagueId}'})">
+                        League Table
+                    </button>
                 </div>
 
                 <div class="grid-2 mb-2">
