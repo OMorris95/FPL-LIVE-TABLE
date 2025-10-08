@@ -65,10 +65,56 @@ async function getLiveGameweekData(gameweekId) {
 /**
  * Fetches league standings data
  * @param {string} leagueId - League ID
+ * @param {number} page - Page number (default 1)
  * @returns {Promise<object>} - League data
  */
-async function getLeagueData(leagueId) {
-    return await fetchData(`${API_BASE_URL}leagues-classic/${leagueId}/standings/`);
+async function getLeagueData(leagueId, page = 1) {
+    return await fetchData(`${API_BASE_URL}leagues-classic/${leagueId}/standings/?page_standings=${page}`);
+}
+
+/**
+ * Fetches multiple pages of league data to get more managers
+ * @param {string} leagueId - League ID
+ * @param {number} maxPages - Maximum number of pages to fetch (default 2 for 100 managers)
+ * @returns {Promise<object>} - Combined league data with all managers
+ */
+async function getAllLeagueManagers(leagueId, maxPages = 2) {
+    const firstPage = await getLeagueData(leagueId, 1);
+    if (!firstPage || !firstPage.standings) {
+        return firstPage;
+    }
+
+    // If only one page needed or no more pages available
+    if (maxPages === 1 || !firstPage.standings.has_next) {
+        return firstPage;
+    }
+
+    // Fetch additional pages
+    const additionalPages = [];
+    for (let page = 2; page <= maxPages; page++) {
+        if (page === 2 || additionalPages[page - 3].standings.has_next) {
+            additionalPages.push(getLeagueData(leagueId, page));
+        }
+    }
+
+    const additionalData = await Promise.all(additionalPages);
+
+    // Combine all results
+    const allManagers = [...firstPage.standings.results];
+    additionalData.forEach(pageData => {
+        if (pageData && pageData.standings && pageData.standings.results) {
+            allManagers.push(...pageData.standings.results);
+        }
+    });
+
+    // Return combined data with first page structure
+    return {
+        ...firstPage,
+        standings: {
+            ...firstPage.standings,
+            results: allManagers
+        }
+    };
 }
 
 /**
@@ -206,6 +252,94 @@ function getPositionLabel(elementType) {
     return positionNames[elementType] || '???';
 }
 
+/**
+ * Helper function to delay execution
+ * @param {number} ms - Milliseconds to delay
+ * @returns {Promise} - Promise that resolves after delay
+ */
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * Fetches manager picks and history data in batches to avoid rate limiting
+ * @param {array} managers - Array of manager objects with entry ID
+ * @param {number} gameweekId - Gameweek ID
+ * @param {number} batchSize - Number of managers to fetch per batch (default 10)
+ * @param {number} delayMs - Delay in milliseconds between batches (default 50)
+ * @returns {Promise<array>} - Array of manager data objects
+ */
+async function fetchManagerDataInBatches(managers, gameweekId, batchSize = 10, delayMs = 50) {
+    const results = [];
+
+    for (let i = 0; i < managers.length; i += batchSize) {
+        const batch = managers.slice(i, i + batchSize);
+
+        const batchPromises = batch.map(async (manager) => {
+            try {
+                const [picksData, historyData] = await Promise.all([
+                    getManagerPicks(manager.entry, gameweekId),
+                    getManagerHistory(manager.entry)
+                ]);
+
+                return {
+                    manager,
+                    picksData,
+                    historyData
+                };
+            } catch (error) {
+                console.error(`Error fetching data for manager ${manager.entry}:`, error);
+                return null;
+            }
+        });
+
+        const batchResults = await Promise.all(batchPromises);
+        results.push(...batchResults);
+
+        // Add delay between batches (except after the last batch)
+        if (i + batchSize < managers.length) {
+            await delay(delayMs);
+        }
+    }
+
+    return results.filter(r => r !== null);
+}
+
+/**
+ * Fetches manager picks only in batches to avoid rate limiting
+ * @param {array} managerIds - Array of manager IDs
+ * @param {number} gameweekId - Gameweek ID
+ * @param {number} batchSize - Number of managers to fetch per batch (default 10)
+ * @param {number} delayMs - Delay in milliseconds between batches (default 50)
+ * @returns {Promise<array>} - Array of picks data
+ */
+async function fetchManagerPicksInBatches(managerIds, gameweekId, batchSize = 10, delayMs = 50) {
+    const results = [];
+
+    for (let i = 0; i < managerIds.length; i += batchSize) {
+        const batch = managerIds.slice(i, i + batchSize);
+
+        const batchPromises = batch.map(async (managerId) => {
+            try {
+                return await getManagerPicks(managerId, gameweekId);
+            } catch (error) {
+                console.error(`Error fetching picks for manager ${managerId}:`, error);
+                return null;
+            }
+        });
+
+        const batchResults = await Promise.all(batchPromises);
+        results.push(...batchResults);
+
+        // Add delay between batches (except after the last batch)
+        if (i + batchSize < managerIds.length) {
+            await delay(delayMs);
+        }
+    }
+
+    return results.filter(r => r !== null);
+}
+
 // Export functions for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
@@ -215,6 +349,7 @@ if (typeof module !== 'undefined' && module.exports) {
         getLastCompletedGameweek,
         getLiveGameweekData,
         getLeagueData,
+        getAllLeagueManagers,
         getManagerPicks,
         getManagerHistory,
         createPlayerMap,
@@ -222,6 +357,9 @@ if (typeof module !== 'undefined' && module.exports) {
         calculateLivePoints,
         getChipAbbreviation,
         getPositionLabel,
+        delay,
+        fetchManagerDataInBatches,
+        fetchManagerPicksInBatches,
         API_BASE_URL,
         CORS_PROXY
     };

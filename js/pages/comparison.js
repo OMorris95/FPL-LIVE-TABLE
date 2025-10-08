@@ -7,12 +7,6 @@ function renderLeagueNavButtons(currentPage, leagueId) {
     if (currentPage !== 'table') {
         buttons.push(`<button class="btn-primary" onclick="router.navigate('/', {leagueId: '${leagueId}'})">League Table</button>`);
     }
-    if (currentPage !== 'dream-team') {
-        buttons.push(`<button class="btn-primary" onclick="router.navigate('/dream-team', {leagueId: '${leagueId}'})">Dream Team</button>`);
-    }
-    if (currentPage !== 'league-stats') {
-        buttons.push(`<button class="btn-primary" onclick="router.navigate('/league-stats', {leagueId: '${leagueId}'})">League Stats</button>`);
-    }
     if (currentPage !== 'comparison') {
         buttons.push(`<button class="btn-primary" onclick="router.navigate('/comparison', {leagueId: '${leagueId}'})">Manager Comparison</button>`);
     }
@@ -321,8 +315,8 @@ function renderComparisonResults(manager1Info, manager2Info, history1, history2,
                             </tr>
                             <tr>
                                 <td>Transfers Cost</td>
-                                <td>-${picks1.entry_history.event_transfers_cost}</td>
-                                <td>-${picks2.entry_history.event_transfers_cost}</td>
+                                <td>${picks1.entry_history.event_transfers_cost > 0 ? '-' + picks1.entry_history.event_transfers_cost : '0'}</td>
+                                <td>${picks2.entry_history.event_transfers_cost > 0 ? '-' + picks2.entry_history.event_transfers_cost : '0'}</td>
                             </tr>
                         </tbody>
                     </table>

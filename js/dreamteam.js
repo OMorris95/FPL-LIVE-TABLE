@@ -156,13 +156,18 @@ async function getAllSquadPlayers(leagueData, gameweekId, playerMap, liveData) {
         liveStatsMap[player.id] = player.stats;
     });
 
-    // Fetch all managers' picks in parallel
-    const managers = leagueData.standings.results;
-    const picksPromises = managers.map(manager =>
-        getManagerPicks(manager.entry, gameweekId)
-    );
+    // Fetch all managers' picks in batches
+    // Limit to top 50 managers for large leagues to avoid rate limiting
+    const allManagers = leagueData.standings.results;
+    const managers = allManagers.length > 50 ? allManagers.slice(0, 50) : allManagers;
 
-    const allPicksData = await Promise.all(picksPromises);
+    // Check if league has more managers than we're using
+    // Either by having >50 managers in results, or by has_next flag indicating more pages
+    const hasMoreManagers = allManagers.length > 50 || leagueData.standings.has_next;
+
+    // Fetch picks in batches to avoid rate limiting
+    const managerIds = managers.map(m => m.entry);
+    const allPicksData = await fetchManagerPicksInBatches(managerIds, gameweekId);
 
     // Process each manager's picks
     allPicksData.forEach(picksData => {
@@ -191,7 +196,12 @@ async function getAllSquadPlayers(leagueData, gameweekId, playerMap, liveData) {
         });
     });
 
-    return allSquadPlayers;
+    return {
+        players: allSquadPlayers,
+        isLimited: hasMoreManagers,
+        totalManagers: allManagers.length,
+        managersUsed: managers.length
+    };
 }
 
 /**

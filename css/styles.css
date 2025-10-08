@@ -739,6 +739,20 @@ select.form-input {
     color: #00ff37;
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.stats-table tbody tr {
+    cursor: pointer;
+}
+
+.stats-table tbody tr:hover {
+    background-color: var(--card-bg-elevated);
+}
+
+.stats-table th,
+.stats-table td {
+    padding: 0.3rem 0.5rem;
 }
 
 .note-text {

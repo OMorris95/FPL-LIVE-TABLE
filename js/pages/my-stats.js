@@ -8,7 +8,7 @@ async function renderMyStatsPage(state = {}) {
     nav.style.display = 'block';
 
     // Extract paramManagerId from state (backwards compatible)
-    const paramManagerId = state.managerId || state;
+    const paramManagerId = (typeof state === 'object' && state.managerId) || (typeof state === 'string' ? state : null);
 
     // Determine which manager ID to use
     // Priority: URL parameter > localStorage
@@ -397,7 +397,10 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
                         <div class="stat-label">Total Transfers</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value text-error">-${currentSeasonHistory.reduce((sum, gw) => sum + gw.event_transfers_cost, 0)}</div>
+                        <div class="stat-value text-error">${(() => {
+                            const total = currentSeasonHistory.reduce((sum, gw) => sum + gw.event_transfers_cost, 0);
+                            return total > 0 ? '-' + total : '0';
+                        })()}</div>
                         <div class="stat-label">Hit Points Lost</div>
                     </div>
                     <div class="stat-card">
