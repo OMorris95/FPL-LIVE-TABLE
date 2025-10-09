@@ -524,7 +524,8 @@ async function renderHomeWithLiveTable(leagueId) {
         let dreamTeamInfo = null;
 
         try {
-            const squadPlayersResult = await getAllSquadPlayers(leagueData, liveGameweekId, playerMap, liveData);
+            // Pass already-fetched picks data to avoid redundant API calls
+            const squadPlayersResult = await getAllSquadPlayers(leagueData, liveGameweekId, playerMap, liveData, allPicksData);
             const allSquadPlayers = squadPlayersResult.players;
             dreamTeamInfo = {
                 isLimited: squadPlayersResult.isLimited,

@@ -18,7 +18,7 @@ async function renderFixturesPage(state = {}) {
     try {
         // Fetch bootstrap data and fixtures
         const bootstrapData = await getBootstrapData();
-        const fixturesData = await fetchData(`${API_BASE_URL}fixtures/`);
+        const fixturesData = await getFixturesData();
 
         if (!bootstrapData || !fixturesData) {
             throw new Error('Could not fetch fixtures data');

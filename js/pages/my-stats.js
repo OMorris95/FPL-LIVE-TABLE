@@ -117,16 +117,6 @@ async function renderMyStatsPage(state = {}) {
     }
 }
 
-// Helper function to get manager general data
-async function getManagerData(managerId) {
-    return await fetchData(`${API_BASE_URL}entry/${managerId}/`);
-}
-
-// Helper function to get manager history
-async function getManagerHistory(managerId) {
-    return await fetchData(`${API_BASE_URL}entry/${managerId}/history/`);
-}
-
 function renderManagerDashboard(managerData, historyData, currentPicks, bootstrapData, currentGw, managerId, ownManagerId, leagueManagers) {
     const app = document.getElementById('app');
 

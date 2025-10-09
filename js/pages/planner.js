@@ -443,13 +443,5 @@ window.removeTransfer = function(index) {
     })();
 };
 
-async function getManagerData(managerId) {
-    return await fetchData(`${API_BASE_URL}entry/${managerId}/`);
-}
-
-async function getManagerPicks(managerId, gameweek) {
-    return await fetchData(`${API_BASE_URL}entry/${managerId}/event/${gameweek}/picks/`);
-}
-
 // Register route
 router.addRoute('/planner', renderPlannerPage);

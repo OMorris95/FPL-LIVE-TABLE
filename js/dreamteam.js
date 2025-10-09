@@ -145,9 +145,10 @@ function findPlayerOfTheWeek(dreamTeam, allSquadPlayers) {
  * @param {number} gameweekId - Gameweek ID
  * @param {object} playerMap - Map of player ID to player object
  * @param {object} liveData - Live gameweek data
+ * @param {array} preloadedPicksData - Optional array of already-fetched picks data to avoid re-fetching
  * @returns {Promise<object>} - Map of player ID to player data with stats
  */
-async function getAllSquadPlayers(leagueData, gameweekId, playerMap, liveData) {
+async function getAllSquadPlayers(leagueData, gameweekId, playerMap, liveData, preloadedPicksData = null) {
     const allSquadPlayers = {};
     const liveStatsMap = {};
 
@@ -156,18 +157,24 @@ async function getAllSquadPlayers(leagueData, gameweekId, playerMap, liveData) {
         liveStatsMap[player.id] = player.stats;
     });
 
-    // Fetch all managers' picks in batches
-    // Limit to top 50 managers for large leagues to avoid rate limiting
+    // Limit to top 50 managers for large leagues
     const allManagers = leagueData.standings.results;
     const managers = allManagers.length > 50 ? allManagers.slice(0, 50) : allManagers;
 
     // Check if league has more managers than we're using
-    // Either by having >50 managers in results, or by has_next flag indicating more pages
     const hasMoreManagers = allManagers.length > 50 || leagueData.standings.has_next;
 
-    // Fetch picks in batches to avoid rate limiting
-    const managerIds = managers.map(m => m.entry);
-    const allPicksData = await fetchManagerPicksInBatches(managerIds, gameweekId);
+    let allPicksData;
+
+    // Use preloaded picks if provided, otherwise fetch
+    if (preloadedPicksData && preloadedPicksData.length > 0) {
+        console.log('⚡ Using preloaded picks for dream team (no fetch needed)');
+        allPicksData = preloadedPicksData.slice(0, managers.length);
+    } else {
+        // Fetch picks in batches to avoid rate limiting
+        const managerIds = managers.map(m => m.entry);
+        allPicksData = await fetchManagerPicksInBatches(managerIds, gameweekId);
+    }
 
     // Process each manager's picks
     allPicksData.forEach(picksData => {
