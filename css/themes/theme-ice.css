@@ -1,0 +1,242 @@
+/* ==========================================
+   ICE THEME - Blue/Cyan Color Palette
+   ========================================== */
+
+:root {
+    /* ==========================================
+       THEME COLORS - Ice Blue Primary
+       ========================================== */
+
+    /* Ice Theme Primary Colors */
+    --fire-start: #00d4ff;
+    --fire-end: #0066ff;
+    --fire-gradient: linear-gradient(135deg, #00d4ff 0%, #0099ff 50%, #0066ff 100%);
+    --fire-gradient-hover: linear-gradient(135deg, #33ddff 0%, #00b3ff 50%, #0080ff 100%);
+
+    /* Theme Semantic Aliases */
+    --theme-primary: var(--fire-start);
+    --theme-gradient: var(--fire-gradient);
+    --theme-gradient-hover: var(--fire-gradient-hover);
+
+    /* ==========================================
+       BASE COLORS - Ice Variant
+       ========================================== */
+
+    --bg-dark: #0a0e1a;
+    --bg-dark-secondary: #0f1420;
+    --bg-gradient: linear-gradient(180deg, #0a0e1a 0%, #0f1929 100%);
+    --bg-card: #141b2e;
+    --bg-card-secondary: #1a2235;
+
+    /* Text Colors */
+    --text-primary: #e0f0ff;
+    --text-secondary: #b0d0e8;
+    --text-tertiary: #7090b8;
+    --text-quaternary: #506080;
+    --text-dim: #405070;
+
+    /* Accent Colors */
+    --accent-success: #00ffc8;
+    --accent-info: #00d4ff;
+    --accent-warning: #ffc400;
+    --accent-danger: #ff4466;
+    --accent-muted: #506080;
+
+    /* ==========================================
+       NAVIGATION COLORS - Ice
+       ========================================== */
+
+    --nav-link-default: rgba(224, 240, 255, 0.9);
+    --nav-link-hover-bg: rgba(0, 212, 255, 0.2);
+    --nav-link-active-bg: rgba(0, 212, 255, 0.3);
+    --nav-league-text: #e0f0ff;
+
+    /* ==========================================
+       BUTTON COLORS - Ice
+       ========================================== */
+
+    --btn-primary-bg: var(--fire-gradient);
+    --btn-primary-bg-hover: var(--fire-gradient-hover);
+    --btn-primary-text: #ffffff;
+
+    --btn-secondary-bg: #1a2235;
+    --btn-secondary-bg-hover: #243048;
+    --btn-secondary-border: #3a4560;
+    --btn-secondary-text: #b0d0e8;
+
+    --btn-danger-bg: #ff4466;
+    --btn-danger-hover: #ff6688;
+    --btn-danger-text: #ffffff;
+
+    /* ==========================================
+       FORM COLORS - Ice
+       ========================================== */
+
+    --form-input-bg: #1a2235;
+    --form-input-border: #2a3545;
+    --form-input-border-focus: #00d4ff;
+    --form-input-text: #e0f0ff;
+    --form-input-placeholder: #506080;
+    --form-select-icon: #00d4ff;
+
+    /* ==========================================
+       TABLE COLORS - Ice
+       ========================================== */
+
+    --table-header-bg: #1a2235;
+    --table-header-text: #b0d0e8;
+    --table-border: #2a3545;
+    --table-hover-bg: #1f2840;
+    --table-hover-tint: rgba(0, 212, 255, 0.1);
+    --table-stripe-bg: rgba(0, 212, 255, 0.05);
+
+    /* ==========================================
+       DREAM TEAM PITCH COLORS - Ice
+       ========================================== */
+
+    --pitch-bg-start: #0a2540;
+    --pitch-bg-end: #051830;
+    --pitch-bg-gradient: linear-gradient(to bottom, #0a2540, #051830);
+    --pitch-border: #1a3550;
+    --pitch-shadow-inset: rgba(0, 0, 0, 0.5);
+    --pitch-card-bg: rgba(255, 255, 255, 0.95);
+    --pitch-card-shadow: rgba(0, 100, 200, 0.4);
+    --pitch-card-text: #000000;
+    --pitch-points-color: #0099ff;
+
+    /* ==========================================
+       PLAYER OF THE WEEK COLORS - Ice
+       ========================================== */
+
+    --potw-card-bg: #1a2235;
+    --potw-card-border: var(--fire-gradient);
+    --potw-badge-bg: var(--fire-gradient);
+    --potw-badge-text: #ffffff;
+    --potw-name-color: #e0f0ff;
+    --potw-team-color: #7090b8;
+    --potw-points-bg: #0f1420;
+    --potw-points-text: #00d4ff;
+    --potw-stat-label: #7090b8;
+    --potw-stat-value: #e0f0ff;
+
+    /* ==========================================
+       PLAYER POSITION BADGE COLORS - Ice
+       ========================================== */
+
+    --position-gk-bg: rgba(0, 212, 255, 0.2);
+    --position-gk-text: #00d4ff;
+    --position-def-bg: rgba(0, 255, 200, 0.2);
+    --position-def-text: #00ffc8;
+    --position-mid-bg: rgba(100, 150, 255, 0.2);
+    --position-mid-text: #6496ff;
+    --position-fwd-bg: rgba(255, 100, 150, 0.2);
+    --position-fwd-text: #ff6496;
+
+    /* ==========================================
+       FDR (FIXTURE DIFFICULTY RATING) COLORS - Ice
+       ========================================== */
+
+    --fdr-easy-bg: rgba(0, 255, 200, 0.15);
+    --fdr-easy-text: #00ffc8;
+    --fdr-medium-bg: rgba(100, 200, 255, 0.15);
+    --fdr-medium-text: #64c8ff;
+    --fdr-hard-bg: rgba(255, 200, 100, 0.15);
+    --fdr-hard-text: #ffc864;
+    --fdr-very-hard-bg: rgba(255, 100, 150, 0.15);
+    --fdr-very-hard-text: #ff6496;
+
+    --fdr-home-color: #00d4ff;
+    --fdr-away-color: #7090b8;
+    --fdr-table-hover: rgba(0, 212, 255, 0.1);
+
+    /* ==========================================
+       TEMPLATE OWNERSHIP TIER COLORS - Ice
+       ========================================== */
+
+    --ownership-high-bg: rgba(255, 100, 150, 0.2);
+    --ownership-high-text: #ff6496;
+    --ownership-high-border: #ff6496;
+    --ownership-medium-bg: rgba(255, 200, 100, 0.2);
+    --ownership-medium-text: #ffc864;
+    --ownership-medium-border: #ffc864;
+    --ownership-low-bg: rgba(100, 150, 255, 0.2);
+    --ownership-low-text: #6496ff;
+    --ownership-low-border: #6496ff;
+    --ownership-diff-bg: rgba(0, 255, 200, 0.2);
+    --ownership-diff-text: #00ffc8;
+    --ownership-diff-border: #00ffc8;
+
+    /* ==========================================
+       CHIP BADGE COLORS - Ice
+       ========================================== */
+
+    --chip-wildcard-bg: rgba(100, 150, 255, 0.2);
+    --chip-wildcard-text: #6496ff;
+    --chip-freehit-bg: rgba(0, 255, 200, 0.2);
+    --chip-freehit-text: #00ffc8;
+    --chip-bench-boost-bg: rgba(255, 150, 0, 0.2);
+    --chip-bench-boost-text: #ff9600;
+    --chip-triple-captain-bg: rgba(255, 100, 150, 0.2);
+    --chip-triple-captain-text: #ff6496;
+
+    /* ==========================================
+       OVERLAY & MODAL COLORS - Ice
+       ========================================== */
+
+    --overlay-dark: rgba(10, 14, 26, 0.9);
+    --modal-bg: #1a2235;
+    --modal-border: #2a3545;
+    --modal-shadow: rgba(0, 100, 200, 0.5);
+
+    /* ==========================================
+       PLAYER CARD COLORS - Ice
+       ========================================== */
+
+    --player-card-bg: #1a2235;
+    --player-card-hover-bg: #1f2840;
+    --player-card-border-default: rgba(255, 255, 255, 0.1);
+    --player-card-border-hover: #00d4ff;
+    --player-card-shadow: rgba(0, 0, 0, 0.4);
+    --player-card-shadow-hover: rgba(0, 100, 200, 0.6);
+
+    /* ==========================================
+       COMPARISON & PLANNER COLORS - Ice
+       ========================================== */
+
+    --comparison-card-bg: #141b2e;
+    --comparison-card-border: #2a3545;
+    --comparison-highlight: #00d4ff;
+    --search-dropdown-bg: #1a2235;
+    --search-dropdown-hover: rgba(0, 212, 255, 0.2);
+    --search-dropdown-border: #2a3545;
+
+    /* ==========================================
+       PRICE PREDICTOR COLORS - Ice
+       ========================================== */
+
+    --price-rise-bg: rgba(0, 255, 200, 0.2);
+    --price-rise-text: #00ffc8;
+    --price-fall-bg: rgba(255, 100, 150, 0.2);
+    --price-fall-text: #ff6496;
+    --disclaimer-bg: #1a2235;
+    --disclaimer-border: #2a3545;
+    --disclaimer-text: #7090b8;
+    --likelihood-bg: #141b2e;
+    --likelihood-border: #2a3545;
+
+    /* ==========================================
+       SORTABLE & INTERACTIVE COLORS - Ice
+       ========================================== */
+
+    --sortable-arrow-color: #00d4ff;
+    --link-color: #00d4ff;
+    --link-hover: #33ddff;
+    --filter-active-border: #00d4ff;
+
+    /* ==========================================
+       STAT DETAIL COLORS - Ice
+       ========================================== */
+
+    --stat-detail-row-hover: rgba(0, 212, 255, 0.1);
+    --stat-detail-border: #2a3545;
+}

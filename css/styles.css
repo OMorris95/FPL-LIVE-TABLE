@@ -1,65 +1,249 @@
 /* FPL Stats Hub - Fire Gradient Theme */
 
+/* ==========================================
+   CSS VARIABLES - THEMING LAYER
+   Edit this section to change theme colors
+   ========================================== */
+
 :root {
-    /* Fire Gradient Colors */
+    /* ==========================================
+       THEME COLORS - Primary Brand
+       ========================================== */
+
+    /* Fire Theme Primary Colors */
     --fire-start: #ffc500;
     --fire-end: #c21500;
     --fire-gradient: linear-gradient(135deg, #ffc500 0%, #f7931e 50%, #c21500 100%);
     --fire-gradient-hover: linear-gradient(135deg, #ffd700 0%, #ff9500 50%, #d32500 100%);
 
-    /* Base Colors */
+    /* Theme Semantic Aliases (for easy theme switching) */
+    --theme-primary: var(--fire-start);
+    --theme-gradient: var(--fire-gradient);
+    --theme-gradient-hover: var(--fire-gradient-hover);
+
+    /* ==========================================
+       BASE COLORS - Backgrounds & Text
+       ========================================== */
+
+    /* Backgrounds */
     --bg-color: #0d0d0d;
     --bg-secondary: #1a1a1a;
     --bg-tertiary: #1f1f1f;
+    --bg-gradient: linear-gradient(180deg, #0d0d0d 0%, #1a1a1a 100%);
     --card-bg: #1e1e1e;
     --card-bg-elevated: #262626;
+
+    /* Text Colors */
     --text-color: #e8e8e8;
     --text-secondary: #a8a8a8;
     --text-tertiary: #888888;
     --text-quaternary: #666666;
     --text-light: #aaaaaa;
     --text-muted: #6a6a6a;
+
+    /* Border */
     --border-color: #333333;
 
-    /* Accent Colors */
+    /* ==========================================
+       ACCENT COLORS - Buttons & Highlights
+       ========================================== */
+
     --accent-gold: #ffc500;
     --accent-orange: #f7931e;
     --accent-red: #c21500;
+    --accent-gold-hover: #ffdb4d;
     --secondary-color: #00ff85;
     --success: #00ff37;
     --warning: #ffab00;
     --error: #ff3d00;
 
-    /* Rank/Status Colors */
+    /* ==========================================
+       RANK & STATUS COLORS
+       ========================================== */
+
     --rank-up: #00e676;
     --rank-down: #ff3d00;
     --rank-neutral: #888888;
-
-    /* Special Colors */
     --captain-color: #ffd700;
     --vice-captain-color: #cccccc;
 
-    /* Shadows */
+    /* ==========================================
+       NAVIGATION COLORS
+       ========================================== */
+
+    --nav-link-default: rgba(255, 255, 255, 0.9);
+    --nav-link-hover-bg: rgba(255, 255, 255, 0.2);
+    --nav-link-active-bg: rgba(255, 255, 255, 0.25);
+    --nav-text-shadow: rgba(0, 0, 0, 0.3);
+    --nav-league-text: #ffffff;
+
+    /* ==========================================
+       BUTTON COLORS
+       ========================================== */
+
+    --btn-secondary-small-bg: rgba(255, 255, 255, 0.1);
+    --btn-secondary-small-text: #ffffff;
+    --btn-secondary-small-border: rgba(255, 255, 255, 0.3);
+    --btn-secondary-small-hover-bg: rgba(255, 255, 255, 0.2);
+    --btn-secondary-small-hover-border: rgba(255, 255, 255, 0.5);
+    --btn-danger-hover: #c0392b;
+
+    /* ==========================================
+       DREAM TEAM PITCH COLORS (Home Page)
+       ========================================== */
+
+    --pitch-bg-start: #1a4d2e;
+    --pitch-bg-end: #0f3320;
+    --pitch-bg-gradient: linear-gradient(to bottom, #1a4d2e, #0f3320);
+    --pitch-border: #2d5a3d;
+    --pitch-shadow-inset: rgba(0, 0, 0, 0.4);
+    --pitch-card-bg: rgba(255, 255, 255, 0.95);
+    --pitch-card-shadow: rgba(0, 0, 0, 0.3);
+    --pitch-card-text: #000000;
+    --pitch-points-color: #00a656;
+
+    /* ==========================================
+       PLAYER OF THE WEEK COLORS
+       ========================================== */
+
+    --potw-text: #ffffff;
+    --potw-text-shadow: rgba(0, 0, 0, 0.5);
+    --potw-text-shadow-strong: rgba(0, 0, 0, 0.6);
+    --potw-stat-bg: rgba(0, 0, 0, 0.2);
+    --potw-stat-text-secondary: rgba(255, 255, 255, 0.9);
+
+    /* ==========================================
+       SECTION HEADER COLORS
+       ========================================== */
+
+    --section-header-color: #00ff37;
+
+    /* ==========================================
+       PLAYER POSITION BADGE COLORS
+       ========================================== */
+
+    --position-gk-bg: rgba(255, 152, 0, 0.2);
+    --position-gk-text: #ff9800;
+    --position-def-bg: rgba(0, 230, 118, 0.2);
+    --position-def-text: #00e676;
+    --position-mid-bg: rgba(33, 150, 243, 0.2);
+    --position-mid-text: #2196f3;
+    --position-fwd-bg: rgba(244, 67, 54, 0.2);
+    --position-fwd-text: #f44336;
+
+    /* ==========================================
+       FDR (FIXTURE DIFFICULTY RATING) COLORS
+       ========================================== */
+
+    /* Difficulty Levels */
+    --fdr-easy-bg: rgba(0, 230, 118, 0.15);
+    --fdr-easy-text: #00e676;
+    --fdr-medium-bg: rgba(255, 193, 7, 0.15);
+    --fdr-medium-text: #ffc107;
+    --fdr-hard-bg: rgba(255, 94, 0, 0.15);
+    --fdr-hard-text: #ff9800;
+    --fdr-very-hard-bg: rgba(255, 17, 0, 0.15);
+    --fdr-very-hard-text: #f44336;
+
+    /* Home/Away Indicators */
+    --fdr-home-bg: rgba(0, 230, 118, 0.2);
+    --fdr-away-bg: rgba(255, 171, 0, 0.2);
+
+    /* Table Hover */
+    --fdr-table-hover: rgba(255, 197, 0, 0.05);
+
+    /* ==========================================
+       TEMPLATE OWNERSHIP TIER COLORS
+       ========================================== */
+
+    --ownership-high-bg: rgba(231, 76, 60, 0.2);
+    --ownership-high-text: #e74c3c;
+    --ownership-high-border: #e74c3c;
+    --ownership-medium-bg: rgba(241, 196, 15, 0.2);
+    --ownership-medium-text: #f1c40f;
+    --ownership-medium-border: #f1c40f;
+    --ownership-low-bg: rgba(52, 152, 219, 0.2);
+    --ownership-low-text: #3498db;
+    --ownership-low-border: #3498db;
+    --ownership-diff-bg: rgba(46, 204, 113, 0.2);
+    --ownership-diff-text: #2ecc71;
+    --ownership-diff-border: #2ecc71;
+
+    /* ==========================================
+       OVERLAY & MODAL COLORS
+       ========================================== */
+
+    --overlay-dark: rgba(0, 0, 0, 0.8);
+    --white-overlay-01: rgba(255, 255, 255, 0.1);
+    --white-overlay-02: rgba(255, 255, 255, 0.2);
+    --white-overlay-03: rgba(255, 255, 255, 0.3);
+    --white-overlay-05: rgba(255, 255, 255, 0.5);
+    --white-overlay-09: rgba(255, 255, 255, 0.9);
+    --white-overlay-95: rgba(255, 255, 255, 0.95);
+    --black-overlay-01: rgba(0, 0, 0, 0.1);
+    --black-overlay-02: rgba(0, 0, 0, 0.2);
+    --black-overlay-04: rgba(0, 0, 0, 0.4);
+
+    /* ==========================================
+       FOCUS & HIGHLIGHT COLORS
+       ========================================== */
+
+    --focus-ring: rgba(255, 197, 0, 0.1);
+    --table-hover-tint: rgba(255, 197, 0, 0.05);
+    --player-card-border-default: #ffffff;
+
+    /* ==========================================
+       DISCLAIMER & WARNING COLORS
+       ========================================== */
+
+    --disclaimer-bg: rgba(255, 152, 0, 0.1);
+
+    /* ==========================================
+       SORTABLE HEADER COLORS
+       ========================================== */
+
+    --sortable-arrow-color: #000;
+
+    /* ==========================================
+       SHADOWS
+       ========================================== */
+
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
     --shadow-glow: 0 0 20px rgba(255, 197, 0, 0.3);
+    --shadow-text-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --shadow-text-md: 0 1px 3px rgba(0, 0, 0, 0.5);
+    --shadow-text-lg: 0 1px 4px rgba(0, 0, 0, 0.5);
+    --shadow-text-xl: 0 2px 6px rgba(0, 0, 0, 0.6);
+    --shadow-inset-sm: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+    --shadow-inset-md: inset 0 2px 10px rgba(0, 0, 0, 0.4);
+    --shadow-card: 0 4px 8px rgba(0, 0, 0, 0.3);
 
-    /* Border Radius */
+    /* ==========================================
+       BORDER RADIUS - Non-themeable
+       ========================================== */
+
     --radius-sm: 3px;
     --radius-md: 4px;
     --radius-lg: 6px;
     --radius-xl: 8px;
     --radius-round: 50%;
 
-    /* Container Widths */
+    /* ==========================================
+       CONTAINER WIDTHS - Non-themeable
+       ========================================== */
+
     --container-sm: 600px;
     --container-md: 800px;
     --container-lg: 1000px;
     --container-xl: 1200px;
     --container-max: 1400px;
 
-    /* Font Sizes */
+    /* ==========================================
+       FONT SIZES - Non-themeable
+       ========================================== */
+
     --font-xs: 0.7rem;
     --font-sm: 0.75rem;
     --font-base-sm: 0.85rem;
@@ -70,14 +254,20 @@
     --font-2xl: 1.75rem;
     --font-3xl: 2.5rem;
 
-    /* Spacing */
+    /* ==========================================
+       SPACING - Non-themeable
+       ========================================== */
+
     --spacing-xs: 0.5rem;
     --spacing-sm: 1rem;
     --spacing-md: 1.5rem;
     --spacing-lg: 2rem;
     --spacing-xl: 3rem;
 
-    /* Gaps (for flexbox/grid) */
+    /* ==========================================
+       GAPS - Non-themeable
+       ========================================== */
+
     --gap-xs: 0.25rem;
     --gap-sm: 0.5rem;
     --gap-md: 0.75rem;
@@ -94,7 +284,7 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", Helvetica, Arial, sans-serif;
-    background: linear-gradient(180deg, #0d0d0d 0%, #1a1a1a 100%);
+    background: var(--bg-gradient);
     color: var(--text-color);
     line-height: 1.6;
     min-height: 100vh;
@@ -150,7 +340,7 @@ body {
 }
 
 .nav-link {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--nav-link-default);
     text-decoration: none;
     padding: 0.75rem 1.25rem;
     border-radius: var(--radius-md);
@@ -162,14 +352,14 @@ body {
 }
 
 .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: var(--nav-link-hover-bg);
     transform: translateY(-2px);
     box-shadow: var(--shadow-sm);
 }
 
 .nav-link.active {
-    background-color: rgba(255, 255, 255, 0.25);
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+    background-color: var(--nav-link-active-bg);
+    box-shadow: var(--shadow-inset-sm);
 }
 
 .nav-league-info {
@@ -179,9 +369,39 @@ body {
 }
 
 .nav-league-info span {
-    color: #ffffff;
+    color: var(--nav-league-text);
     font-weight: 600;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: var(--shadow-text-lg);
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.theme-selector {
+    background-color: var(--card-bg-elevated);
+    color: var(--text-color);
+    border: 2px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    font-size: var(--font-base-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 140px;
+}
+
+.theme-selector:hover {
+    border-color: var(--accent-gold);
+    background-color: var(--card-bg);
+}
+
+.theme-selector:focus {
+    outline: none;
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 /* ============================================
@@ -214,7 +434,7 @@ body {
 }
 
 .btn-primary:hover {
-    background: #ffdb4d;
+    background: var(--accent-gold-hover);
     transform: translateY(-3px);
     box-shadow: var(--shadow-glow);
 }
@@ -250,9 +470,9 @@ body {
 }
 
 .btn-secondary-small {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background-color: var(--btn-secondary-small-bg);
+    color: var(--btn-secondary-small-text);
+    border: 1px solid var(--btn-secondary-small-border);
     padding: 8px 16px;
     border-radius: var(--radius-md);
     cursor: pointer;
@@ -262,8 +482,8 @@ body {
 }
 
 .btn-secondary-small:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.5);
+    background-color: var(--btn-secondary-small-hover-bg);
+    border-color: var(--btn-secondary-small-hover-border);
     transform: translateY(-1px);
 }
 
@@ -342,7 +562,7 @@ select.form-input {
 .form-input:focus {
     outline: none;
     border-color: var(--accent-gold);
-    box-shadow: 0 0 0 4px rgba(255, 197, 0, 0.1);
+    box-shadow: 0 0 0 4px var(--focus-ring);
     background-color: var(--card-bg);
 }
 
@@ -381,7 +601,7 @@ select.form-input {
     position: sticky;
     top: 0;
     z-index: 10;
-    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    border-right: 1px solid var(--black-overlay-01);
     border-top: 1px solid var(--border-color);
     border-bottom: 1px solid var(--border-color);
 }
@@ -504,14 +724,14 @@ select.form-input {
    ============================================ */
 
 .pitch-container {
-    background: linear-gradient(to bottom, #1a4d2e, #0f3320);
+    background: var(--pitch-bg-gradient);
     border-radius: var(--radius-lg);
     padding: var(--spacing-sm);
     position: relative;
     min-height: 400px;
     margin: var(--spacing-sm) 0;
-    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4);
-    border: 2px solid #2d5a3d;
+    box-shadow: var(--shadow-inset-md);
+    border: 2px solid var(--pitch-border);
 }
 
 .formation-row {
@@ -521,24 +741,24 @@ select.form-input {
 }
 
 .dream-team-player-card {
-    background-color: rgba(255, 255, 255, 0.95);
+    background-color: var(--pitch-card-bg);
     border-radius: var(--radius-md);
     padding: 0.75rem;
     min-width: 120px;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    box-shadow: var(--shadow-card);
 }
 
 .dream-team-player-card .player-name {
     font-weight: bold;
-    color: #000000 !important;
+    color: var(--pitch-card-text) !important;
     font-size: 0.9rem;
     margin-bottom: 0.25rem;
     text-align: center;
 }
 
 .dream-team-player-card .player-points {
-    color: #00a656;
+    color: var(--pitch-points-color);
     font-weight: bold;
     font-size: var(--font-md);
 }
@@ -573,12 +793,12 @@ select.form-input {
 .potw-title {
     font-size: var(--font-base);
     font-weight: 700;
-    color: #ffffff;
+    color: var(--potw-text);
     margin-bottom: var(--spacing-xs);
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 1px;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: var(--shadow-text-lg);
 }
 
 .potw-player-info {
@@ -588,9 +808,9 @@ select.form-input {
 .potw-player-name {
     font-size: var(--font-xl);
     font-weight: 700;
-    color: #ffffff;
+    color: var(--potw-text);
     margin-bottom: var(--spacing-xs);
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+    text-shadow: var(--shadow-text-xl);
 }
 
 .potw-player-stats {
@@ -602,7 +822,7 @@ select.form-input {
 
 .potw-stat {
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: var(--potw-stat-bg);
     padding: 8px 12px;
     border-radius: var(--radius-md);
     backdrop-filter: blur(10px);
@@ -611,13 +831,13 @@ select.form-input {
 .potw-stat-value {
     font-size: 1.25rem;
     font-weight: 700;
-    color: #ffffff;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    color: var(--potw-text);
+    text-shadow: var(--shadow-text-md);
 }
 
 .potw-stat-label {
     font-size: var(--font-sm);
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--potw-stat-text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     font-weight: 600;
@@ -742,7 +962,7 @@ select.form-input {
 }
 
 .section-header {
-    color: #00ff37;
+    color: var(--section-header-color);
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
     font-weight: 700;
@@ -808,6 +1028,16 @@ select.form-input {
         font-size: 0.85rem;
     }
 
+    .nav-actions {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .theme-selector {
+        width: 100%;
+        max-width: 280px;
+    }
+
     #app {
         padding: var(--spacing-sm);
     }
@@ -864,8 +1094,8 @@ select.form-input {
 .chip-active {
     font-size: var(--font-sm);
     font-weight: 800;
-    color: #ffffff;
-    background: var(--fire-gradient);
+    color: var(--potw-text);
+    background: var(--theme-gradient);
     padding: 4px 10px;
     border-radius: var(--radius-sm);
     margin-left: 8px;
@@ -894,13 +1124,13 @@ select.form-input {
 }
 
 .details-section h3 {
-    background: var(--fire-gradient);
+    background: var(--theme-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin-top: 0;
     border-bottom: 2px solid transparent;
-    border-image: var(--fire-gradient) 1;
+    border-image: var(--theme-gradient) 1;
     padding-bottom: var(--spacing-xs);
     font-weight: 700;
     font-size: var(--font-md);
@@ -1116,7 +1346,7 @@ select.form-input {
 }
 
 .fdr-matrix tbody tr:hover {
-    background: rgba(255, 197, 0, 0.05);
+    background: var(--fdr-table-hover);
 }
 
 .fdr-matrix td {
@@ -1155,50 +1385,50 @@ select.form-input {
 }
 
 .fdr-location.home {
-    background: rgba(0, 230, 118, 0.2);
+    background: var(--fdr-home-bg);
     color: var(--success);
 }
 
 .fdr-location.away {
-    background: rgba(255, 171, 0, 0.2);
+    background: var(--fdr-away-bg);
     color: var(--warning);
 }
 
 /* FDR Difficulty Colors */
 .fdr-easy {
-    background: rgba(0, 230, 118, 0.15);
-    color: #00e676;
+    background: var(--fdr-easy-bg);
+    color: var(--fdr-easy-text);
 }
 
 .fdr-easy .fdr-opponent {
-    color: #00e676;
+    color: var(--fdr-easy-text);
 }
 
 .fdr-medium {
-    background: rgba(255, 193, 7, 0.15);
-    color: #ffc107;
+    background: var(--fdr-medium-bg);
+    color: var(--fdr-medium-text);
 }
 
 .fdr-medium .fdr-opponent {
-    color: #ffc107;
+    color: var(--fdr-medium-text);
 }
 
 .fdr-hard {
-    background: rgba(255, 94, 0, 0.15);
-    color: #ff9800;
+    background: var(--fdr-hard-bg);
+    color: var(--fdr-hard-text);
 }
 
 .fdr-hard .fdr-opponent {
-    color: #ff9800;
+    color: var(--fdr-hard-text);
 }
 
 .fdr-very-hard {
-    background: rgba(255, 17, 0, 0.15);
-    color: #f44336;
+    background: var(--fdr-very-hard-bg);
+    color: var(--fdr-very-hard-text);
 }
 
 .fdr-very-hard .fdr-opponent {
-    color: #f44336;
+    color: var(--fdr-very-hard-text);
 }
 
 .fdr-blank {
@@ -1346,7 +1576,7 @@ select.form-input {
 /* Player Card */
 .player-card {
     background: var(--card-bg);
-    border: 1px solid #ffffff;
+    border: 1px solid var(--player-card-border-default);
     border-radius: var(--radius-md);
     padding: 1rem;
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
@@ -1402,23 +1632,23 @@ select.form-input {
 }
 
 .position-1 {
-    background: rgba(255, 152, 0, 0.2);
-    color: #ff9800;
+    background: var(--position-gk-bg);
+    color: var(--position-gk-text);
 }
 
 .position-2 {
-    background: rgba(0, 230, 118, 0.2);
-    color: #00e676;
+    background: var(--position-def-bg);
+    color: var(--position-def-text);
 }
 
 .position-3 {
-    background: rgba(33, 150, 243, 0.2);
-    color: #2196f3;
+    background: var(--position-mid-bg);
+    color: var(--position-mid-text);
 }
 
 .position-4 {
-    background: rgba(244, 67, 54, 0.2);
-    color: #f44336;
+    background: var(--position-fwd-bg);
+    color: var(--position-fwd-text);
 }
 
 .player-team {
@@ -1466,13 +1696,13 @@ select.form-input {
 }
 
 .player-status-badge.injury {
-    background: rgba(255, 152, 0, 0.2);
-    color: #ff9800;
+    background: var(--position-gk-bg);
+    color: var(--position-gk-text);
 }
 
 .player-status-badge.news {
-    background: rgba(33, 150, 243, 0.2);
-    color: #2196f3;
+    background: var(--position-mid-bg);
+    color: var(--position-mid-text);
 }
 
 .player-news-text {
@@ -1630,7 +1860,7 @@ select.form-input {
 }
 
 .remove-player-btn:hover {
-    background: #c0392b;
+    background: var(--btn-danger-hover);
 }
 
 .player-price {
@@ -1796,7 +2026,7 @@ select.form-input {
 }
 
 .remove-transfer-btn:hover {
-    background: #c0392b;
+    background: var(--btn-danger-hover);
 }
 
 .selected-player-badge {
@@ -1821,7 +2051,7 @@ select.form-input {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
+    background: var(--overlay-dark);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1941,27 +2171,27 @@ select.form-input {
 }
 
 .ownership-high {
-    background: rgba(231, 76, 60, 0.2);
-    color: #e74c3c;
-    border: 1px solid #e74c3c;
+    background: var(--ownership-high-bg);
+    color: var(--ownership-high-text);
+    border: 1px solid var(--ownership-high-border);
 }
 
 .ownership-medium {
-    background: rgba(241, 196, 15, 0.2);
-    color: #f1c40f;
-    border: 1px solid #f1c40f;
+    background: var(--ownership-medium-bg);
+    color: var(--ownership-medium-text);
+    border: 1px solid var(--ownership-medium-border);
 }
 
 .ownership-low {
-    background: rgba(52, 152, 219, 0.2);
-    color: #3498db;
-    border: 1px solid #3498db;
+    background: var(--ownership-low-bg);
+    color: var(--ownership-low-text);
+    border: 1px solid var(--ownership-low-border);
 }
 
 .ownership-differential {
-    background: rgba(46, 204, 113, 0.2);
-    color: #2ecc71;
-    border: 1px solid #2ecc71;
+    background: var(--ownership-diff-bg);
+    color: var(--ownership-diff-text);
+    border: 1px solid var(--ownership-diff-border);
 }
 
 .ownership-table {
@@ -1992,7 +2222,7 @@ select.form-input {
     position: absolute;
     right: 0.25rem;
     font-size: 0.7rem;
-    color: #000;
+    color: var(--sortable-arrow-color);
 }
 
 .sortable-header.sort-desc::after {
@@ -2045,7 +2275,7 @@ select.form-input {
 
 /* Disclaimer */
 .price-disclaimer {
-    background: rgba(255, 152, 0, 0.1);
+    background: var(--disclaimer-bg);
     border-left: 3px solid var(--warning);
     padding: 0.75rem 1rem;
     margin-bottom: 1rem;
@@ -2115,7 +2345,7 @@ select.form-input {
 
 .price-tab:hover {
     color: var(--text-color);
-    background: rgba(255, 197, 0, 0.05);
+    background: var(--table-hover-tint);
 }
 
 .price-tab.active {
@@ -2272,7 +2502,7 @@ select.form-input {
     font-size: var(--font-sm);
     font-weight: 700;
     color: var(--text-color);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    text-shadow: var(--shadow-text-sm);
 }
 
 /* Mobile Responsiveness */

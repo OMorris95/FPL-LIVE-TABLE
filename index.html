@@ -24,6 +24,13 @@
                 <a href="/template" data-link class="nav-link">Template</a>
                 <a href="/my-stats" data-link class="nav-link">My Stats</a>
             </div>
+            <div class="nav-actions">
+                <select id="theme-selector" class="theme-selector">
+                    <option value="">Fire Theme</option>
+                    <option value="ice">Ice Theme</option>
+                    <option value="forest">Forest Theme</option>
+                </select>
+            </div>
         </div>
     </nav>
 
@@ -37,6 +44,45 @@
         <div class="spinner"></div>
         <p>Loading...</p>
     </div>
+
+    <!-- Theme Switcher Script -->
+    <script>
+        // Theme Switcher - Load saved theme on page load
+        (function() {
+            const themeSelector = document.getElementById('theme-selector');
+            const savedTheme = localStorage.getItem('fpl-theme') || '';
+
+            // Apply saved theme
+            if (savedTheme) {
+                themeSelector.value = savedTheme;
+                loadTheme(savedTheme);
+            }
+
+            // Listen for theme changes
+            themeSelector.addEventListener('change', function() {
+                const selectedTheme = this.value;
+                localStorage.setItem('fpl-theme', selectedTheme);
+                loadTheme(selectedTheme);
+            });
+
+            function loadTheme(theme) {
+                // Remove existing theme link if present
+                const existingThemeLink = document.getElementById('theme-stylesheet');
+                if (existingThemeLink) {
+                    existingThemeLink.remove();
+                }
+
+                // If a theme is selected (not default), load its CSS
+                if (theme) {
+                    const link = document.createElement('link');
+                    link.id = 'theme-stylesheet';
+                    link.rel = 'stylesheet';
+                    link.href = `css/themes/theme-${theme}.css`;
+                    document.head.appendChild(link);
+                }
+            }
+        })();
+    </script>
 
     <!-- Scripts -->
     <script src="js/api.js"></script>

@@ -1,0 +1,242 @@
+/* ==========================================
+   FOREST THEME - Green Color Palette
+   ========================================== */
+
+:root {
+    /* ==========================================
+       THEME COLORS - Forest Green Primary
+       ========================================== */
+
+    /* Forest Theme Primary Colors */
+    --fire-start: #7cff00;
+    --fire-end: #00a651;
+    --fire-gradient: linear-gradient(135deg, #7cff00 0%, #4ec53d 50%, #00a651 100%);
+    --fire-gradient-hover: linear-gradient(135deg, #96ff33 0%, #5ed84d 50%, #00b961 100%);
+
+    /* Theme Semantic Aliases */
+    --theme-primary: var(--fire-start);
+    --theme-gradient: var(--fire-gradient);
+    --theme-gradient-hover: var(--fire-gradient-hover);
+
+    /* ==========================================
+       BASE COLORS - Forest Variant
+       ========================================== */
+
+    --bg-dark: #0a1410;
+    --bg-dark-secondary: #0d1914;
+    --bg-gradient: linear-gradient(180deg, #0a1410 0%, #0f1f19 100%);
+    --bg-card: #14241e;
+    --bg-card-secondary: #1a2e25;
+
+    /* Text Colors */
+    --text-primary: #e0ffe8;
+    --text-secondary: #b0e8c0;
+    --text-tertiary: #70b890;
+    --text-quaternary: #508070;
+    --text-dim: #407060;
+
+    /* Accent Colors */
+    --accent-success: #7cff00;
+    --accent-info: #00e6a0;
+    --accent-warning: #ffc400;
+    --accent-danger: #ff4466;
+    --accent-muted: #508070;
+
+    /* ==========================================
+       NAVIGATION COLORS - Forest
+       ========================================== */
+
+    --nav-link-default: rgba(224, 255, 232, 0.9);
+    --nav-link-hover-bg: rgba(124, 255, 0, 0.2);
+    --nav-link-active-bg: rgba(124, 255, 0, 0.3);
+    --nav-league-text: #e0ffe8;
+
+    /* ==========================================
+       BUTTON COLORS - Forest
+       ========================================== */
+
+    --btn-primary-bg: var(--fire-gradient);
+    --btn-primary-bg-hover: var(--fire-gradient-hover);
+    --btn-primary-text: #0a1410;
+
+    --btn-secondary-bg: #1a2e25;
+    --btn-secondary-bg-hover: #243d32;
+    --btn-secondary-border: #3a5548;
+    --btn-secondary-text: #b0e8c0;
+
+    --btn-danger-bg: #ff4466;
+    --btn-danger-hover: #ff6688;
+    --btn-danger-text: #ffffff;
+
+    /* ==========================================
+       FORM COLORS - Forest
+       ========================================== */
+
+    --form-input-bg: #1a2e25;
+    --form-input-border: #2a3d35;
+    --form-input-border-focus: #7cff00;
+    --form-input-text: #e0ffe8;
+    --form-input-placeholder: #508070;
+    --form-select-icon: #7cff00;
+
+    /* ==========================================
+       TABLE COLORS - Forest
+       ========================================== */
+
+    --table-header-bg: #1a2e25;
+    --table-header-text: #b0e8c0;
+    --table-border: #2a3d35;
+    --table-hover-bg: #1f3328;
+    --table-hover-tint: rgba(124, 255, 0, 0.1);
+    --table-stripe-bg: rgba(124, 255, 0, 0.05);
+
+    /* ==========================================
+       DREAM TEAM PITCH COLORS - Forest
+       ========================================== */
+
+    --pitch-bg-start: #1a4d2e;
+    --pitch-bg-end: #0f3320;
+    --pitch-bg-gradient: linear-gradient(to bottom, #1a4d2e, #0f3320);
+    --pitch-border: #2d5a3d;
+    --pitch-shadow-inset: rgba(0, 0, 0, 0.4);
+    --pitch-card-bg: rgba(255, 255, 255, 0.95);
+    --pitch-card-shadow: rgba(0, 166, 81, 0.4);
+    --pitch-card-text: #000000;
+    --pitch-points-color: #00a651;
+
+    /* ==========================================
+       PLAYER OF THE WEEK COLORS - Forest
+       ========================================== */
+
+    --potw-card-bg: #1a2e25;
+    --potw-card-border: var(--fire-gradient);
+    --potw-badge-bg: var(--fire-gradient);
+    --potw-badge-text: #0a1410;
+    --potw-name-color: #e0ffe8;
+    --potw-team-color: #70b890;
+    --potw-points-bg: #0d1914;
+    --potw-points-text: #7cff00;
+    --potw-stat-label: #70b890;
+    --potw-stat-value: #e0ffe8;
+
+    /* ==========================================
+       PLAYER POSITION BADGE COLORS - Forest
+       ========================================== */
+
+    --position-gk-bg: rgba(255, 195, 0, 0.2);
+    --position-gk-text: #ffc300;
+    --position-def-bg: rgba(0, 230, 160, 0.2);
+    --position-def-text: #00e6a0;
+    --position-mid-bg: rgba(78, 197, 61, 0.2);
+    --position-mid-text: #4ec53d;
+    --position-fwd-bg: rgba(255, 100, 150, 0.2);
+    --position-fwd-text: #ff6496;
+
+    /* ==========================================
+       FDR (FIXTURE DIFFICULTY RATING) COLORS - Forest
+       ========================================== */
+
+    --fdr-easy-bg: rgba(124, 255, 0, 0.15);
+    --fdr-easy-text: #7cff00;
+    --fdr-medium-bg: rgba(255, 195, 0, 0.15);
+    --fdr-medium-text: #ffc300;
+    --fdr-hard-bg: rgba(255, 150, 0, 0.15);
+    --fdr-hard-text: #ff9600;
+    --fdr-very-hard-bg: rgba(255, 68, 102, 0.15);
+    --fdr-very-hard-text: #ff4466;
+
+    --fdr-home-color: #7cff00;
+    --fdr-away-color: #70b890;
+    --fdr-table-hover: rgba(124, 255, 0, 0.1);
+
+    /* ==========================================
+       TEMPLATE OWNERSHIP TIER COLORS - Forest
+       ========================================== */
+
+    --ownership-high-bg: rgba(255, 68, 102, 0.2);
+    --ownership-high-text: #ff4466;
+    --ownership-high-border: #ff4466;
+    --ownership-medium-bg: rgba(255, 195, 0, 0.2);
+    --ownership-medium-text: #ffc300;
+    --ownership-medium-border: #ffc300;
+    --ownership-low-bg: rgba(78, 197, 61, 0.2);
+    --ownership-low-text: #4ec53d;
+    --ownership-low-border: #4ec53d;
+    --ownership-diff-bg: rgba(124, 255, 0, 0.2);
+    --ownership-diff-text: #7cff00;
+    --ownership-diff-border: #7cff00;
+
+    /* ==========================================
+       CHIP BADGE COLORS - Forest
+       ========================================== */
+
+    --chip-wildcard-bg: rgba(78, 197, 61, 0.2);
+    --chip-wildcard-text: #4ec53d;
+    --chip-freehit-bg: rgba(0, 230, 160, 0.2);
+    --chip-freehit-text: #00e6a0;
+    --chip-bench-boost-bg: rgba(255, 195, 0, 0.2);
+    --chip-bench-boost-text: #ffc300;
+    --chip-triple-captain-bg: rgba(255, 100, 150, 0.2);
+    --chip-triple-captain-text: #ff6496;
+
+    /* ==========================================
+       OVERLAY & MODAL COLORS - Forest
+       ========================================== */
+
+    --overlay-dark: rgba(10, 20, 16, 0.9);
+    --modal-bg: #1a2e25;
+    --modal-border: #2a3d35;
+    --modal-shadow: rgba(0, 166, 81, 0.5);
+
+    /* ==========================================
+       PLAYER CARD COLORS - Forest
+       ========================================== */
+
+    --player-card-bg: #1a2e25;
+    --player-card-hover-bg: #1f3328;
+    --player-card-border-default: rgba(255, 255, 255, 0.1);
+    --player-card-border-hover: #7cff00;
+    --player-card-shadow: rgba(0, 0, 0, 0.4);
+    --player-card-shadow-hover: rgba(0, 166, 81, 0.6);
+
+    /* ==========================================
+       COMPARISON & PLANNER COLORS - Forest
+       ========================================== */
+
+    --comparison-card-bg: #14241e;
+    --comparison-card-border: #2a3d35;
+    --comparison-highlight: #7cff00;
+    --search-dropdown-bg: #1a2e25;
+    --search-dropdown-hover: rgba(124, 255, 0, 0.2);
+    --search-dropdown-border: #2a3d35;
+
+    /* ==========================================
+       PRICE PREDICTOR COLORS - Forest
+       ========================================== */
+
+    --price-rise-bg: rgba(124, 255, 0, 0.2);
+    --price-rise-text: #7cff00;
+    --price-fall-bg: rgba(255, 68, 102, 0.2);
+    --price-fall-text: #ff4466;
+    --disclaimer-bg: #1a2e25;
+    --disclaimer-border: #2a3d35;
+    --disclaimer-text: #70b890;
+    --likelihood-bg: #14241e;
+    --likelihood-border: #2a3d35;
+
+    /* ==========================================
+       SORTABLE & INTERACTIVE COLORS - Forest
+       ========================================== */
+
+    --sortable-arrow-color: #7cff00;
+    --link-color: #7cff00;
+    --link-hover: #96ff33;
+    --filter-active-border: #7cff00;
+
+    /* ==========================================
+       STAT DETAIL COLORS - Forest
+       ========================================== */
+
+    --stat-detail-row-hover: rgba(124, 255, 0, 0.1);
+    --stat-detail-border: #2a3d35;
+}
