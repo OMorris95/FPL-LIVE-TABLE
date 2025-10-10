@@ -1,0 +1,215 @@
+/* ==========================================
+   FOREST THEME (LIGHT) - Green Light Palette
+   ========================================== */
+
+:root {
+    /* ==========================================
+       THEME COLORS - Forest Green Primary
+       ========================================== */
+
+    /* Forest Theme Primary Colors */
+    --fire-start: #00a651;
+    --fire-end: #006633;
+    --fire-gradient: linear-gradient(135deg, #00a651 0%, #008844 50%, #006633 100%);
+    --fire-gradient-hover: linear-gradient(135deg, #00b961 0%, #009955 50%, #007744 100%);
+
+    /* Theme Semantic Aliases */
+    --theme-primary: var(--fire-start);
+    --theme-gradient: var(--fire-gradient);
+    --theme-gradient-hover: var(--fire-gradient-hover);
+
+    /* ==========================================
+       BASE COLORS - Light Variant
+       ========================================== */
+
+    /* Backgrounds - Light */
+    --bg-color: #ffffff;
+    --bg-secondary: #f0faf5;
+    --bg-tertiary: #e6f5ed;
+    --bg-gradient: linear-gradient(180deg, #ffffff 0%, #f0faf5 100%);
+    --card-bg: #ffffff;
+    --card-bg-elevated: #f0faf5;
+
+    /* Text Colors - Dark on Light */
+    --text-color: #1a2e25;
+    --text-secondary: #3d5249;
+    --text-tertiary: #5c7067;
+    --text-quaternary: #8a9d95;
+    --text-light: #5c7067;
+    --text-muted: #75897f;
+
+    /* Border - Light */
+    --border-color: #d0e4d9;
+
+    /* ==========================================
+       ACCENT COLORS - Adjusted for Light BG
+       ========================================== */
+
+    --accent-gold: #00a651;
+    --accent-orange: #008844;
+    --accent-red: #006633;
+    --accent-gold-hover: #00b961;
+    --secondary-color: #00c56d;
+    --success: #00a651;
+    --warning: #ff9500;
+    --error: #dc3545;
+
+    /* ==========================================
+       RANK & STATUS COLORS
+       ========================================== */
+
+    --rank-up: #00a651;
+    --rank-down: #dc3545;
+    --rank-neutral: #5c7067;
+    --captain-color: #00a651;
+    --vice-captain-color: #5c7067;
+
+    /* ==========================================
+       NAVIGATION COLORS - Light
+       ========================================== */
+
+    --nav-link-default: rgba(26, 46, 37, 0.85);
+    --nav-link-hover-bg: rgba(0, 166, 81, 0.1);
+    --nav-link-active-bg: rgba(0, 166, 81, 0.15);
+    --nav-text-shadow: rgba(255, 255, 255, 0.5);
+    --nav-league-text: #1a2e25;
+
+    /* ==========================================
+       BUTTON COLORS - Light
+       ========================================== */
+
+    --btn-secondary-small-bg: rgba(0, 166, 81, 0.1);
+    --btn-secondary-small-text: #00a651;
+    --btn-secondary-small-border: rgba(0, 166, 81, 0.3);
+    --btn-secondary-small-hover-bg: rgba(0, 166, 81, 0.2);
+    --btn-secondary-small-hover-border: rgba(0, 166, 81, 0.5);
+    --btn-danger-hover: #bb2d3b;
+
+    /* ==========================================
+       DREAM TEAM PITCH COLORS - Light (keep pitch dark for contrast)
+       ========================================== */
+
+    --pitch-bg-start: #1a4d2e;
+    --pitch-bg-end: #0f3320;
+    --pitch-bg-gradient: linear-gradient(to bottom, #1a4d2e, #0f3320);
+    --pitch-border: #2d5a3d;
+    --pitch-shadow-inset: rgba(0, 0, 0, 0.4);
+    --pitch-card-bg: rgba(255, 255, 255, 0.95);
+    --pitch-card-shadow: rgba(0, 166, 81, 0.3);
+    --pitch-card-text: #000000;
+    --pitch-points-color: #00a656;
+
+    /* ==========================================
+       PLAYER OF THE WEEK COLORS - Light
+       ========================================== */
+
+    --potw-text: #ffffff;
+    --potw-text-shadow: rgba(0, 0, 0, 0.5);
+    --potw-text-shadow-strong: rgba(0, 0, 0, 0.6);
+    --potw-stat-bg: rgba(0, 0, 0, 0.2);
+    --potw-stat-text-secondary: rgba(255, 255, 255, 0.9);
+
+    /* ==========================================
+       SECTION HEADER COLORS
+       ========================================== */
+
+    --section-header-color: #00a651;
+
+    /* ==========================================
+       PLAYER POSITION BADGE COLORS - Light
+       ========================================== */
+
+    --position-gk-bg: rgba(0, 166, 81, 0.12);
+    --position-gk-text: #008844;
+    --position-def-bg: rgba(0, 123, 184, 0.12);
+    --position-def-text: #006699;
+    --position-mid-bg: rgba(100, 150, 50, 0.12);
+    --position-mid-text: #5c7e30;
+    --position-fwd-bg: rgba(220, 53, 69, 0.12);
+    --position-fwd-text: #c02133;
+
+    /* ==========================================
+       FDR (FIXTURE DIFFICULTY RATING) COLORS - Light
+       ========================================== */
+
+    --fdr-easy-bg: rgba(0, 166, 81, 0.1);
+    --fdr-easy-text: #00a656;
+    --fdr-medium-bg: rgba(255, 193, 7, 0.1);
+    --fdr-medium-text: #cc7a00;
+    --fdr-hard-bg: rgba(255, 149, 0, 0.1);
+    --fdr-hard-text: #cc5f00;
+    --fdr-very-hard-bg: rgba(220, 53, 69, 0.1);
+    --fdr-very-hard-text: #c02133;
+
+    --fdr-home-bg: rgba(0, 166, 81, 0.15);
+    --fdr-away-bg: rgba(0, 123, 184, 0.15);
+    --fdr-table-hover: rgba(0, 166, 81, 0.05);
+
+    /* ==========================================
+       TEMPLATE OWNERSHIP TIER COLORS - Light
+       ========================================== */
+
+    --ownership-high-bg: rgba(220, 53, 69, 0.1);
+    --ownership-high-text: #c02133;
+    --ownership-high-border: #f1aeb5;
+    --ownership-medium-bg: rgba(255, 193, 7, 0.1);
+    --ownership-medium-text: #cc7a00;
+    --ownership-medium-border: #ffe69c;
+    --ownership-low-bg: rgba(0, 123, 184, 0.1);
+    --ownership-low-text: #006699;
+    --ownership-low-border: #b3d9f0;
+    --ownership-diff-bg: rgba(0, 166, 81, 0.1);
+    --ownership-diff-text: #00a656;
+    --ownership-diff-border: #a3e6c3;
+
+    /* ==========================================
+       OVERLAY & MODAL COLORS - Light
+       ========================================== */
+
+    --overlay-dark: rgba(0, 0, 0, 0.7);
+    --white-overlay-01: rgba(0, 0, 0, 0.03);
+    --white-overlay-02: rgba(0, 0, 0, 0.05);
+    --white-overlay-03: rgba(0, 0, 0, 0.08);
+    --white-overlay-05: rgba(0, 0, 0, 0.1);
+    --white-overlay-09: rgba(0, 0, 0, 0.15);
+    --white-overlay-95: rgba(255, 255, 255, 0.95);
+    --black-overlay-01: rgba(0, 0, 0, 0.03);
+    --black-overlay-02: rgba(0, 0, 0, 0.05);
+    --black-overlay-04: rgba(0, 0, 0, 0.08);
+
+    /* ==========================================
+       FOCUS & HIGHLIGHT COLORS
+       ========================================== */
+
+    --focus-ring: rgba(0, 166, 81, 0.25);
+    --table-hover-tint: rgba(0, 166, 81, 0.05);
+    --player-card-border-default: #d0e4d9;
+
+    /* ==========================================
+       DISCLAIMER & WARNING COLORS
+       ========================================== */
+
+    --disclaimer-bg: rgba(255, 193, 7, 0.1);
+
+    /* ==========================================
+       SORTABLE HEADER COLORS
+       ========================================== */
+
+    --sortable-arrow-color: #1a2e25;
+
+    /* ==========================================
+       SHADOWS - Lighter for Light Theme
+       ========================================== */
+
+    --shadow-sm: 0 2px 4px rgba(0, 100, 50, 0.08);
+    --shadow-md: 0 4px 8px rgba(0, 100, 50, 0.12);
+    --shadow-lg: 0 8px 16px rgba(0, 100, 50, 0.15);
+    --shadow-glow: 0 0 15px rgba(0, 166, 81, 0.2);
+    --shadow-text-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+    --shadow-text-md: 0 1px 3px rgba(0, 0, 0, 0.15);
+    --shadow-text-lg: 0 1px 4px rgba(0, 0, 0, 0.2);
+    --shadow-text-xl: 0 2px 6px rgba(0, 0, 0, 0.25);
+    --shadow-inset-sm: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-inset-md: inset 0 2px 6px rgba(0, 0, 0, 0.08);
+    --shadow-card: 0 2px 8px rgba(0, 100, 50, 0.1);
+}
