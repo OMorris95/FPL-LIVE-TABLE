@@ -212,7 +212,7 @@ function renderTemplateTracker(allPlayers, teamMap, bootstrapData) {
         <div class="template-container">
             <div class="card card-top">
                 <div class="card-header">
-                    <h2 class="card-title">Template Team Tracker</h2>
+                    <h2 class="card-title">Top Owned Team Tracker</h2>
                     <p class="subtitle">Ownership: ${getTierDisplayName(currentTier)}</p>
                 </div>
 

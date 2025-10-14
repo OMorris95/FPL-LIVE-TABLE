@@ -671,24 +671,20 @@ function renderLiveTable(managers, leagueName, leagueId, captainStats, ownership
             <!-- Dream Team Section -->
             ${positions ? `
                 <div class="card mt-1">
-                    <div class="card-header">
-                        <div class="flex items-center justify-between flex-wrap">
-                            <div>
-                                <h2 class="card-title">GW ${liveGameweekId} Dream Team</h2>
-                                ${dreamTeamInfo && dreamTeamInfo.isLimited ? `
-                                    <p class="subtitle text-base-sm m-0" style="color: #888;">
-                                        Based on top 50 managers in league
-                                    </p>
-                                ` : ''}
-                            </div>
-                            <div class="text-right">
-                                <p class="text-lg m-0" style="color: var(--section-header-color);">
-                                    Formation: ${bestFormation}
-                                </p>
-                                <p class="text-xl m-0" style="font-weight: 700; color: var(--section-header-color);">
-                                    Total: ${totalPoints} pts
-                                </p>
-                            </div>
+                    <div class="card-header text-center">
+                        <h2 class="card-title">GW ${liveGameweekId} Dream Team</h2>
+                        ${dreamTeamInfo && dreamTeamInfo.isLimited ? `
+                            <p class="subtitle text-base-sm m-0" style="color: #888;">
+                                Based on top 50 managers in league
+                            </p>
+                        ` : ''}
+                        <div class="mt-sm">
+                            <p class="text-lg m-0" style="color: var(--section-header-color);">
+                                Formation: ${bestFormation}
+                            </p>
+                            <p class="text-xl m-0" style="font-weight: 700; color: var(--section-header-color);">
+                                Total: ${totalPoints} pts
+                            </p>
                         </div>
                     </div>
 
