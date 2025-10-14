@@ -318,10 +318,10 @@ function renderCaptainDistribution(captainStats) {
                     <div class="mb-sm">
                         <div class="flex justify-between mb-xs">
                             <span class="text-base-sm">${captain.webName}</span>
-                            <span class="text-base-sm" style="color: #00ff37;">${captain.count}</span>
+                            <span class="text-base-sm" style="color: var(--section-header-color);">${captain.count}</span>
                         </div>
                         <div style="background-color: #333; height: 24px; border-radius: 4px; overflow: hidden;">
-                            <div style="background-color: #00ff37; height: 100%; width: ${percentage}%; transition: width 0.3s;"></div>
+                            <div style="background-color: var(--section-header-color); height: 100%; width: ${percentage}%; transition: width 0.3s;"></div>
                         </div>
                     </div>
                 `;
@@ -343,7 +343,7 @@ function renderChipSection(chipStats) {
 
 function renderChipCard(fullName, abbrev, managers) {
     const count = managers.length;
-    const color = count > 0 ? '#00ff37' : '#888';
+    const color = count > 0 ? 'var(--section-header-color)' : '#888';
 
     return `
         <div class="stat-card" style="padding: 0.75rem;">
@@ -682,10 +682,10 @@ function renderLiveTable(managers, leagueName, leagueId, captainStats, ownership
                                 ` : ''}
                             </div>
                             <div class="text-right">
-                                <p class="text-lg m-0" style="color: #00ff37;">
+                                <p class="text-lg m-0" style="color: var(--section-header-color);">
                                     Formation: ${bestFormation}
                                 </p>
-                                <p class="text-xl m-0" style="font-weight: 700; color: #00ff37;">
+                                <p class="text-xl m-0" style="font-weight: 700; color: var(--section-header-color);">
                                     Total: ${totalPoints} pts
                                 </p>
                             </div>
@@ -910,7 +910,7 @@ function toggleStatsDetailsRow(playerId, playerType, captainStats, ownershipStat
         managersHtml = `
             ${starters.length > 0 ? `
                 <div class="mb-sm">
-                    <h4 style="color: #00ff37; font-size: 0.9rem; margin-bottom: 0.5rem;">Starting (${starters.length})</h4>
+                    <h4 style="color: var(--section-header-color); font-size: 0.9rem; margin-bottom: 0.5rem;">Starting (${starters.length})</h4>
                     <ul class="player-list">
                         ${starters.map(m => `<li><span>${m.name}</span></li>`).join('')}
                     </ul>
@@ -929,7 +929,7 @@ function toggleStatsDetailsRow(playerId, playerType, captainStats, ownershipStat
 
     const contentHtml = `
         <div style="padding: 1rem;">
-            <h3 style="color: #00ff37; margin-top: 0;">${playerData.name}</h3>
+            <h3 style="color: var(--section-header-color); margin-top: 0;">${playerData.name}</h3>
             <p style="color: #888; margin-bottom: 1rem;">
                 ${playerType === 'captain' ? `Captained by ${playerData.count} manager(s)` : `Owned by ${playerData.count} manager(s) (${playerData.ownershipPercent}%)`}
             </p>

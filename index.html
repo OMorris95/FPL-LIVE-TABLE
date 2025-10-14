@@ -19,20 +19,15 @@
                 <a href="/" data-link class="nav-link">Home</a>
                 <a href="/fixtures" data-link class="nav-link">Fixtures</a>
                 <a href="/players" data-link class="nav-link">Players</a>
-                <a href="/prices" data-link class="nav-link">Prices</a>
-                <a href="/planner" data-link class="nav-link">Planner</a>
+                <a href="/prices" data-link class="nav-link" style="display: none;">Prices</a>
+                <a href="/planner" data-link class="nav-link" style="display: none;">Planner</a>
                 <a href="/template" data-link class="nav-link">Template</a>
                 <a href="/my-stats" data-link class="nav-link">My Stats</a>
             </div>
-            <div class="nav-actions">
-                <select id="theme-selector" class="theme-selector">
-                    <option value="">Fire (Dark)</option>
-                    <option value="fire-light">Fire (Light)</option>
-                    <option value="ice">Ice (Dark)</option>
-                    <option value="ice-light">Ice (Light)</option>
-                    <option value="forest">Forest (Dark)</option>
-                    <option value="forest-light">Forest (Light)</option>
-                </select>
+            <div class="nav-actions" style="display: none;">
+                <button id="theme-toggle" class="theme-toggle" title="Toggle dark/light mode">
+                    <span id="theme-icon">☀️</span>
+                </button>
             </div>
         </div>
     </nav>
@@ -50,38 +45,44 @@
 
     <!-- Theme Switcher Script -->
     <script>
-        // Theme Switcher - Load saved theme on page load
+        // Dark/Light Mode Toggle
         (function() {
-            const themeSelector = document.getElementById('theme-selector');
-            const savedTheme = localStorage.getItem('fpl-theme') || '';
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const savedMode = localStorage.getItem('theme-mode') || 'dark';
 
-            // Apply saved theme
-            if (savedTheme) {
-                themeSelector.value = savedTheme;
-                loadTheme(savedTheme);
-            }
+            // Apply saved theme on page load
+            applyTheme(savedMode);
 
-            // Listen for theme changes
-            themeSelector.addEventListener('change', function() {
-                const selectedTheme = this.value;
-                localStorage.setItem('fpl-theme', selectedTheme);
-                loadTheme(selectedTheme);
+            // Toggle theme when button is clicked
+            themeToggle.addEventListener('click', function() {
+                const currentMode = localStorage.getItem('theme-mode') || 'dark';
+                const newMode = currentMode === 'dark' ? 'light' : 'dark';
+                localStorage.setItem('theme-mode', newMode);
+                applyTheme(newMode);
             });
 
-            function loadTheme(theme) {
-                // Remove existing theme link if present
+            function applyTheme(mode) {
                 const existingThemeLink = document.getElementById('theme-stylesheet');
-                if (existingThemeLink) {
-                    existingThemeLink.remove();
-                }
 
-                // If a theme is selected (not default), load its CSS
-                if (theme) {
-                    const link = document.createElement('link');
-                    link.id = 'theme-stylesheet';
-                    link.rel = 'stylesheet';
-                    link.href = `css/themes/theme-${theme}.css`;
-                    document.head.appendChild(link);
+                if (mode === 'light') {
+                    // Light mode: Load ice-light theme
+                    if (existingThemeLink) {
+                        existingThemeLink.href = 'css/themes/theme-ice-light.css';
+                    } else {
+                        const link = document.createElement('link');
+                        link.id = 'theme-stylesheet';
+                        link.rel = 'stylesheet';
+                        link.href = 'css/themes/theme-ice-light.css';
+                        document.head.appendChild(link);
+                    }
+                    themeIcon.textContent = '🌙';
+                } else {
+                    // Dark mode: Use default fire theme (remove theme CSS)
+                    if (existingThemeLink) {
+                        existingThemeLink.remove();
+                    }
+                    themeIcon.textContent = '☀️';
                 }
             }
         })();
