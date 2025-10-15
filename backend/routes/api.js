@@ -130,4 +130,37 @@ router.get('/price-accuracy', async (req, res) => {
     }
 });
 
+/**
+ * GET /api/fpl-proxy/*
+ * Proxies FPL API requests for users whose carriers block CORS proxies
+ * Only used as fallback when corsproxy.io fails
+ */
+router.get('/fpl-proxy/*', async (req, res) => {
+    try {
+        const axios = require('axios');
+        const fplPath = req.params[0];
+        const fplUrl = `https://fantasy.premierleague.com/api/${fplPath}`;
+        const userIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+
+        console.log(`[FALLBACK PROXY] ${new Date().toISOString()} | IP: ${userIP} | Path: ${fplPath}`);
+
+        const response = await axios.get(fplUrl);
+
+        console.log(`[FALLBACK SUCCESS] Status: ${response.status} | Path: ${fplPath}`);
+        res.json(response.data);
+    } catch (error) {
+        // Log rate limiting specifically
+        if (error.response && error.response.status === 429) {
+            console.error(`[RATE LIMIT DETECTED] ${new Date().toISOString()} | IP: ${userIP} | Path: ${fplPath}`);
+            console.error(`[RATE LIMIT] This means FPL is blocking your VPS IP. Consider alternative solutions.`);
+        } else {
+            console.error(`[FALLBACK ERROR] ${error.message} | Status: ${error.response?.status} | Path: ${fplPath}`);
+        }
+
+        res.status(error.response?.status || 500).json({
+            error: error.response?.status === 429 ? 'Rate limited by FPL API' : 'FPL API error'
+        });
+    }
+});
+
 module.exports = router;

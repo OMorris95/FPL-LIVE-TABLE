@@ -1,8 +1,12 @@
 // FPL API Helper Functions
 // Shared utilities for making API calls to the Fantasy Premier League API
 
+// Primary: CORS proxy for most users
+// Fallback: Backend proxy for blocked mobile carriers
 const CORS_PROXY = 'https://corsproxy.io/?';
-const API_BASE_URL = `${CORS_PROXY}https://fantasy.premierleague.com/api/`;
+const FPL_API = 'https://fantasy.premierleague.com/api/';
+const API_BASE_URL = `${CORS_PROXY}${FPL_API}`;
+const BACKEND_PROXY = '/api/fpl-proxy/';
 
 // ============================================
 // CACHE SYSTEM
@@ -273,7 +277,8 @@ function getNextDeadline(bootstrapData) {
 // ============================================
 
 /**
- * Fetches data from a given URL and handles errors.
+ * Fetches data from a given URL with automatic fallback to backend proxy.
+ * Tries CORS proxy first (for distributed IPs), falls back to backend if blocked.
  * @param {string} url - The URL to fetch data from.
  * @returns {Promise<object|null>} - The JSON response or null if an error occurred.
  */
@@ -283,6 +288,21 @@ async function fetchData(url) {
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         return await response.json();
     } catch (error) {
+        // If CORS proxy fails (e.g., blocked by mobile carrier), try backend proxy
+        if (url.includes(CORS_PROXY)) {
+            console.log('⚠️ CORS proxy failed, trying backend proxy...');
+            const fplPath = url.replace(`${CORS_PROXY}${FPL_API}`, '');
+            const backendUrl = `${BACKEND_PROXY}${fplPath}`;
+            try {
+                const fallbackResponse = await fetch(backendUrl);
+                if (!fallbackResponse.ok) throw new Error(`Backend proxy error! status: ${fallbackResponse.status}`);
+                console.log('✅ Backend proxy succeeded');
+                return await fallbackResponse.json();
+            } catch (fallbackError) {
+                console.error("Both CORS and backend proxy failed:", fallbackError);
+                throw fallbackError;
+            }
+        }
         console.error("Failed to fetch data:", error);
         throw error;
     }
@@ -828,7 +848,6 @@ if (typeof module !== 'undefined' && module.exports) {
         fetchManagerPicksInBatches,
         clearCache,
         clearAllCaches,
-        API_BASE_URL,
-        CORS_PROXY
+        API_BASE_URL
     };
 }
