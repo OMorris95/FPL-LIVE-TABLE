@@ -139,11 +139,13 @@ async function loadAndRenderTier(tier) {
     }
 }
 
+// Make loadAndRenderTier available globally for onclick handlers
+window.loadAndRenderTier = loadAndRenderTier;
+
 function getTierDisplayName(tier) {
     const names = {
         'overall': 'Overall',
         '100': 'Top 100',
-        '100_test': 'Top 100 (Test)',
         '1k': 'Top 1k',
         '10k': 'Top 10k'
     };
@@ -209,6 +211,33 @@ function renderTemplateTracker(allPlayers, teamMap, bootstrapData) {
     ` : '';
 
     app.innerHTML = `
+        <style>
+            .player-row-expandable:hover {
+                background-color: var(--bg-secondary);
+            }
+            .player-row-expandable.expanded {
+                background-color: var(--bg-tertiary);
+            }
+            .player-details-row.hidden {
+                display: none;
+            }
+            .player-status-badge {
+                display: inline-block;
+                padding: 0.25rem 0.5rem;
+                border-radius: 4px;
+                font-size: 0.75rem;
+                font-weight: 600;
+                margin-right: 0.5rem;
+            }
+            .player-status-badge.injury {
+                background: var(--color-warning);
+                color: var(--bg-primary);
+            }
+            .player-status-badge.news {
+                background: var(--color-info);
+                color: var(--bg-primary);
+            }
+        </style>
         <div class="template-container">
             <div class="card card-top">
                 <div class="card-header">
@@ -232,9 +261,6 @@ function renderTemplateTracker(allPlayers, teamMap, bootstrapData) {
                         </button>
                         <button class="tier-btn ${currentTier === '100' ? 'active' : ''}" onclick="loadAndRenderTier('100')" ${!backendStatus ? 'disabled' : ''}>
                             Top 100
-                        </button>
-                        <button class="tier-btn ${currentTier === '100_test' ? 'active' : ''}" onclick="loadAndRenderTier('100_test')" ${!backendStatus ? 'disabled' : ''}>
-                            Top 100 (Test)
                         </button>
                     </div>
                     ${!backendStatus ? '<p class="text-xs text-tertiary mt-xs">Backend data not available. Showing overall ownership.</p>' : ''}
@@ -270,6 +296,17 @@ function renderTemplateTracker(allPlayers, teamMap, bootstrapData) {
             </div>
         </div>
     `;
+
+    // Attach click handlers - inline like my-stats.js
+    document.querySelectorAll('.player-row-expandable').forEach(row => {
+        row.addEventListener('click', () => {
+            const playerId = parseInt(row.dataset.playerId);
+            const tableType = row.dataset.tableType;
+            if (playerId && tableType) {
+                togglePlayerExpansion(playerId, tableType);
+            }
+        });
+    });
 }
 
 function renderTemplateSquad(templateTeam, teamMap) {
@@ -320,7 +357,7 @@ function renderTemplateSquad(templateTeam, teamMap) {
                         const borderStyle = player.isLastOfPosition ? `box-shadow: inset 0 -2px 0 0 ${positionColors[player.pos]};` : '';
 
                         return `
-                            <tr>
+                            <tr class="player-row-expandable" data-player-id="${player.id}" data-table-type="template-squad" style="cursor: pointer;">
                                 <td style="${borderStyle}"><strong>${player.pos}</strong></td>
                                 <td style="font-weight: 600; ${borderStyle}">${player.first_name.charAt(0)}. ${player.second_name}</td>
                                 <td style="${borderStyle}">${team.short_name}</td>
@@ -331,6 +368,11 @@ function renderTemplateSquad(templateTeam, teamMap) {
                                     </span>
                                 </td>
                                 <td class="text-center" style="font-weight: 600; ${borderStyle}">${player.total_points}</td>
+                            </tr>
+                            <tr class="player-details-row hidden" id="player-details-template-squad-${player.id}">
+                                <td colspan="6" style="padding: 0; background: var(--bg-tertiary);">
+                                    <div class="player-details-content"></div>
+                                </td>
                             </tr>
                         `;
                     }).join('')}
@@ -374,7 +416,7 @@ function renderOwnershipTable(players, teamMap, type) {
                         const ownership = player.tier_ownership !== undefined ? player.tier_ownership : parseFloat(player.selected_by_percent);
 
                         return `
-                            <tr>
+                            <tr class="player-row-expandable" data-player-id="${player.id}" data-table-type="${type}" style="cursor: pointer;">
                                 <td style="font-weight: 600;">${player.first_name.charAt(0)}. ${player.second_name}</td>
                                 <td>${team.short_name}</td>
                                 <td class="text-center">${getPositionLabel(player.element_type)}</td>
@@ -387,6 +429,11 @@ function renderOwnershipTable(players, teamMap, type) {
                                 <td class="text-center" style="font-weight: 600;">${player.total_points}</td>
                                 <td class="text-center">${player.form}</td>
                                 <td class="text-center">${player.points_per_game}</td>
+                            </tr>
+                            <tr class="player-details-row hidden" id="player-details-${type}-${player.id}">
+                                <td colspan="8" style="padding: 0; background: var(--bg-tertiary);">
+                                    <div class="player-details-content"></div>
+                                </td>
                             </tr>
                         `;
                     }).join('')}
@@ -518,6 +565,255 @@ function rerenderTable(tableType, players) {
     // Re-render just the table (not the parent which contains the title)
     const tableHtml = renderOwnershipTable(players, cachedTeamMap, tableType);
     tableElement.outerHTML = tableHtml;
+
+    // Re-attach click handlers to the newly rendered table
+    attachPlayerRowClickHandlers();
+}
+
+/**
+ * Renders player details content (2-card layout: player card + detailed stats)
+ */
+function renderPlayerDetails(player) {
+    const team = cachedTeamMap[player.team];
+    const positionNames = ['', 'GKP', 'DEF', 'MID', 'FWD'];
+    const position = positionNames[player.element_type] || '???';
+    const price = (player.now_cost / 10).toFixed(1);
+    const pointsPerMillion = player.now_cost > 0 ? (player.total_points / (player.now_cost / 10)).toFixed(1) : '0.0';
+    const ownership = parseFloat(player.selected_by_percent).toFixed(1);
+
+    // Status badges
+    const statusBadges = [];
+    if (player.chance_of_playing_next_round !== null && player.chance_of_playing_next_round < 100) {
+        statusBadges.push(`<span class="player-status-badge injury">${player.chance_of_playing_next_round}%</span>`);
+    }
+    if (player.news) {
+        statusBadges.push(`<span class="player-status-badge news">!</span>`);
+    }
+
+    // Format name with first initial
+    const firstInitial = player.first_name ? player.first_name.charAt(0) : '';
+    const displayName = firstInitial ? `${firstInitial}. ${player.second_name}` : player.web_name;
+
+    return `
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; padding: 1rem;">
+            <!-- Left Card: Player Card (from Player Stats Hub) -->
+            <div style="background: var(--bg-secondary); border-radius: 8px; padding: 1rem; border: 1px solid var(--border-color);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                    <div>
+                        <h3 style="margin: 0 0 0.25rem 0; font-size: 1.125rem; font-weight: 700;">${displayName}</h3>
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                            <span style="display: inline-block; padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; background: var(--bg-tertiary);">${position}</span>
+                            <span style="font-size: 0.875rem; color: var(--text-tertiary);">${team ? team.short_name : '???'}</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 1.25rem; font-weight: 700;">£${price}m</div>
+                        ${player.cost_change_start !== 0 ? `
+                            <div style="font-size: 0.75rem; color: ${player.cost_change_start > 0 ? 'var(--color-success)' : 'var(--color-error)'};">
+                                ${player.cost_change_start > 0 ? '+' : ''}£${(player.cost_change_start / 10).toFixed(1)}m
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+
+                ${statusBadges.length > 0 ? `
+                    <div style="margin-bottom: 1rem;">
+                        ${statusBadges.join(' ')}
+                        ${player.news ? `<div style="font-size: 0.875rem; color: var(--text-tertiary); margin-top: 0.5rem; padding: 0.5rem; background: var(--bg-tertiary); border-radius: 4px;">${player.news}</div>` : ''}
+                    </div>
+                ` : ''}
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 1rem;">
+                    <div style="text-align: center; padding: 0.75rem; background: var(--bg-tertiary); border-radius: 6px;">
+                        <div style="font-size: 1.5rem; font-weight: 700;">${player.total_points}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">Points</div>
+                    </div>
+                    <div style="text-align: center; padding: 0.75rem; background: var(--bg-tertiary); border-radius: 6px;">
+                        <div style="font-size: 1.5rem; font-weight: 700;">${player.form}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">Form</div>
+                    </div>
+                    <div style="text-align: center; padding: 0.75rem; background: var(--bg-tertiary); border-radius: 6px;">
+                        <div style="font-size: 1.5rem; font-weight: 700;">${pointsPerMillion}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">Pts/£m</div>
+                    </div>
+                    <div style="text-align: center; padding: 0.75rem; background: var(--bg-tertiary); border-radius: 6px;">
+                        <div style="font-size: 1.5rem; font-weight: 700;">${ownership}%</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">Owned</div>
+                    </div>
+                </div>
+
+                <div style="border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
+                        ${player.element_type === 1 ? `
+                            <div style="display: flex; justify-content: space-between; padding: 0.5rem;">
+                                <span style="color: var(--text-secondary); font-size: 0.875rem;">Saves:</span>
+                                <strong>${player.saves}</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 0.5rem;">
+                                <span style="color: var(--text-secondary); font-size: 0.875rem;">Clean Sheets:</span>
+                                <strong>${player.clean_sheets}</strong>
+                            </div>
+                        ` : player.element_type === 2 ? `
+                            <div style="display: flex; justify-content: space-between; padding: 0.5rem;">
+                                <span style="color: var(--text-secondary); font-size: 0.875rem;">Clean Sheets:</span>
+                                <strong>${player.clean_sheets}</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 0.5rem;">
+                                <span style="color: var(--text-secondary); font-size: 0.875rem;">Goals:</span>
+                                <strong>${player.goals_scored}</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 0.5rem;">
+                                <span style="color: var(--text-secondary); font-size: 0.875rem;">Assists:</span>
+                                <strong>${player.assists}</strong>
+                            </div>
+                        ` : `
+                            <div style="display: flex; justify-content: space-between; padding: 0.5rem;">
+                                <span style="color: var(--text-secondary); font-size: 0.875rem;">Goals:</span>
+                                <strong>${player.goals_scored}</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 0.5rem;">
+                                <span style="color: var(--text-secondary); font-size: 0.875rem;">Assists:</span>
+                                <strong>${player.assists}</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 0.5rem;">
+                                <span style="color: var(--text-secondary); font-size: 0.875rem;">xG:</span>
+                                <strong>${parseFloat(player.expected_goals || 0).toFixed(2)}</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 0.5rem;">
+                                <span style="color: var(--text-secondary); font-size: 0.875rem;">xA:</span>
+                                <strong>${parseFloat(player.expected_assists || 0).toFixed(2)}</strong>
+                            </div>
+                        `}
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-around; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                    <div style="text-align: center;">
+                        <span style="color: var(--text-secondary); font-size: 0.75rem;">Minutes</span>
+                        <strong style="display: block; margin-top: 0.25rem;">${player.minutes}</strong>
+                    </div>
+                    <div style="text-align: center;">
+                        <span style="color: var(--text-secondary); font-size: 0.75rem;">Bonus</span>
+                        <strong style="display: block; margin-top: 0.25rem;">${player.bonus}</strong>
+                    </div>
+                    <div style="text-align: center;">
+                        <span style="color: var(--text-secondary); font-size: 0.75rem;">ICT</span>
+                        <strong style="display: block; margin-top: 0.25rem;">${parseFloat(player.ict_index).toFixed(1)}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Card: Detailed Stats (from Comparison page) -->
+            <div style="background: var(--bg-secondary); border-radius: 8px; padding: 1rem; border: 1px solid var(--border-color);">
+                <h4 style="margin: 0 0 1rem 0; font-size: 1rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Detailed Statistics</h4>
+
+                <div style="display: grid; gap: 0.5rem;">
+                    <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--bg-tertiary); border-radius: 4px;">
+                        <span style="color: var(--text-secondary);">Points per Game</span>
+                        <strong>${player.points_per_game}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--bg-tertiary); border-radius: 4px;">
+                        <span style="color: var(--text-secondary);">Goals Conceded</span>
+                        <strong>${player.goals_conceded}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--bg-tertiary); border-radius: 4px;">
+                        <span style="color: var(--text-secondary);">Yellow Cards</span>
+                        <strong>${player.yellow_cards}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--bg-tertiary); border-radius: 4px;">
+                        <span style="color: var(--text-secondary);">Red Cards</span>
+                        <strong>${player.red_cards}</strong>
+                    </div>
+                    ${player.element_type === 1 ? `
+                        <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--bg-tertiary); border-radius: 4px;">
+                            <span style="color: var(--text-secondary);">Penalties Saved</span>
+                            <strong>${player.penalties_saved}</strong>
+                        </div>
+                    ` : ''}
+                    <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--bg-tertiary); border-radius: 4px;">
+                        <span style="color: var(--text-secondary);">Penalties Missed</span>
+                        <strong>${player.penalties_missed}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--bg-tertiary); border-radius: 4px;">
+                        <span style="color: var(--text-secondary);">Expected Goals (xG)</span>
+                        <strong>${parseFloat(player.expected_goals || 0).toFixed(2)}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--bg-tertiary); border-radius: 4px;">
+                        <span style="color: var(--text-secondary);">Expected Assists (xA)</span>
+                        <strong>${parseFloat(player.expected_assists || 0).toFixed(2)}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--bg-tertiary); border-radius: 4px;">
+                        <span style="color: var(--text-secondary);">Bonus Points System</span>
+                        <strong>${parseFloat(player.bps || 0)}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--bg-tertiary); border-radius: 4px;">
+                        <span style="color: var(--text-secondary);">Influence</span>
+                        <strong>${parseFloat(player.influence || 0).toFixed(1)}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--bg-tertiary); border-radius: 4px;">
+                        <span style="color: var(--text-secondary);">Creativity</span>
+                        <strong>${parseFloat(player.creativity || 0).toFixed(1)}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--bg-tertiary); border-radius: 4px;">
+                        <span style="color: var(--text-secondary);">Threat</span>
+                        <strong>${parseFloat(player.threat || 0).toFixed(1)}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Toggles player row expansion
+ */
+function togglePlayerExpansion(playerId, tableType) {
+    if (!playerId || !tableType) return;
+
+    // Find the details row using unique ID
+    const detailsRow = document.getElementById(`player-details-${tableType}-${playerId}`);
+    if (!detailsRow) return;
+
+    // Find the clicked row
+    const clickedRow = document.querySelector(`.player-row-expandable[data-player-id="${playerId}"][data-table-type="${tableType}"]`);
+    if (!clickedRow) return;
+
+    // If this row is already expanded, collapse it
+    if (!detailsRow.classList.contains('hidden')) {
+        detailsRow.classList.add('hidden');
+        clickedRow.classList.remove('expanded');
+        return;
+    }
+
+    // Close all other expanded rows
+    document.querySelectorAll('.player-details-row').forEach(row => row.classList.add('hidden'));
+    document.querySelectorAll('.player-row-expandable').forEach(row => row.classList.remove('expanded'));
+
+    // Expand this row
+    detailsRow.classList.remove('hidden');
+    clickedRow.classList.add('expanded');
+
+    // Load player details
+    const player = cachedPlayerMap[playerId];
+    if (player) {
+        const contentDiv = detailsRow.querySelector('.player-details-content');
+        contentDiv.innerHTML = renderPlayerDetails(player);
+    }
+}
+
+/**
+ * Attaches click handlers to all player rows (used after re-rendering tables)
+ */
+function attachPlayerRowClickHandlers() {
+    document.querySelectorAll('.player-row-expandable').forEach(row => {
+        row.addEventListener('click', () => {
+            const playerId = parseInt(row.dataset.playerId);
+            const tableType = row.dataset.tableType;
+            if (playerId && tableType) {
+                togglePlayerExpansion(playerId, tableType);
+            }
+        });
+    });
 }
 
 // Register route

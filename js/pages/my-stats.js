@@ -101,7 +101,7 @@ async function renderMyStatsPage(state = {}) {
         }
 
         // Render dashboard
-        renderManagerDashboard(managerData, historyData, currentPicks, bootstrapData, currentGw, managerId, storedManagerId, leagueManagers);
+        await renderManagerDashboard(managerData, historyData, currentPicks, bootstrapData, currentGw, managerId, storedManagerId, leagueManagers);
 
     } catch (error) {
         console.error('Error loading My Stats:', error);
@@ -117,7 +117,7 @@ async function renderMyStatsPage(state = {}) {
     }
 }
 
-function renderManagerDashboard(managerData, historyData, currentPicks, bootstrapData, currentGw, managerId, ownManagerId, leagueManagers) {
+async function renderManagerDashboard(managerData, historyData, currentPicks, bootstrapData, currentGw, managerId, ownManagerId, leagueManagers) {
     const app = document.getElementById('app');
 
     // Check if viewing own stats or another manager
@@ -165,7 +165,7 @@ function renderManagerDashboard(managerData, historyData, currentPicks, bootstra
     });
 
     // Calculate captain stats
-    const captainStats = calculateCaptainStats(currentSeasonHistory);
+    const captainStats = await calculateCaptainStats(currentSeasonHistory, managerId);
 
     // Get chip usage from historyData.chips (not from current array)
     const usedChips = historyData.chips || [];
@@ -636,18 +636,70 @@ async function toggleGameweekDetails(gameweek, managerId, bootstrapData, clickSo
 }
 
 // Helper function to calculate captain stats
-function calculateCaptainStats(seasonHistory) {
-    // Note: We don't have direct captain point data from history endpoint
-    // This is a simplified calculation - would need picks data for accuracy
-    const totalGws = seasonHistory.length;
+async function calculateCaptainStats(seasonHistory, managerId) {
+    if (!seasonHistory || seasonHistory.length === 0) {
+        return {
+            totalPoints: 0,
+            avgPoints: 0,
+            successRate: 0
+        };
+    }
 
-    return {
-        total: totalGws,
-        returns: Math.floor(totalGws * 0.7), // Placeholder
-        totalPoints: 0, // Would need picks data
-        avgPoints: 0, // Would need picks data
-        successRate: 70 // Placeholder
-    };
+    try {
+        let totalCaptainPoints = 0;
+        let successfulGws = 0;
+        const completedGws = [];
+
+        // Fetch picks and live data for each gameweek
+        for (const gw of seasonHistory) {
+            try {
+                const [picksData, liveData] = await Promise.all([
+                    getManagerPicks(managerId, gw.event),
+                    getLiveGameweekData(gw.event)
+                ]);
+
+                if (!picksData || !liveData) continue;
+
+                // Find the captain
+                const captainPick = picksData.picks.find(p => p.is_captain);
+                if (!captainPick) continue;
+
+                // Get captain's stats from live data
+                const captainStats = liveData.elements.find(e => e.id === captainPick.element);
+                if (!captainStats || !captainStats.stats) continue;
+
+                // Calculate captain points (already multiplied by 2 or 3 for TC)
+                const captainPoints = captainStats.stats.total_points * captainPick.multiplier;
+                totalCaptainPoints += captainPoints;
+                completedGws.push(gw.event);
+
+                // Count as successful if captain returned 8+ points (double digits with multiplier)
+                if (captainPoints >= 8) {
+                    successfulGws++;
+                }
+            } catch (error) {
+                console.error(`Error calculating captain stats for GW${gw.event}:`, error);
+                // Continue to next gameweek if this one fails
+            }
+        }
+
+        const gwCount = completedGws.length;
+        const avgPoints = gwCount > 0 ? totalCaptainPoints / gwCount : 0;
+        const successRate = gwCount > 0 ? Math.round((successfulGws / gwCount) * 100) : 0;
+
+        return {
+            totalPoints: totalCaptainPoints,
+            avgPoints: avgPoints,
+            successRate: successRate
+        };
+    } catch (error) {
+        console.error('Error calculating captain stats:', error);
+        return {
+            totalPoints: 0,
+            avgPoints: 0,
+            successRate: 0
+        };
+    }
 }
 
 // Global function to view specific manager stats

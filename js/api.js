@@ -80,17 +80,18 @@ function setCachedData(key, data, expiresInMs) {
  * @param {string|null} nextDeadline - ISO timestamp of next deadline (for bootstrap data)
  */
 function setCachedDataWithDeadline(key, data, expiresInMs, nextDeadline = null) {
-    try {
-        const cacheKey = CACHE_PREFIX + key;
-        const cacheEntry = {
-            data,
-            timestamp: Date.now(),
-            expiresAt: Date.now() + expiresInMs,
-            version: CACHE_VERSION,
-            nextDeadline,
-            lastRefreshAttempt: null
-        };
+    // Define variables outside try block for error handler access
+    const cacheKey = CACHE_PREFIX + key;
+    const cacheEntry = {
+        data,
+        timestamp: Date.now(),
+        expiresAt: Date.now() + expiresInMs,
+        version: CACHE_VERSION,
+        nextDeadline,
+        lastRefreshAttempt: null
+    };
 
+    try {
         sessionStorage.setItem(cacheKey, JSON.stringify(cacheEntry));
 
         const durationStr = expiresInMs >= CACHE_DURATIONS.DAY
@@ -106,11 +107,14 @@ function setCachedDataWithDeadline(key, data, expiresInMs, nextDeadline = null) 
         console.error('Cache write error:', error);
         // If storage is full, clear old caches and try again
         if (error.name === 'QuotaExceededError') {
+            console.log('🧹 Clearing old caches to free up space...');
             clearOldCaches();
             try {
                 sessionStorage.setItem(cacheKey, JSON.stringify(cacheEntry));
+                console.log('✅ Cache write succeeded after cleanup');
             } catch (e) {
-                console.error('Cache write failed even after cleanup:', e);
+                console.error('❌ Cache write failed even after cleanup - storage may be full:', e);
+                // Silently fail - app will continue without caching this data
             }
         }
     }
