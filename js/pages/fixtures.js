@@ -38,11 +38,16 @@ async function renderFixturesPage(state = {}) {
             <div class="card text-center">
                 <h2 class="text-error">Error Loading Fixtures</h2>
                 <p>${error.message}</p>
-                <button class="btn-primary" onclick="router.navigate('/')">
+                <button class="btn-primary" id="go-home-btn">
                     Go to Home
                 </button>
             </div>
         `;
+
+        // Add event listener
+        document.getElementById('go-home-btn').addEventListener('click', () => {
+            router.navigate('/');
+        });
     }
 }
 

@@ -56,11 +56,16 @@ async function renderPlayersPage(state = {}) {
             <div class="card text-center">
                 <h2 class="text-error">Error Loading Players</h2>
                 <p>${error.message}</p>
-                <button class="btn-primary" onclick="router.navigate('/')">
+                <button class="btn-primary" id="go-home-btn">
                     Go to Home
                 </button>
             </div>
         `;
+
+        // Add event listener
+        document.getElementById('go-home-btn').addEventListener('click', () => {
+            router.navigate('/');
+        });
     }
 }
 
@@ -96,6 +101,7 @@ function renderPlayerSearchHub() {
                 <div class="players-filters">
                     <!-- Search Bar -->
                     <div class="filter-group filter-search">
+                        <label for="player-search-input" class="form-label" style="display: block; margin-bottom: 0.25rem;">Search Players</label>
                         <input
                             type="text"
                             id="player-search-input"
@@ -107,6 +113,7 @@ function renderPlayerSearchHub() {
 
                     <!-- Position Filter -->
                     <div class="filter-group">
+                        <label for="position-filter" class="form-label" style="display: block; margin-bottom: 0.25rem;">Position</label>
                         <select id="position-filter" class="form-select">
                             ${positions.map(pos => `
                                 <option value="${pos.id}" ${filters.position === pos.id ? 'selected' : ''}>
@@ -118,6 +125,7 @@ function renderPlayerSearchHub() {
 
                     <!-- Team Filter -->
                     <div class="filter-group">
+                        <label for="team-filter" class="form-label" style="display: block; margin-bottom: 0.25rem;">Team</label>
                         <select id="team-filter" class="form-select">
                             ${teams.map(team => `
                                 <option value="${team.id}" ${filters.team === team.id ? 'selected' : ''}>
@@ -129,33 +137,37 @@ function renderPlayerSearchHub() {
 
                     <!-- Price Range -->
                     <div class="filter-group filter-price">
-                        <label class="text-sm text-tertiary mb-xs">
-                            Price: £${(filters.priceMin / 10).toFixed(1)}m - £${(filters.priceMax / 10).toFixed(1)}m
+                        <label for="price-min" class="text-sm text-tertiary mb-xs" style="display: block;">
+                            Price Min: £${(filters.priceMin / 10).toFixed(1)}m
                         </label>
-                        <div class="flex gap-sm">
-                            <input
-                                type="range"
-                                id="price-min"
-                                min="35"
-                                max="150"
-                                step="5"
-                                value="${filters.priceMin}"
-                                class="price-slider"
-                            />
-                            <input
-                                type="range"
-                                id="price-max"
-                                min="35"
-                                max="150"
-                                step="5"
-                                value="${filters.priceMax}"
-                                class="price-slider"
-                            />
-                        </div>
+                        <input
+                            type="range"
+                            id="price-min"
+                            min="35"
+                            max="150"
+                            step="5"
+                            value="${filters.priceMin}"
+                            class="price-slider"
+                            aria-label="Minimum price filter"
+                        />
+                        <label for="price-max" class="text-sm text-tertiary mb-xs" style="display: block; margin-top: 0.25rem;">
+                            Price Max: £${(filters.priceMax / 10).toFixed(1)}m
+                        </label>
+                        <input
+                            type="range"
+                            id="price-max"
+                            min="35"
+                            max="150"
+                            step="5"
+                            value="${filters.priceMax}"
+                            class="price-slider"
+                            aria-label="Maximum price filter"
+                        />
                     </div>
 
                     <!-- Sort By -->
                     <div class="filter-group">
+                        <label for="sort-filter" class="form-label" style="display: block; margin-bottom: 0.25rem;">Sort By</label>
                         <select id="sort-filter" class="form-select">
                             <option value="total_points" ${filters.sortBy === 'total_points' ? 'selected' : ''}>Points (High to Low)</option>
                             <option value="form" ${filters.sortBy === 'form' ? 'selected' : ''}>Form (High to Low)</option>

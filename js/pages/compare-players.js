@@ -59,13 +59,14 @@ function renderComparisonTool(allPlayers, teamMap, currentGw) {
 
                 <!-- Back Button -->
                 <div class="mb-1">
-                    <button class="btn-secondary" onclick="router.navigate('/players')">
+                    <button class="btn-secondary" id="back-to-players-btn">
                         ← Back to Players
                     </button>
                 </div>
 
                 <!-- Player Search -->
                 <div class="mb-1">
+                    <label for="player-search" class="form-label" style="display: block; margin-bottom: 0.5rem;">Search Players to Compare</label>
                     <input
                         type="text"
                         id="player-search"
@@ -98,6 +99,23 @@ function renderComparisonTool(allPlayers, teamMap, currentGw) {
 
     // Add event listeners
     setupComparisonEventListeners(allPlayers, teamMap, currentGw);
+
+    // Back to players button
+    const backToPlayersBtn = document.getElementById('back-to-players-btn');
+    if (backToPlayersBtn) {
+        backToPlayersBtn.addEventListener('click', () => {
+            router.navigate('/players');
+        });
+    }
+
+    // Remove player buttons
+    document.querySelectorAll('.remove-player-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const playerId = parseInt(btn.dataset.playerId);
+            comparisonPlayers = comparisonPlayers.filter(p => p.id !== playerId);
+            renderComparisonTool(allPlayers, teamMap, currentGw);
+        });
+    });
 }
 
 function renderSelectedPlayers(players, teamMap) {
@@ -107,7 +125,7 @@ function renderSelectedPlayers(players, teamMap) {
 
         return `
             <div class="comparison-player-card">
-                <button class="remove-player-btn" onclick="removePlayer(${player.id})">×</button>
+                <button class="remove-player-btn" data-player-id="${player.id}">×</button>
                 <div class="player-name">${player.first_name.charAt(0)}. ${player.second_name}</div>
                 <div class="text-sm text-tertiary">${team.short_name} - ${positionLabel}</div>
                 <div class="player-price">£${(player.now_cost / 10).toFixed(1)}m</div>
@@ -266,21 +284,6 @@ function addPlayer(player, allPlayers, teamMap, currentGw) {
     comparisonPlayers.push(player);
     renderComparisonTool(allPlayers, teamMap, currentGw);
 }
-
-window.removePlayer = function(playerId) {
-    comparisonPlayers = comparisonPlayers.filter(p => p.id !== playerId);
-
-    // Need to re-fetch data to re-render
-    (async () => {
-        const bootstrapData = await getBootstrapData();
-        const currentGw = getCurrentGameweek(bootstrapData);
-        const playerMap = createPlayerMap(bootstrapData);
-        const teamMap = createTeamMap(bootstrapData);
-        const allPlayers = Object.values(playerMap);
-
-        renderComparisonTool(allPlayers, teamMap, currentGw);
-    })();
-};
 
 // Register route
 router.addRoute('/compare-players', renderComparePlayersPage);

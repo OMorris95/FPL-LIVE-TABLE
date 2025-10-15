@@ -30,6 +30,7 @@ async function renderMyStatsPage(state = {}) {
                 </p>
                 <form id="manager-id-form">
                     <div class="form-group mb-sm">
+                        <label for="manager-id-input" class="form-label" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Manager ID</label>
                         <input
                             type="number"
                             id="manager-id-input"
@@ -109,11 +110,17 @@ async function renderMyStatsPage(state = {}) {
             <div class="card text-center">
                 <h2 class="text-error">Error Loading Stats</h2>
                 <p>${error.message}</p>
-                <button class="btn-primary" onclick="localStorage.removeItem('fpl_manager_id'); router.navigate('/my-stats');">
+                <button class="btn-primary" id="try-different-manager">
                     Try Different Manager ID
                 </button>
             </div>
         `;
+
+        // Add event listener
+        document.getElementById('try-different-manager').addEventListener('click', () => {
+            localStorage.removeItem('fpl_manager_id');
+            router.navigate('/my-stats');
+        });
     }
 }
 
@@ -219,8 +226,9 @@ async function renderManagerDashboard(managerData, historyData, currentPicks, bo
                     </div>
                     <div class="flex gap-sm items-center flex-wrap">
                         ${leagueManagers ? `
+                            <label for="league-manager-selector" class="form-label" style="margin-right: 0.5rem;">View Manager:</label>
                             <select id="league-manager-selector" class="form-select" style="min-width: 200px;">
-                                <option value="">View League Manager...</option>
+                                <option value="">Select a manager...</option>
                                 ${leagueManagers.map(mgr => `
                                     <option value="${mgr.entry}" ${mgr.entry == managerId ? 'selected' : ''}>
                                         ${mgr.player_name} (${mgr.entry_name})
@@ -229,11 +237,11 @@ async function renderManagerDashboard(managerData, historyData, currentPicks, bo
                             </select>
                         ` : ''}
                         ${!isOwnStats && ownManagerId ? `
-                            <button class="btn-secondary-small" onclick="router.navigate('/my-stats');">
+                            <button class="btn-secondary-small" id="view-my-stats-btn">
                                 View My Stats
                             </button>
                         ` : ''}
-                        <button class="btn-secondary-small" onclick="localStorage.removeItem('fpl_manager_id'); router.navigate('/my-stats');">
+                        <button class="btn-secondary-small" id="change-manager-btn">
                             Change Manager
                         </button>
                     </div>
@@ -465,6 +473,22 @@ async function renderManagerDashboard(managerData, historyData, currentPicks, bo
             }
         });
     });
+
+    // Add event listeners for header buttons
+    const viewMyStatsBtn = document.getElementById('view-my-stats-btn');
+    if (viewMyStatsBtn) {
+        viewMyStatsBtn.addEventListener('click', () => {
+            router.navigate('/my-stats');
+        });
+    }
+
+    const changeManagerBtn = document.getElementById('change-manager-btn');
+    if (changeManagerBtn) {
+        changeManagerBtn.addEventListener('click', () => {
+            localStorage.removeItem('fpl_manager_id');
+            router.navigate('/my-stats');
+        });
+    }
 }
 
 // Toggle gameweek details expansion

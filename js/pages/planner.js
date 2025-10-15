@@ -27,11 +27,16 @@ async function renderPlannerPage(state = {}) {
                 <p class="subtitle mb-md">
                     Import your squad from My Stats to start planning transfers.
                 </p>
-                <button class="btn-primary" onclick="router.navigate('/my-stats')">
+                <button class="btn-primary" id="go-to-my-stats-btn">
                     Go to My Stats
                 </button>
             </div>
         `;
+
+        // Add event listener
+        document.getElementById('go-to-my-stats-btn').addEventListener('click', () => {
+            router.navigate('/my-stats');
+        });
         return;
     }
 
@@ -73,9 +78,14 @@ async function renderPlannerPage(state = {}) {
             <div class="card text-center">
                 <h2 class="text-error">Error Loading Planner</h2>
                 <p>${error.message}</p>
-                <button class="btn-primary" onclick="router.navigate('/my-stats');">Go to My Stats</button>
+                <button class="btn-primary" id="error-go-to-my-stats-btn">Go to My Stats</button>
             </div>
         `;
+
+        // Add event listener
+        document.getElementById('error-go-to-my-stats-btn').addEventListener('click', () => {
+            router.navigate('/my-stats');
+        });
     }
 }
 
@@ -161,7 +171,7 @@ function renderPlannerTool(playerMap, teamMap, currentGw, managerData) {
                             Clear All Transfers
                         </button>
                     ` : ''}
-                    <button class="btn-secondary" onclick="router.navigate('/my-stats');">
+                    <button class="btn-secondary" id="back-to-my-stats-btn">
                         Back to My Stats
                     </button>
                 </div>
@@ -184,6 +194,33 @@ function renderPlannerTool(playerMap, teamMap, currentGw, managerData) {
             renderPlannerTool(playerMap, teamMap, currentGw, managerData);
         });
     }
+
+    const backToMyStatsBtn = document.getElementById('back-to-my-stats-btn');
+    if (backToMyStatsBtn) {
+        backToMyStatsBtn.addEventListener('click', () => {
+            router.navigate('/my-stats');
+        });
+    }
+
+    // Add event listeners for remove transfer buttons
+    document.querySelectorAll('.remove-transfer-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const index = parseInt(btn.dataset.transferIndex);
+            plannerState.transfers.splice(index, 1);
+
+            // Re-render
+            (async () => {
+                const bootstrapData = await getBootstrapData();
+                const currentGw = getCurrentGameweek(bootstrapData);
+                const managerId = plannerState.managerId;
+                const managerData = await getManagerData(managerId);
+                const playerMap = createPlayerMap(bootstrapData);
+                const teamMap = createTeamMap(bootstrapData);
+
+                renderPlannerTool(playerMap, teamMap, currentGw, managerData);
+            })();
+        });
+    });
 }
 
 function renderSquadByPosition(squadByPosition, teamMap) {
@@ -251,7 +288,7 @@ function renderPlannedTransfers(playerMap, teamMap) {
                                 <span style="font-weight: 600;">£${(playerIn.now_cost / 10).toFixed(1)}m</span>
                             </div>
                         </div>
-                        <button class="remove-transfer-btn" onclick="removeTransfer(${index})">×</button>
+                        <button class="remove-transfer-btn" data-transfer-index="${index}">×</button>
                     </div>
                 `;
             }).join('')}
@@ -266,7 +303,7 @@ async function showTransferModal(playerMap, teamMap, currentGw) {
         <div class="modal-content container-md">
             <div class="modal-header">
                 <h3>Plan a Transfer</h3>
-                <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">×</button>
+                <button class="modal-close" id="modal-close-btn">×</button>
             </div>
             <div class="modal-body">
                 <div class="mb-1">
@@ -299,7 +336,7 @@ async function showTransferModal(playerMap, teamMap, currentGw) {
                 <div id="selected-player-in" class="mt-sm"></div>
             </div>
             <div class="modal-footer">
-                <button class="btn-secondary" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                <button class="btn-secondary" id="modal-cancel-btn">Cancel</button>
                 <button id="confirm-transfer-btn" class="btn-primary" disabled>Add Transfer</button>
             </div>
         </div>
@@ -314,6 +351,21 @@ async function showTransferModal(playerMap, teamMap, currentGw) {
     const selectedPlayerInDiv = document.getElementById('selected-player-in');
     const confirmBtn = document.getElementById('confirm-transfer-btn');
     const playerOutSelect = document.getElementById('player-out-select');
+
+    // Modal close buttons
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    if (modalCloseBtn) {
+        modalCloseBtn.addEventListener('click', () => {
+            modal.remove();
+        });
+    }
+
+    const modalCancelBtn = document.getElementById('modal-cancel-btn');
+    if (modalCancelBtn) {
+        modalCancelBtn.addEventListener('click', () => {
+            modal.remove();
+        });
+    }
 
     // Player search
     let searchTimeout;
@@ -426,22 +478,6 @@ async function showTransferModal(playerMap, teamMap, currentGw) {
         })();
     });
 }
-
-window.removeTransfer = function(index) {
-    plannerState.transfers.splice(index, 1);
-
-    // Re-render
-    (async () => {
-        const bootstrapData = await getBootstrapData();
-        const currentGw = getCurrentGameweek(bootstrapData);
-        const managerId = plannerState.managerId;
-        const managerData = await getManagerData(managerId);
-        const playerMap = createPlayerMap(bootstrapData);
-        const teamMap = createTeamMap(bootstrapData);
-
-        renderPlannerTool(playerMap, teamMap, currentGw, managerData);
-    })();
-};
 
 // Register route
 router.addRoute('/planner', renderPlannerPage);

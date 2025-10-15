@@ -74,11 +74,16 @@ async function renderPricePredictorPage(state = {}) {
                 <h2 class="text-error">Error Loading Price Predictor</h2>
                 <p>${error.message}</p>
                 <p class="text-sm text-tertiary mt-xs">Make sure the backend server is running</p>
-                <button class="btn-primary" onclick="router.navigate('/')">
+                <button class="btn-primary" id="go-home-btn">
                     Go to Home
                 </button>
             </div>
         `;
+
+        // Add event listener
+        document.getElementById('go-home-btn').addEventListener('click', () => {
+            router.navigate('/');
+        });
     }
 }
 

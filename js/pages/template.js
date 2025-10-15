@@ -250,16 +250,16 @@ function renderTemplateTracker(allPlayers, teamMap, bootstrapData) {
                 <!-- Tier Selector -->
                 <div class="mb-1">
                     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                        <button class="tier-btn ${currentTier === 'overall' ? 'active' : ''}" onclick="loadAndRenderTier('overall')">
+                        <button class="tier-btn ${currentTier === 'overall' ? 'active' : ''}" data-tier="overall">
                             Overall League
                         </button>
-                        <button class="tier-btn ${currentTier === '10k' ? 'active' : ''}" onclick="loadAndRenderTier('10k')" ${!backendStatus ? 'disabled' : ''}>
+                        <button class="tier-btn ${currentTier === '10k' ? 'active' : ''}" data-tier="10k" ${!backendStatus ? 'disabled' : ''}>
                             Top 10k
                         </button>
-                        <button class="tier-btn ${currentTier === '1k' ? 'active' : ''}" onclick="loadAndRenderTier('1k')" ${!backendStatus ? 'disabled' : ''}>
+                        <button class="tier-btn ${currentTier === '1k' ? 'active' : ''}" data-tier="1k" ${!backendStatus ? 'disabled' : ''}>
                             Top 1k
                         </button>
-                        <button class="tier-btn ${currentTier === '100' ? 'active' : ''}" onclick="loadAndRenderTier('100')" ${!backendStatus ? 'disabled' : ''}>
+                        <button class="tier-btn ${currentTier === '100' ? 'active' : ''}" data-tier="100" ${!backendStatus ? 'disabled' : ''}>
                             Top 100
                         </button>
                     </div>
@@ -297,7 +297,28 @@ function renderTemplateTracker(allPlayers, teamMap, bootstrapData) {
         </div>
     `;
 
-    // Attach click handlers - inline like my-stats.js
+    // Attach event listeners for tier buttons
+    document.querySelectorAll('.tier-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tier = btn.dataset.tier;
+            if (tier) {
+                loadAndRenderTier(tier);
+            }
+        });
+    });
+
+    // Attach event listeners for sortable table headers
+    document.querySelectorAll('.sortable-header').forEach(header => {
+        header.addEventListener('click', () => {
+            const tableType = header.dataset.tableType;
+            const column = header.dataset.column;
+            if (tableType && column) {
+                handleTableSort(tableType, column);
+            }
+        });
+    });
+
+    // Attach click handlers for player expansion
     document.querySelectorAll('.player-row-expandable').forEach(row => {
         row.addEventListener('click', () => {
             const playerId = parseInt(row.dataset.playerId);
@@ -400,14 +421,14 @@ function renderOwnershipTable(players, teamMap, type) {
             <table class="data-table ownership-table">
                 <thead>
                     <tr>
-                        <th class="text-left sortable-header ${getSortClass('player')}" onclick="handleTableSort('${type}', 'player')">Player</th>
-                        <th class="text-left sortable-header ${getSortClass('team')}" onclick="handleTableSort('${type}', 'team')">Team</th>
-                        <th class="sortable-header ${getSortClass('position')}" onclick="handleTableSort('${type}', 'position')">Position</th>
-                        <th class="sortable-header ${getSortClass('price')}" onclick="handleTableSort('${type}', 'price')">Price</th>
-                        <th class="sortable-header ${getSortClass('ownership')}" onclick="handleTableSort('${type}', 'ownership')">Ownership</th>
-                        <th class="sortable-header ${getSortClass('points')}" onclick="handleTableSort('${type}', 'points')">Points</th>
-                        <th class="sortable-header ${getSortClass('form')}" onclick="handleTableSort('${type}', 'form')">Form</th>
-                        <th class="sortable-header ${getSortClass('ppg')}" onclick="handleTableSort('${type}', 'ppg')">PPG</th>
+                        <th class="text-left sortable-header ${getSortClass('player')}" data-table-type="${type}" data-column="player">Player</th>
+                        <th class="text-left sortable-header ${getSortClass('team')}" data-table-type="${type}" data-column="team">Team</th>
+                        <th class="sortable-header ${getSortClass('position')}" data-table-type="${type}" data-column="position">Position</th>
+                        <th class="sortable-header ${getSortClass('price')}" data-table-type="${type}" data-column="price">Price</th>
+                        <th class="sortable-header ${getSortClass('ownership')}" data-table-type="${type}" data-column="ownership">Ownership</th>
+                        <th class="sortable-header ${getSortClass('points')}" data-table-type="${type}" data-column="points">Points</th>
+                        <th class="sortable-header ${getSortClass('form')}" data-table-type="${type}" data-column="form">Form</th>
+                        <th class="sortable-header ${getSortClass('ppg')}" data-table-type="${type}" data-column="ppg">PPG</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -805,6 +826,18 @@ function togglePlayerExpansion(playerId, tableType) {
  * Attaches click handlers to all player rows (used after re-rendering tables)
  */
 function attachPlayerRowClickHandlers() {
+    // Re-attach sorting header listeners
+    document.querySelectorAll('.sortable-header').forEach(header => {
+        header.addEventListener('click', () => {
+            const tableType = header.dataset.tableType;
+            const column = header.dataset.column;
+            if (tableType && column) {
+                handleTableSort(tableType, column);
+            }
+        });
+    });
+
+    // Re-attach player row listeners
     document.querySelectorAll('.player-row-expandable').forEach(row => {
         row.addEventListener('click', () => {
             const playerId = parseInt(row.dataset.playerId);

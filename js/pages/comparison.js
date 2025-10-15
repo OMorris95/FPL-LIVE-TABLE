@@ -13,9 +13,14 @@ async function renderComparisonPage(state = {}) {
             <div class="card text-center">
                 <h2>No League Selected</h2>
                 <p>Please select a league from the home page.</p>
-                <button class="btn-primary" onclick="router.navigate('/')">Go to Home</button>
+                <button class="btn-primary" id="go-home-btn">Go to Home</button>
             </div>
         `;
+
+        // Add event listener
+        document.getElementById('go-home-btn').addEventListener('click', () => {
+            router.navigate('/');
+        });
         return;
     }
 
@@ -46,9 +51,14 @@ async function renderComparisonPage(state = {}) {
             <div class="card text-center">
                 <h2 class="text-error">Error Loading Comparison</h2>
                 <p>${error.message}</p>
-                <button class="btn-primary" onclick="router.navigate('/')">Go to Home</button>
+                <button class="btn-primary" id="error-go-home-btn">Go to Home</button>
             </div>
         `;
+
+        // Add event listener
+        document.getElementById('error-go-home-btn').addEventListener('click', () => {
+            router.navigate('/');
+        });
     }
 }
 
@@ -63,7 +73,7 @@ function renderManagerSelection(leagueData, leagueId) {
                     <div>
                         <h2 class="card-title">Manager Comparison</h2>
                     </div>
-                    <button class="btn-primary" onclick="router.navigate('/', {leagueId: '${leagueId}'})">
+                    <button class="btn-primary" id="league-table-btn" data-league-id="${leagueId}">
                         League Table
                     </button>
                 </div>
@@ -119,6 +129,15 @@ function renderManagerSelection(leagueData, leagueId) {
 
         await compareManagers(manager1Id, manager2Id, leagueData);
     });
+
+    // Add league table button handler
+    const leagueTableBtn = document.getElementById('league-table-btn');
+    if (leagueTableBtn) {
+        leagueTableBtn.addEventListener('click', () => {
+            const leagueId = leagueTableBtn.dataset.leagueId;
+            router.navigate('/', { leagueId });
+        });
+    }
 }
 
 async function compareManagers(manager1Id, manager2Id, leagueData) {

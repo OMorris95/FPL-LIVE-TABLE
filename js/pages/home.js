@@ -137,6 +137,7 @@ function renderEntryBoxes() {
                     </div>
                     <form id="league-form">
                         <div class="form-group mb-sm">
+                            <label for="league-id-input" class="form-label" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">League ID</label>
                             <input
                                 type="number"
                                 id="league-id-input"
@@ -158,6 +159,7 @@ function renderEntryBoxes() {
                     </div>
                     <form id="manager-form">
                         <div class="form-group mb-sm">
+                            <label for="manager-id-input" class="form-label" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Manager ID</label>
                             <input
                                 type="number"
                                 id="manager-id-input"
@@ -557,9 +559,14 @@ async function renderHomeWithLiveTable(leagueId) {
                 <h2 class="text-error">Error Loading League</h2>
                 <p>${error.message}</p>
                 <p>Please check the League ID and try again.</p>
-                <button class="btn-primary" onclick="changeLeague()">Try Different League</button>
+                <button class="btn-primary" id="error-change-league">Try Different League</button>
             </div>
         `;
+
+        // Add event listener
+        document.getElementById('error-change-league').addEventListener('click', () => {
+            changeLeague();
+        });
     }
 }
 
@@ -583,7 +590,7 @@ function renderLiveTable(managers, leagueName, leagueId, captainStats, ownership
                     </div>
                     <div class="flex items-center gap-lg flex-wrap">
                         <p class="subtitle m-0">${leagueName}</p>
-                        <button class="btn-primary" onclick="router.navigate('/comparison', {leagueId: '${leagueId}'})">
+                        <button class="btn-primary" id="comparison-btn" data-league-id="${leagueId}">
                             Manager Comparison
                         </button>
                         <button id="change-league-btn" class="btn-secondary-small">
@@ -779,6 +786,15 @@ function renderLiveTable(managers, leagueName, leagueId, captainStats, ownership
     document.getElementById('change-league-btn').addEventListener('click', () => {
         changeLeague();
     });
+
+    // Add comparison button handler
+    const comparisonBtn = document.getElementById('comparison-btn');
+    if (comparisonBtn) {
+        comparisonBtn.addEventListener('click', () => {
+            const leagueId = comparisonBtn.dataset.leagueId;
+            router.navigate('/comparison', { leagueId });
+        });
+    }
 }
 
 async function toggleDetailsRow(manager, row) {
