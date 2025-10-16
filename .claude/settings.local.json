@@ -12,7 +12,12 @@
       "Bash(curl:*)",
       "Bash(findstr:*)",
       "Bash(cat:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "WebFetch(domain:fplgraphed.com)",
+      "WebFetch(domain:www.fplanalytics.com)",
+      "WebFetch(domain:www.premierfantasytools.com)",
+      "WebFetch(domain:www.fplgameweek.com)",
+      "WebFetch(domain:fplreview.com)"
     ],
     "deny": [],
     "ask": []

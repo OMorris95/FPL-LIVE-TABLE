@@ -363,9 +363,7 @@ function renderTemplateSquad(templateTeam, teamMap) {
             <table class="data-table ownership-table">
                 <thead>
                     <tr>
-                        <th class="text-left">Pos</th>
                         <th class="text-left">Player</th>
-                        <th class="text-left">Team</th>
                         <th>Price</th>
                         <th>Ownership</th>
                         <th>Points</th>
@@ -379,9 +377,10 @@ function renderTemplateSquad(templateTeam, teamMap) {
 
                         return `
                             <tr class="player-row-expandable" data-player-id="${player.id}" data-table-type="template-squad" style="cursor: pointer;">
-                                <td style="${borderStyle}"><strong>${player.pos}</strong></td>
-                                <td style="font-weight: 600; ${borderStyle}">${player.first_name.charAt(0)}. ${player.second_name}</td>
-                                <td style="${borderStyle}">${team.short_name}</td>
+                                <td style="font-weight: 600; ${borderStyle}">
+                                    ${player.first_name.charAt(0)}. ${player.second_name}
+                                    <span class="player-sub-info">${player.pos} • ${team.short_name}</span>
+                                </td>
                                 <td class="text-center" style="${borderStyle}">£${(player.now_cost / 10).toFixed(1)}m</td>
                                 <td class="text-center" style="${borderStyle}">
                                     <span class="ownership-badge ${getOwnershipClass(ownership)}">
@@ -391,7 +390,7 @@ function renderTemplateSquad(templateTeam, teamMap) {
                                 <td class="text-center" style="font-weight: 600; ${borderStyle}">${player.total_points}</td>
                             </tr>
                             <tr class="player-details-row hidden" id="player-details-template-squad-${player.id}">
-                                <td colspan="6" style="padding: 0; background: var(--bg-tertiary);">
+                                <td colspan="4" style="padding: 0; background: var(--bg-tertiary);">
                                     <div class="player-details-content"></div>
                                 </td>
                             </tr>
@@ -422,8 +421,6 @@ function renderOwnershipTable(players, teamMap, type) {
                 <thead>
                     <tr>
                         <th class="text-left sortable-header ${getSortClass('player')}" data-table-type="${type}" data-column="player">Player</th>
-                        <th class="text-left sortable-header ${getSortClass('team')}" data-table-type="${type}" data-column="team">Team</th>
-                        <th class="sortable-header ${getSortClass('position')}" data-table-type="${type}" data-column="position">Position</th>
                         <th class="sortable-header ${getSortClass('price')}" data-table-type="${type}" data-column="price">Price</th>
                         <th class="sortable-header ${getSortClass('ownership')}" data-table-type="${type}" data-column="ownership">Ownership</th>
                         <th class="sortable-header ${getSortClass('points')}" data-table-type="${type}" data-column="points">Points</th>
@@ -438,9 +435,10 @@ function renderOwnershipTable(players, teamMap, type) {
 
                         return `
                             <tr class="player-row-expandable" data-player-id="${player.id}" data-table-type="${type}" style="cursor: pointer;">
-                                <td style="font-weight: 600;">${player.first_name.charAt(0)}. ${player.second_name}</td>
-                                <td>${team.short_name}</td>
-                                <td class="text-center">${getPositionLabel(player.element_type)}</td>
+                                <td style="font-weight: 600;">
+                                    ${player.first_name.charAt(0)}. ${player.second_name}
+                                    <span class="player-sub-info">${getPositionLabel(player.element_type)} • ${team.short_name}</span>
+                                </td>
                                 <td class="text-center">£${(player.now_cost / 10).toFixed(1)}m</td>
                                 <td class="text-center">
                                     <span class="ownership-badge ${getOwnershipClass(ownership)}">
@@ -452,7 +450,7 @@ function renderOwnershipTable(players, teamMap, type) {
                                 <td class="text-center">${player.points_per_game}</td>
                             </tr>
                             <tr class="player-details-row hidden" id="player-details-${type}-${player.id}">
-                                <td colspan="8" style="padding: 0; background: var(--bg-tertiary);">
+                                <td colspan="6" style="padding: 0; background: var(--bg-tertiary);">
                                     <div class="player-details-content"></div>
                                 </td>
                             </tr>
