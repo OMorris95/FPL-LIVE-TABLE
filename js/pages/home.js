@@ -514,9 +514,9 @@ async function renderHomeWithLiveTable(leagueId) {
         const playerMap = createPlayerMap(staticData);
         const teamMap = createTeamMap(staticData);
 
-        const captainStats = analyzeCaptainPicks(allPicksData, managerList, playerMap, liveData);
-        const ownershipStats = analyzeOwnership(allPicksData, managerList, playerMap, liveData);
-        const chipStats = analyzeChipUsage(allPicksData, managerList);
+        const captainStats = analyzeCaptainPicks(allPicksData, managers, playerMap, liveData);
+        const ownershipStats = analyzeOwnership(allPicksData, managers, playerMap, liveData);
+        const chipStats = analyzeChipUsage(allPicksData, managers);
 
         // Calculate dream team - wrap in try-catch to prevent page crash on large leagues
         let positions = null;

@@ -17,7 +17,9 @@
       "WebFetch(domain:www.fplanalytics.com)",
       "WebFetch(domain:www.premierfantasytools.com)",
       "WebFetch(domain:www.fplgameweek.com)",
-      "WebFetch(domain:fplreview.com)"
+      "WebFetch(domain:fplreview.com)",
+      "Bash(scp:*)",
+      "Bash(ssh:*)"
     ],
     "deny": [],
     "ask": []
