@@ -643,6 +643,124 @@ function renderLiveTable(managers, leagueName, leagueId, captainStats, ownership
                 </div>
             </div>
 
+            <!-- MODERN DESIGN - Chart Analytics Section -->
+            <div class="card mt-1">
+                <div class="card-header">
+                    <h2 class="card-title">League Analytics</h2>
+                </div>
+
+                <!-- Controls Bar -->
+                <div class="controls-bar">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span class="controls-bar-label">Timeframe:</span>
+                        <div class="timeframe-toggle">
+                            <button class="timeframe-btn active" data-timeframe="season">Full Season</button>
+                            <button class="timeframe-btn" data-timeframe="last10">Last 10</button>
+                            <button class="timeframe-btn" data-timeframe="last5">Last 5</button>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span class="controls-bar-label">Compare:</span>
+                        <select class="select-modern" id="compare-player-select">
+                            <option value="">Select Player...</option>
+                            <option value="1">Haaland</option>
+                            <option value="2">Salah</option>
+                            <option value="3">Palmer</option>
+                        </select>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span class="controls-bar-label">Team:</span>
+                        <select class="select-modern" id="filter-team-select">
+                            <option value="">All Teams</option>
+                            <option value="1">Arsenal</option>
+                            <option value="2">Liverpool</option>
+                            <option value="3">Man City</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Stats Summary Cards -->
+                <div class="stats-summary">
+                    <div class="stat-card">
+                        <div class="stat-card-label">Average GW Score</div>
+                        <div class="stat-card-value">58</div>
+                        <div class="stat-card-change positive">+5 vs last GW</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-label">Highest Score</div>
+                        <div class="stat-card-value">84</div>
+                        <div class="stat-card-change positive">Top performer</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-label">Active Chips</div>
+                        <div class="stat-card-value">${Object.values(chipStats).reduce((sum, arr) => sum + arr.length, 0)}</div>
+                        <div class="stat-card-change">This gameweek</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-label">Captaincy EO</div>
+                        <div class="stat-card-value">${captainStats[0] ? captainStats[0].count : 0}</div>
+                        <div class="stat-card-change">${captainStats[0] ? captainStats[0].webName : 'N/A'}</div>
+                    </div>
+                </div>
+
+                <!-- Chart Grid -->
+                <div class="chart-grid chart-grid-2col">
+                    <!-- Manager Points Progression Chart -->
+                    <div class="chart-card">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3 class="chart-card-title">Manager Points Progression</h3>
+                                <p class="chart-card-subtitle">Top managers across gameweeks</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="manager-progression-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Captain Performance Chart -->
+                    <div class="chart-card">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3 class="chart-card-title">Captain Performance</h3>
+                                <p class="chart-card-subtitle">Points distribution by captain choice</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="captain-performance-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Position Performance Chart -->
+                    <div class="chart-card">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3 class="chart-card-title">Position Performance</h3>
+                                <p class="chart-card-subtitle">Average points by position</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="position-performance-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Team Value Distribution Chart -->
+                    <div class="chart-card">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3 class="chart-card-title">Team Value Distribution</h3>
+                                <p class="chart-card-subtitle">League squad value spread</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="team-value-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- League Statistics Section -->
             <div class="card mt-1">
                 <div class="card-header">
@@ -795,6 +913,127 @@ function renderLiveTable(managers, leagueName, leagueId, captainStats, ownership
             router.navigate('/comparison', { leagueId });
         });
     }
+
+    // Initialize modern charts
+    initializeModernCharts();
+
+    // Add timeframe toggle handlers
+    const timeframeButtons = document.querySelectorAll('.timeframe-btn');
+    timeframeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Update active state
+            timeframeButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Update appState
+            const timeframe = btn.dataset.timeframe;
+            appState.update({ timeframe });
+
+            // Charts will auto-update via state subscription
+            console.log('Timeframe changed to:', timeframe);
+        });
+    });
+}
+
+// Initialize modern placeholder charts
+function initializeModernCharts() {
+    // Manager Points Progression Chart
+    const managerProgressionData = {
+        labels: generateGameweekLabels(10),
+        datasets: [
+            {
+                label: 'Manager 1',
+                data: generateSampleData(10, 400, 650),
+            },
+            {
+                label: 'Manager 2',
+                data: generateSampleData(10, 380, 630),
+            },
+            {
+                label: 'Manager 3',
+                data: generateSampleData(10, 370, 610),
+            }
+        ]
+    };
+    createSampleLineChart('manager-progression-chart', 'Manager Points Progression');
+
+    // Captain Performance Chart (Bar chart)
+    const captainPerformanceData = {
+        labels: ['Haaland', 'Salah', 'Palmer', 'Saka', 'Son'],
+        datasets: [
+            {
+                label: 'Avg Points',
+                data: [12.5, 10.2, 9.8, 8.5, 7.9],
+            }
+        ]
+    };
+    const captainChart = createChart(
+        'captain-performance-chart',
+        createBarChartConfig,
+        captainPerformanceData,
+        {
+            plugins: {
+                title: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    );
+
+    // Position Performance Chart (Radar)
+    const positionPerformanceData = {
+        labels: ['Goals', 'Assists', 'Clean Sheets', 'Bonus', 'Saves', 'xG'],
+        datasets: [
+            {
+                label: 'DEF',
+                data: [45, 52, 85, 70, 20, 38],
+            },
+            {
+                label: 'MID',
+                data: [78, 88, 35, 82, 10, 75],
+            },
+            {
+                label: 'FWD',
+                data: [92, 68, 15, 75, 5, 88],
+            }
+        ]
+    };
+    createChart(
+        'position-performance-chart',
+        createRadarChartConfig,
+        positionPerformanceData
+    );
+
+    // Team Value Distribution Chart (Line)
+    const teamValueData = {
+        labels: generateGameweekLabels(10),
+        datasets: [
+            {
+                label: 'Avg Team Value',
+                data: [100.0, 100.3, 100.8, 101.2, 101.5, 101.9, 102.3, 102.6, 103.0, 103.4],
+                borderColor: getThemeColors().primary,
+                backgroundColor: getThemeColors().primary + '20',
+            }
+        ]
+    };
+    createChart(
+        'team-value-chart',
+        createLineChartConfig,
+        teamValueData,
+        {
+            scales: {
+                y: {
+                    min: 99,
+                    max: 104
+                }
+            }
+        }
+    );
 }
 
 async function toggleDetailsRow(manager, row) {
