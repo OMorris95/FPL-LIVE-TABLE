@@ -86,7 +86,7 @@ function getDefaultChartOptions(customOptions = {}) {
 
     const defaults = {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 display: true,

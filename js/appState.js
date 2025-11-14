@@ -7,7 +7,7 @@
 
 const appState = {
     // ===== UI State =====
-    theme: localStorage.getItem('theme') || 'dark', // 'light' or 'dark'
+    theme: localStorage.getItem('theme') || 'light', // 'light' or 'dark'
 
     // ===== Filter State =====
     // These control what data is shown in charts
@@ -159,7 +159,7 @@ function applyTheme(theme) {
  * Initializes theme from localStorage
  */
 function initTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
+    const savedTheme = localStorage.getItem('theme') || 'light';
     appState.update({ theme: savedTheme });
     applyTheme(savedTheme);
 }

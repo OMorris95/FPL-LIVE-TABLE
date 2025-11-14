@@ -55,32 +55,36 @@
     }
     </script>
 
-    <link rel="stylesheet" href="css/styles.css?v=1.0.5">
+    <link rel="stylesheet" href="css/styles.css?v=1.0.20">
 </head>
 <body>
 
     <!-- Navigation -->
     <nav id="main-nav">
         <div class="nav-container">
-            <div class="nav-brand">
-                <img src="logotest3.png" alt="Live FPL Stats" class="nav-logo" />
+            <div class="nav-logo">
+                <span class="nav-logo-text">LiveFPLStats</span>
             </div>
             <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle navigation menu">
                 ☰
             </button>
-            <div class="nav-links" id="nav-links">
+            <div class="nav-links-box" id="nav-links-box">
                 <a href="/" data-link class="nav-link">Home</a>
-                <a href="/fixtures" data-link class="nav-link">Fixtures</a>
+                <a href="/league" data-link class="nav-link">League</a>
                 <a href="/players" data-link class="nav-link">Players</a>
-                <a href="/prices" data-link class="nav-link" style="display: none;">Prices</a>
-                <a href="/planner" data-link class="nav-link" style="display: none;">Planner</a>
+                <a href="/fixtures" data-link class="nav-link">Fixtures</a>
                 <a href="/template" data-link class="nav-link">Top Owned</a>
-                <a href="/my-stats" data-link class="nav-link">My Stats</a>
             </div>
-            <div class="nav-actions" style="display: none;">
-                <button id="theme-toggle" class="theme-toggle" title="Toggle dark/light mode">
-                    <span id="theme-icon">☀️</span>
+            <div class="nav-settings-box">
+                <button class="nav-settings-btn">Settings</button>
+            </div>
+            <div class="nav-theme-box">
+                <button id="theme-toggle-nav" class="nav-theme-btn" title="Toggle dark/light mode">
+                    <span id="theme-icon-nav">☀️</span>
                 </button>
+            </div>
+            <div class="nav-discord-box">
+                <a href="https://discord.gg/your-invite-link" target="_blank" class="nav-discord-btn">🤖 Try Our Discord Bot!</a>
             </div>
         </div>
     </nav>
@@ -100,23 +104,23 @@
     <!-- Chart.js for data visualizations -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-    <script src="js/theme.js?v=1.0.5"></script>
-    <script src="js/nav.js?v=1.0.5"></script>
-    <script src="js/api.js?v=1.0.5"></script>
-    <script src="js/appState.js?v=1.0.5"></script>
-    <script src="js/chartConfig.js?v=1.0.5"></script>
-    <script src="js/chartFactory.js?v=1.0.5"></script>
-    <script src="js/dreamteam.js?v=1.0.5"></script>
-    <script src="js/router.js?v=1.0.5"></script>
-    <script src="js/pages/home.js?v=1.0.5"></script>
-    <script src="js/pages/comparison.js?v=1.0.5"></script>
-    <script src="js/pages/fixtures.js?v=1.0.5"></script>
-    <script src="js/pages/players.js?v=1.0.5"></script>
-    <script src="js/pages/price-predictor.js?v=1.0.5"></script>
-    <script src="js/pages/compare-players.js?v=1.0.5"></script>
-    <script src="js/pages/planner.js?v=1.0.5"></script>
-    <script src="js/pages/template.js?v=1.0.5"></script>
-    <script src="js/pages/my-stats.js?v=1.0.5"></script>
-    <script src="js/app.js?v=1.0.5"></script>
+    <script src="js/theme.js?v=1.0.13"></script>
+    <script src="js/nav.js?v=1.0.8"></script>
+    <script src="js/api.js?v=1.0.8"></script>
+    <script src="js/appState.js?v=1.0.8"></script>
+    <script src="js/chartConfig.js?v=1.0.8"></script>
+    <script src="js/chartFactory.js?v=1.0.8"></script>
+    <script src="js/dreamteam.js?v=1.0.8"></script>
+    <script src="js/router.js?v=1.0.8"></script>
+    <script src="js/pages/home.js?v=1.0.8"></script>
+    <script src="js/pages/comparison.js?v=1.0.8"></script>
+    <script src="js/pages/fixtures.js?v=1.0.8"></script>
+    <script src="js/pages/players.js?v=1.0.8"></script>
+    <script src="js/pages/price-predictor.js?v=1.0.8"></script>
+    <script src="js/pages/compare-players.js?v=1.0.8"></script>
+    <script src="js/pages/planner.js?v=1.0.8"></script>
+    <script src="js/pages/template.js?v=1.0.8"></script>
+    <script src="js/pages/my-stats.js?v=1.0.8"></script>
+    <script src="js/app.js?v=1.0.8"></script>
 </body>
 </html>
