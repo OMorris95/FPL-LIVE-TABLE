@@ -276,6 +276,168 @@
     --gap-2xl: 2rem;
 }
 
+/* ==========================================
+   LIGHT THEME - Modern Cream/Neutral Design
+   ========================================== */
+
+.light-theme {
+    /* Base Colors - Light Backgrounds */
+    --bg-color: #F5F1E8;          /* Cream/Beige background */
+    --bg-secondary: #FFFFFF;       /* White */
+    --bg-tertiary: #FAFAF9;        /* Off-white */
+    --bg-gradient: linear-gradient(180deg, #F5F1E8 0%, #FFFFFF 100%);
+    --card-bg: #FFFFFF;
+    --card-bg-elevated: #FAFAF9;
+
+    /* Text Colors - Dark on Light */
+    --text-color: #1F2937;         /* Dark gray */
+    --text-secondary: #4B5563;     /* Medium gray */
+    --text-tertiary: #6B7280;      /* Light gray */
+    --text-quaternary: #9CA3AF;    /* Very light gray */
+    --text-light: #6B7280;
+    --text-muted: #9CA3AF;
+
+    /* Border */
+    --border-color: #E5E7EB;       /* Light gray border */
+
+    /* Modern Neutral Accents - Grays/Blues */
+    --accent-gold: #3B82F6;        /* Blue (replaces gold) */
+    --accent-orange: #8B5CF6;      /* Purple */
+    --accent-red: #EF4444;         /* Red */
+    --accent-gold-hover: #2563EB;  /* Darker blue */
+    --secondary-color: #10B981;    /* Green */
+    --success: #10B981;
+    --warning: #F59E0B;
+    --error: #EF4444;
+
+    /* Theme Gradient - Blue instead of Fire */
+    --theme-primary: #3B82F6;
+    --theme-gradient: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 50%, #06B6D4 100%);
+    --theme-gradient-hover: linear-gradient(135deg, #60A5FA 0%, #A78BFA 50%, #22D3EE 100%);
+
+    /* Rank & Status */
+    --rank-up: #10B981;
+    --rank-down: #EF4444;
+    --rank-neutral: #6B7280;
+    --captain-color: #3B82F6;
+    --vice-captain-color: #6B7280;
+
+    /* Navigation - Light */
+    --nav-link-default: rgba(31, 41, 55, 0.9);
+    --nav-link-hover-bg: rgba(59, 130, 246, 0.1);
+    --nav-link-active-bg: rgba(59, 130, 246, 0.15);
+    --nav-text-shadow: rgba(255, 255, 255, 0.3);
+    --nav-league-text: #1F2937;
+
+    /* Buttons - Light */
+    --btn-secondary-small-bg: rgba(59, 130, 246, 0.1);
+    --btn-secondary-small-text: #3B82F6;
+    --btn-secondary-small-border: rgba(59, 130, 246, 0.3);
+    --btn-secondary-small-hover-bg: rgba(59, 130, 246, 0.2);
+    --btn-secondary-small-hover-border: rgba(59, 130, 246, 0.5);
+    --btn-danger-hover: #DC2626;
+
+    /* Dream Team Pitch - Light */
+    --pitch-bg-start: #86EFAC;
+    --pitch-bg-end: #22C55E;
+    --pitch-bg-gradient: linear-gradient(to bottom, #86EFAC, #22C55E);
+    --pitch-border: #16A34A;
+    --pitch-shadow-inset: rgba(0, 0, 0, 0.1);
+    --pitch-card-bg: rgba(255, 255, 255, 0.98);
+    --pitch-card-shadow: rgba(0, 0, 0, 0.15);
+    --pitch-card-text: #000000;
+    --pitch-points-color: #16A34A;
+
+    /* Player of the Week - Light */
+    --potw-text: #1F2937;
+    --potw-text-shadow: rgba(255, 255, 255, 0.5);
+    --potw-text-shadow-strong: rgba(255, 255, 255, 0.7);
+    --potw-stat-bg: rgba(0, 0, 0, 0.05);
+    --potw-stat-text-secondary: rgba(31, 41, 55, 0.9);
+
+    /* Section Headers - Light */
+    --section-header-color: #3B82F6;
+
+    /* Player Position Badges - Light */
+    --position-gk-bg: rgba(251, 146, 60, 0.15);
+    --position-gk-text: #EA580C;
+    --position-def-bg: rgba(34, 197, 94, 0.15);
+    --position-def-text: #16A34A;
+    --position-mid-bg: rgba(59, 130, 246, 0.15);
+    --position-mid-text: #2563EB;
+    --position-fwd-bg: rgba(239, 68, 68, 0.15);
+    --position-fwd-text: #DC2626;
+
+    /* FDR Colors - Light */
+    --fdr-easy-bg: rgba(34, 197, 94, 0.12);
+    --fdr-easy-text: #16A34A;
+    --fdr-medium-bg: rgba(251, 191, 36, 0.12);
+    --fdr-medium-text: #D97706;
+    --fdr-hard-bg: rgba(251, 146, 60, 0.12);
+    --fdr-hard-text: #EA580C;
+    --fdr-very-hard-bg: rgba(239, 68, 68, 0.12);
+    --fdr-very-hard-text: #DC2626;
+    --fdr-home-bg: rgba(34, 197, 94, 0.15);
+    --fdr-away-bg: rgba(251, 146, 60, 0.15);
+    --fdr-table-hover: rgba(59, 130, 246, 0.05);
+
+    /* Template Ownership - Light */
+    --ownership-high-bg: rgba(239, 68, 68, 0.12);
+    --ownership-high-text: #DC2626;
+    --ownership-high-border: #DC2626;
+    --ownership-medium-bg: rgba(251, 191, 36, 0.12);
+    --ownership-medium-text: #D97706;
+    --ownership-medium-border: #D97706;
+    --ownership-low-bg: rgba(59, 130, 246, 0.12);
+    --ownership-low-text: #2563EB;
+    --ownership-low-border: #2563EB;
+    --ownership-diff-bg: rgba(34, 197, 94, 0.12);
+    --ownership-diff-text: #16A34A;
+    --ownership-diff-border: #16A34A;
+
+    /* Overlays - Light */
+    --overlay-dark: rgba(0, 0, 0, 0.5);
+    --white-overlay-01: rgba(255, 255, 255, 0.1);
+    --white-overlay-02: rgba(255, 255, 255, 0.2);
+    --white-overlay-03: rgba(255, 255, 255, 0.3);
+    --white-overlay-05: rgba(255, 255, 255, 0.5);
+    --white-overlay-09: rgba(255, 255, 255, 0.9);
+    --white-overlay-95: rgba(255, 255, 255, 0.95);
+    --black-overlay-01: rgba(0, 0, 0, 0.1);
+    --black-overlay-02: rgba(0, 0, 0, 0.2);
+    --black-overlay-04: rgba(0, 0, 0, 0.4);
+
+    /* Focus & Highlight - Light */
+    --focus-ring: rgba(59, 130, 246, 0.2);
+    --table-hover-tint: rgba(59, 130, 246, 0.05);
+    --player-card-border-default: #E5E7EB;
+
+    /* Disclaimer - Light */
+    --disclaimer-bg: rgba(251, 191, 36, 0.1);
+
+    /* Sortable Header - Light */
+    --sortable-arrow-color: #374151;
+
+    /* Shadows - Light (softer) */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+    --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.15);
+    --shadow-text-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+    --shadow-text-md: 0 1px 3px rgba(0, 0, 0, 0.15);
+    --shadow-text-lg: 0 1px 4px rgba(0, 0, 0, 0.2);
+    --shadow-text-xl: 0 2px 6px rgba(0, 0, 0, 0.25);
+    --shadow-inset-sm: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+    --shadow-inset-md: inset 0 2px 10px rgba(0, 0, 0, 0.08);
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Smooth theme transitions */
+:root,
+.light-theme {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -596,6 +758,308 @@ select.form-input {
     border-color: var(--accent-gold);
     box-shadow: 0 0 0 4px var(--focus-ring);
     background-color: var(--card-bg);
+}
+
+/* ============================================
+   MODERN DESIGN SYSTEM - Charts & Grids
+   ============================================ */
+
+/* Chart Grid Layouts */
+.chart-grid {
+    display: grid;
+    gap: var(--gap-xl);
+    margin-bottom: var(--spacing-lg);
+}
+
+.chart-grid-2col {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.chart-grid-3col {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.chart-grid-sidebar {
+    grid-template-columns: 2fr 1fr;
+}
+
+/* Chart Card Component */
+.chart-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-color);
+    transition: box-shadow 0.2s ease;
+}
+
+.chart-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.chart-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+
+.chart-card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.chart-card-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+}
+
+/* Chart Canvas Container */
+.chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
+.chart-container.large {
+    height: 400px;
+}
+
+.chart-container.small {
+    height: 250px;
+}
+
+/* Filter Controls Bar */
+.controls-bar {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    margin-bottom: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.controls-bar-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-right: 0.5rem;
+}
+
+/* Modern Select Dropdown */
+.select-modern {
+    appearance: none;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--text-color);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.25rem;
+}
+
+.select-modern:hover {
+    border-color: var(--accent-gold);
+    background-color: var(--card-bg);
+}
+
+.select-modern:focus {
+    outline: none;
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+/* Timeframe Toggle Buttons */
+.timeframe-toggle {
+    display: inline-flex;
+    gap: 0.25rem;
+    background: var(--bg-tertiary);
+    padding: 0.25rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.timeframe-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.timeframe-btn:hover {
+    color: var(--text-color);
+    background: var(--card-bg);
+}
+
+.timeframe-btn.active {
+    color: var(--text-color);
+    background: var(--card-bg);
+    box-shadow: var(--shadow-sm);
+    font-weight: 600;
+}
+
+/* Stats Summary Cards */
+.stats-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: var(--spacing-lg);
+}
+
+.stat-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.25rem;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.stat-card-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.stat-card-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-color);
+    line-height: 1;
+}
+
+.stat-card-change {
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    font-weight: 500;
+}
+
+.stat-card-change.positive {
+    color: var(--success);
+}
+
+.stat-card-change.negative {
+    color: var(--error);
+}
+
+/* Modern Button Variants */
+.btn-modern {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-modern-primary {
+    background: var(--accent-gold);
+    color: white;
+}
+
+.btn-modern-primary:hover {
+    background: var(--accent-gold-hover);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-modern-secondary {
+    background: var(--bg-tertiary);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.btn-modern-secondary:hover {
+    background: var(--card-bg);
+    border-color: var(--accent-gold);
+}
+
+/* Loading State for Charts */
+.chart-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+/* Empty State for Charts */
+.chart-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+.chart-empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .chart-grid-2col,
+    .chart-grid-3col,
+    .chart-grid-sidebar {
+        grid-template-columns: 1fr;
+    }
+
+    .controls-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .select-modern {
+        width: 100%;
+    }
+
+    .timeframe-toggle {
+        width: 100%;
+        justify-content: stretch;
+    }
+
+    .timeframe-btn {
+        flex: 1;
+    }
+
+    .chart-container {
+        height: 250px;
+    }
+
+    .chart-card {
+        padding: 1rem;
+    }
+
+    .stat-card-value {
+        font-size: 1.5rem;
+    }
 }
 
 /* ============================================
