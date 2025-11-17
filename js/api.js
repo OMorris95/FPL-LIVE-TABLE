@@ -567,6 +567,26 @@ async function getFixturesData() {
 }
 
 /**
+ * Fetches detailed player history including gameweek-by-gameweek stats
+ * Used for player performance charts and comparisons
+ * @param {number} playerId - Player element ID
+ * @returns {Promise<object>} - Player history data with fixtures and history arrays
+ */
+async function getPlayerHistory(playerId) {
+    const cacheKey = `player_history_${playerId}`;
+    const cached = getCachedData(cacheKey);
+
+    if (cached) {
+        return cached;
+    }
+
+    console.log(`🌐 Fetching history for player ${playerId} from API`);
+    const data = await fetchData(`${API_BASE_URL}element-summary/${playerId}/`);
+    setCachedData(cacheKey, data, CACHE_DURATIONS.WEEK);
+    return data;
+}
+
+/**
  * Creates a map of player ID to player object
  * @param {object} bootstrapData - Bootstrap data
  * @returns {object} - Map of player ID to player object

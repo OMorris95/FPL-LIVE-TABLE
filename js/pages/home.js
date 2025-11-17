@@ -46,13 +46,13 @@ function renderModernHomepage(currentGw, currentEvent) {
         <div class="home-modern-container">
             <!-- Main Chart Grid - 3 Columns -->
             <div class="chart-grid chart-grid-3col">
-                <!-- Chart 1 - Line Chart -->
-                <div class="chart-card">
+                <!-- Chart 1 - Player Comparison Chart -->
+                <div class="chart-card" id="player-comparison-card">
                     <div class="chart-card-header">
-                        <h3 class="chart-card-title">Chart.js Line Chart</h3>
+                        <h3 class="chart-card-title">Player Performance Comparison</h3>
                     </div>
                     <div class="chart-container line">
-                        <canvas id="chart-1"></canvas>
+                        <canvas id="player-comparison-chart"></canvas>
                     </div>
                 </div>
 
@@ -115,21 +115,8 @@ function renderModernHomepage(currentGw, currentEvent) {
 
 // Initialize all homepage charts with placeholder data
 function initializeHomepageCharts() {
-    // Chart 1 - Line Chart
-    const lineData1 = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November'],
-        datasets: [
-            {
-                label: 'Dataset 1',
-                data: generateSampleData(11, -80, 80),
-            },
-            {
-                label: 'Dataset 2',
-                data: generateSampleData(11, -80, 80),
-            }
-        ]
-    };
-    createChart('chart-1', createLineChartConfig, lineData1);
+    // Chart 1 - Player Comparison Chart (real FPL data)
+    initializePlayerComparisonChart('player-comparison-card', 'player-comparison-chart');
 
     // Chart 2 - Line Chart
     const lineData2 = {
