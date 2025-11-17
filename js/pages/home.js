@@ -111,6 +111,9 @@ function renderModernHomepage(currentGw, currentEvent) {
 
     // Initialize all charts
     initializeHomepageCharts();
+
+    // Initialize expand buttons for full-screen view
+    initializeChartExpanders();
 }
 
 // Initialize all homepage charts with placeholder data
