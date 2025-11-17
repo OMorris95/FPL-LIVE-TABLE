@@ -23,10 +23,10 @@ async function initializePlayerComparisonChart(containerId, canvasId) {
         allPlayers: bootstrapData.elements,
         selectedMetric: 'total_points',
         gameweekRange: {
-            start: Math.max(1, currentGw - 5),
+            start: Math.max(1, currentGw - 9),
             end: currentGw
         },
-        preset: 'last6',
+        preset: '10gw',
         currentGw,
         chart: null
     };
@@ -50,22 +50,22 @@ async function initializePlayerComparisonChart(containerId, canvasId) {
 function compChart_renderUI(container, canvasId, state) {
     const html = `
         <div class="player-comparison-controls">
-            <div class="player-search-section">
-                <input
-                    type="text"
-                    id="player-search-input"
-                    class="player-search-input"
-                    placeholder="Search for a player..."
-                    autocomplete="off"
-                />
-                <div id="player-search-results" class="player-search-results"></div>
-            </div>
-
             <div class="selected-players" id="selected-players">
                 <!-- Selected player chips will appear here -->
             </div>
 
             <div class="chart-controls-row">
+                <div class="player-search-section">
+                    <input
+                        type="text"
+                        id="player-search-input"
+                        class="player-search-input"
+                        placeholder="Search for a player..."
+                        autocomplete="off"
+                    />
+                    <div id="player-search-results" class="player-search-results"></div>
+                </div>
+
                 <div class="metric-select-container">
                     <label for="metric-select">Metric:</label>
                     <select id="metric-select" class="metric-select">
@@ -81,13 +81,13 @@ function compChart_renderUI(container, canvasId, state) {
                     </select>
                 </div>
 
-                <div class="gameweek-preset-container">
-                    <label>Range:</label>
-                    <div class="preset-buttons">
-                        <button class="preset-btn" data-preset="last4">Last 4 GWs</button>
-                        <button class="preset-btn active" data-preset="last6">Last 6 GWs</button>
-                        <button class="preset-btn" data-preset="season">Season</button>
-                    </div>
+                <div class="range-select-container">
+                    <label for="range-select">Range:</label>
+                    <select id="range-select" class="range-select">
+                        <option value="5gw">5GW</option>
+                        <option value="10gw" selected>10GW</option>
+                        <option value="season">Full Season</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -98,7 +98,7 @@ function compChart_renderUI(container, canvasId, state) {
     // Attach event listeners
     compChart_attachSearchListeners(state, canvasId);
     compChart_attachMetricListener(state, canvasId);
-    compChart_attachPresetListeners(state, canvasId);
+    compChart_attachRangeListener(state, canvasId);
 }
 
 /**
@@ -260,45 +260,38 @@ function compChart_attachMetricListener(state, canvasId) {
 }
 
 /**
- * Attaches event listeners to preset buttons
+ * Attaches event listener to range dropdown
  */
-function compChart_attachPresetListeners(state, canvasId) {
-    const buttons = document.querySelectorAll('.preset-btn');
+function compChart_attachRangeListener(state, canvasId) {
+    const select = document.getElementById('range-select');
 
-    buttons.forEach(btn => {
-        btn.addEventListener('click', async () => {
-            // Update active state
-            buttons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+    select.addEventListener('change', async (e) => {
+        const range = e.target.value;
+        state.preset = range;
 
-            // Update state
-            const preset = btn.dataset.preset;
-            state.preset = preset;
+        // Update gameweek range
+        switch (range) {
+            case '5gw':
+                state.gameweekRange = {
+                    start: Math.max(1, state.currentGw - 4),
+                    end: state.currentGw
+                };
+                break;
+            case '10gw':
+                state.gameweekRange = {
+                    start: Math.max(1, state.currentGw - 9),
+                    end: state.currentGw
+                };
+                break;
+            case 'season':
+                state.gameweekRange = {
+                    start: 1,
+                    end: state.currentGw
+                };
+                break;
+        }
 
-            // Update gameweek range
-            switch (preset) {
-                case 'last4':
-                    state.gameweekRange = {
-                        start: Math.max(1, state.currentGw - 3),
-                        end: state.currentGw
-                    };
-                    break;
-                case 'last6':
-                    state.gameweekRange = {
-                        start: Math.max(1, state.currentGw - 5),
-                        end: state.currentGw
-                    };
-                    break;
-                case 'season':
-                    state.gameweekRange = {
-                        start: 1,
-                        end: state.currentGw
-                    };
-                    break;
-            }
-
-            await compChart_updateChart(state, canvasId);
-        });
+        await compChart_updateChart(state, canvasId);
     });
 }
 
