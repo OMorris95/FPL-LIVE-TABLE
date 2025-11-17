@@ -1283,6 +1283,99 @@ select.form-input {
 }
 
 /* ============================================
+   EXPECTED POINTS CHART
+   ============================================ */
+
+.expected-points-controls {
+    margin-bottom: 1rem;
+}
+
+.expected-points-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.player-search-section-exp {
+    flex: 1;
+    position: relative;
+}
+
+.selected-player-display {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    background: var(--card-bg);
+    border-radius: 8px;
+}
+
+.selected-player-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.player-meta-inline {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: normal;
+}
+
+/* Performance Indicator */
+.performance-indicator {
+    min-width: 120px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.performance-positive,
+.performance-negative,
+.performance-neutral {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.performance-positive {
+    background: #10b981;
+    color: white;
+}
+
+.performance-negative {
+    background: #ef4444;
+    color: white;
+}
+
+.performance-neutral {
+    background: var(--text-secondary);
+    color: white;
+}
+
+.performance-value {
+    font-size: 1.1rem;
+}
+
+.performance-arrow {
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .expected-points-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .performance-indicator {
+        justify-content: center;
+    }
+}
+
+/* ============================================
    CHART FULL-SCREEN EXPANDER
    ============================================ */
 

@@ -56,13 +56,13 @@ function renderModernHomepage(currentGw, currentEvent) {
                     </div>
                 </div>
 
-                <!-- Chart 2 - Line Chart -->
-                <div class="chart-card">
+                <!-- Chart 2 - Expected Points Chart -->
+                <div class="chart-card" id="expected-points-card">
                     <div class="chart-card-header">
-                        <h3 class="chart-card-title">Chart.js Line Chart</h3>
+                        <h3 class="chart-card-title">Actual vs Expected Points</h3>
                     </div>
                     <div class="chart-container line">
-                        <canvas id="chart-2"></canvas>
+                        <canvas id="expected-points-chart"></canvas>
                     </div>
                 </div>
 
@@ -121,21 +121,8 @@ function initializeHomepageCharts() {
     // Chart 1 - Player Comparison Chart (real FPL data)
     initializePlayerComparisonChart('player-comparison-card', 'player-comparison-chart');
 
-    // Chart 2 - Line Chart
-    const lineData2 = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November'],
-        datasets: [
-            {
-                label: 'Dataset 1',
-                data: generateSampleData(11, -80, 80),
-            },
-            {
-                label: 'Dataset 2',
-                data: generateSampleData(11, -80, 80),
-            }
-        ]
-    };
-    createChart('chart-2', createLineChartConfig, lineData2);
+    // Chart 2 - Expected Points Chart (real FPL data)
+    initializeExpectedPointsChart('expected-points-card', 'expected-points-chart');
 
     // Chart 3 - Radar Chart
     const radarData1 = {
