@@ -21,6 +21,7 @@ async function initializeExpectedPointsChart(containerId, canvasId) {
     const state = {
         selectedPlayer: null,
         allPlayers: bootstrapData.elements,
+        teamMap: createTeamMap(bootstrapData),
         gameweekRange: {
             start: Math.max(1, currentGw - 9),
             end: currentGw
@@ -195,7 +196,7 @@ function expPts_renderSelectedPlayer(state) {
     container.innerHTML = `
         <div class="selected-player-name">
             <strong>${player.web_name}</strong>
-            <span class="player-meta-inline">${expPts_getPositionAbbr(player.element_type)} • ${expPts_getTeamName(player.team, state.allPlayers)}</span>
+            <span class="player-meta-inline">${expPts_getPositionAbbr(player.element_type)} • ${expPts_getTeamName(player.team, state.teamMap)}</span>
         </div>
     `;
 }
@@ -374,10 +375,9 @@ function expPts_getPositionAbbr(elementType) {
 }
 
 /**
- * Helper function to get team name from team ID
+ * Helper function to get team abbreviation from team ID
  */
-function expPts_getTeamName(teamId, allPlayers) {
-    // This is a simple approach - could be improved by using bootstrap teams data
-    const playerInTeam = allPlayers.find(p => p.team === teamId);
-    return playerInTeam ? `Team ${teamId}` : '';
+function expPts_getTeamName(teamId, teamMap) {
+    const team = teamMap[teamId];
+    return team ? team.short_name : `Team ${teamId}`;
 }
