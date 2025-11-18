@@ -66,13 +66,13 @@ function renderModernHomepage(currentGw, currentEvent) {
                     </div>
                 </div>
 
-                <!-- Chart 3 - Radar Chart -->
-                <div class="chart-card square">
+                <!-- Chart 3 - Player Radar Chart -->
+                <div class="chart-card square" id="player-radar-card">
                     <div class="chart-card-header">
-                        <h3 class="chart-card-title">Chart.js Radar Chart</h3>
+                        <h3 class="chart-card-title">Player Stats Radar</h3>
                     </div>
                     <div class="chart-container radar">
-                        <canvas id="chart-3"></canvas>
+                        <canvas id="player-radar-chart"></canvas>
                     </div>
                 </div>
 
@@ -124,17 +124,8 @@ function initializeHomepageCharts() {
     // Chart 2 - Expected Points Chart (real FPL data)
     initializeExpectedPointsChart('expected-points-card', 'expected-points-chart');
 
-    // Chart 3 - Radar Chart
-    const radarData1 = {
-        labels: ['Pace', 'Shooting', 'Passing', 'Dribbling', 'Defence', 'Physical'],
-        datasets: [
-            {
-                label: 'Dataset 1',
-                data: [65, 59, 90, 81, 56, 55],
-            }
-        ]
-    };
-    createChart('chart-3', createRadarChartConfig, radarData1);
+    // Chart 3 - Player Radar Chart (real FPL data)
+    initializePlayerRadarChart('player-radar-card', 'player-radar-chart');
 
     // Chart 4 - Line Chart
     const lineData3 = {

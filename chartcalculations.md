@@ -147,11 +147,159 @@ Difference = 8 - 5.56 = +2.44 (overperforming)
 
 ---
 
+## 3. Player Stats Radar Chart
+
+**Location:** Homepage - Chart 3
+**Files:** `js/components/playerRadarChart.js`, `js/utils/radarStats.js`
+**Purpose:** Visualize a single player's performance across multiple metrics, normalized against the best players in their position
+
+### Data Source
+- **Full Season:** `bootstrap-static` data (season totals)
+- **Last 5GW/10GW:** `element-summary/{playerId}/history` for selected player
+- Normalization always uses season maximums for consistency
+
+### Stats by Position
+
+#### Forwards (6 stats):
+1. **Goals** - Goals scored
+2. **Assists** - Assists provided
+3. **Minutes Per Game** - Average minutes when playing
+4. **Discipline** - Weighted cards (inverted: fewer = better)
+5. **BPS** - Bonus Points System score
+6. **ICT Index** - Influence, Creativity, Threat combined
+
+#### Midfielders (7 stats):
+1. **Goals** - Goals scored
+2. **Assists** - Assists provided
+3. **Minutes Per Game** - Average minutes when playing
+4. **Discipline** - Weighted cards (inverted: fewer = better)
+5. **Clean Sheets** - Clean sheets kept
+6. **BPS** - Bonus Points System score
+7. **ICT Index** - Influence, Creativity, Threat combined
+
+#### Defenders (7 stats):
+1. **Goals** - Goals scored
+2. **Assists** - Assists provided
+3. **Minutes Per Game** - Average minutes when playing
+4. **Discipline** - Weighted cards (inverted: fewer = better)
+5. **Clean Sheets** - Clean sheets kept
+6. **BPS** - Bonus Points System score
+7. **ICT Index** - Influence, Creativity, Threat combined
+
+#### Goalkeepers (7 stats):
+1. **Clean Sheets** - Clean sheets kept
+2. **Saves** - Total saves made
+3. **BPS** - Bonus Points System score
+4. **Discipline** - Weighted cards (inverted: fewer = better)
+5. **% Games Played** - Percentage of total gameweeks played
+6. **Goals Prevented** - Goals conceded (inverted: fewer = better)
+7. **Penalties Saved** - Penalties saved
+
+### Calculation Formulas
+
+#### Weighted Cards (Discipline)
+```
+Weighted Cards = Yellow Cards + (Red Cards × 3)
+```
+- Weights red cards more heavily due to severity
+- Yellow card = 1 point, Red card = 3 points
+
+#### Minutes Per Game
+```
+Minutes Per Game = Total Minutes / Games Played
+
+Where Games Played = count of gameweeks with minutes > 0
+```
+- Only counts games where player actually played
+- Excludes gameweeks where minutes = 0
+
+#### % Games Played (GKP only)
+```
+% Games Played = (Games Played / Total Gameweeks) × 100
+```
+- Shows how often the goalkeeper plays
+- Important for rotation risk assessment
+
+### Normalization Logic
+
+All stats are normalized to a 0-100 scale based on position maximums:
+
+#### Standard Stats (Higher is Better)
+```
+Normalized Value = (Player Value / Position Max) × 100
+
+Example: If max goals for FWD is 20, player with 10 goals gets:
+= (10 / 20) × 100 = 50
+```
+
+#### Inverted Stats (Lower is Better)
+For **Discipline** (cards) and **Goals Prevented** (goals conceded):
+```
+Normalized Value = ((Position Max - Player Value) / (Position Max - Position Min)) × 100
+
+Example: If cards range from 0 (min) to 12 (max), player with 3 cards gets:
+= ((12 - 3) / (12 - 0)) × 100 = 75
+
+Player with 0 cards (best discipline) gets:
+= ((12 - 0) / (12 - 0)) × 100 = 100
+```
+
+**Edge Case:** If max = min (all players have same value):
+- Standard stats: return 0
+- Inverted stats: return 100
+
+### Position Comparison
+
+Players are **only compared to others in their position**:
+- Forwards compared to forwards
+- Midfielders compared to midfielders
+- Defenders compared to defenders
+- Goalkeepers compared to goalkeepers
+
+This ensures fair comparison (e.g., a defender's 5 goals is more impressive relative to other defenders than a forward's 5 goals relative to other forwards).
+
+### Range Selection
+
+**Full Season:**
+- Uses `bootstrap-static` season totals
+- Fast - no additional API calls
+- Normalization uses season maximums
+
+**Last 5GW / Last 10GW:**
+- Fetches player's `element-summary` history
+- Sums stats over selected gameweek range
+- **Normalization still uses season maximums** for consistency
+- This means a player's radar shape won't change as dramatically with range selection
+
+### Example Calculation
+
+**Erling Haaland (FWD) - Full Season:**
+- Goals: 18 (Position max: 20)
+- Assists: 4 (Position max: 10)
+- Mins/Game: 85 (Position max: 90)
+- Weighted Cards: 2 (Position range: 0-8)
+- BPS: 450 (Position max: 500)
+- ICT: 180 (Position max: 200)
+
+**Normalized Values:**
+```
+Goals: (18 / 20) × 100 = 90
+Assists: (4 / 10) × 100 = 40
+Mins/Game: (85 / 90) × 100 = 94
+Discipline: ((8 - 2) / 8) × 100 = 75  (inverted)
+BPS: (450 / 500) × 100 = 90
+ICT: (180 / 200) × 100 = 90
+```
+
+**Radar Result:** Strong in goals, BPS, ICT, and minutes. Weaker in assists. Good discipline.
+
+---
+
 ## Future Charts
 
 ### Placeholder Charts (To Be Implemented)
 
-**Chart 3-6:** Currently display placeholder data with Chart.js examples
+**Chart 4-6:** Currently display placeholder data with Chart.js examples
 - Will be replaced with FPL-specific analytics
 - Potential ideas:
   - Form vs Fixtures difficulty

@@ -1376,6 +1376,47 @@ select.form-input {
 }
 
 /* ============================================
+   PLAYER RADAR CHART
+   ============================================ */
+
+.radar-chart-controls {
+    margin-bottom: 1rem;
+}
+
+.radar-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.player-search-section-radar {
+    flex: 1;
+    position: relative;
+}
+
+.selected-player-display-radar {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    background: var(--card-bg);
+    border-radius: 8px;
+}
+
+.selected-player-info-radar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+    .radar-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+/* ============================================
    CHART FULL-SCREEN EXPANDER
    ============================================ */
 
