@@ -309,19 +309,48 @@ function createRadarChartConfig(data, options = {}) {
     // Radar-specific options
     const radarOptions = {
         scales: {
+            x: {
+                display: false  // Radar charts don't use x-axis
+            },
+            y: {
+                display: false  // Radar charts don't use y-axis
+            },
             r: {
+                beginAtZero: true,
+                max: 100,
                 grid: {
+                    display: true,
                     color: colors.gridColor,
                 },
                 ticks: {
-                    color: colors.textColor,
+                    display: true,  // Show the number labels on radial lines
+                    stepSize: 20,
                     backdropColor: 'transparent',
+                    color: colors.textColor,
                 },
                 pointLabels: {
+                    display: true,  // Keep stat labels around perimeter
                     color: colors.textColor,
                     font: {
-                        size: 11,
+                        size: 12,
                         weight: '500'
+                    }
+                },
+                angleLines: {
+                    display: true,  // Keep lines from center to edge
+                    color: colors.gridColor
+                }
+            }
+        },
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const playerName = context.dataset.label;
+                        const normalizedValue = context.parsed.r.toFixed(1);
+                        const rawValue = context.dataset.rawValues[context.dataIndex];
+
+                        return `${playerName}: ${normalizedValue}/100 (${rawValue})`;
                     }
                 }
             }

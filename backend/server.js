@@ -30,5 +30,6 @@ app.listen(PORT, () => {
 // Start cron jobs
 require('./cron/updateOwnership');      // Top 10k ownership (1-2h after deadline)
 require('./cron/syncWeeklyData');       // Weekly static data sync (2-3h after deadline)
-require('./cron/trackTransfers');       // Transfer tracking (Every 30 mins)
+// require('./cron/trackTransfers');    // Transfer tracking (Every 30 mins) - DISABLED: Needs fixing
 require('./cron/verifyPriceChanges');   // Price verification & reset (Daily 2:45 AM)
+require('./cron/smartPlayerDataSync'); // Smart player data sync (Every 10 mins during live GW)

@@ -150,12 +150,19 @@ Difference = 8 - 5.56 = +2.44 (overperforming)
 ## 3. Player Stats Radar Chart
 
 **Location:** Homepage - Chart 3
-**Files:** `js/components/playerRadarChart.js`, `js/utils/radarStats.js`
-**Purpose:** Visualize a single player's performance across multiple metrics, normalized against the best players in their position
+**Files:** `js/components/playerRadarChart.js`, `js/utils/radarStats.js`, `js/chartConfig.js`
+**Purpose:** Visualize player performance across multiple metrics, normalized against the best players in their position. **Supports comparing up to 2 players** (same position only).
+
+### Features
+- **Two-Player Comparison:** Compare up to 2 players side-by-side
+- **Position Restriction:** Second player must be same position as first
+- **Color Coding:** Player 1 (Red/Pink), Player 2 (Blue)
+- **Custom Tooltips:** Show both normalized (0-100) and raw values
+- **Clean Visualization:** No axis numbers, only radial grid lines
 
 ### Data Source
 - **Full Season:** `bootstrap-static` data (season totals)
-- **Last 5GW/10GW:** `element-summary/{playerId}/history` for selected player
+- **Last 5GW/10GW:** `element-summary/{playerId}/history` for selected players
 - Normalization always uses season maximums for consistency
 
 ### Stats by Position
@@ -292,6 +299,50 @@ ICT: (180 / 200) × 100 = 90
 ```
 
 **Radar Result:** Strong in goals, BPS, ICT, and minutes. Weaker in assists. Good discipline.
+
+### Tooltip Format
+
+When hovering over a data point on the radar, the tooltip displays:
+```
+[Player Name]: [Normalized]/100 ([Raw Value with Unit])
+```
+
+**Examples:**
+- **Goals:** "Haaland: 90.0/100 (18 goals)"
+- **Discipline:** "Van Dijk: 75.0/100 (2 cards)"
+- **Mins/Game:** "Salah: 94.0/100 (85.0 mins/game)"
+- **% Games Played:** "Alisson: 88.0/100 (88.0%)"
+- **ICT Index:** "De Bruyne: 92.0/100 (184.5 ICT)"
+
+This provides context by showing both the normalized score (for comparison) and the actual statistic value.
+
+### Two-Player Comparison
+
+**Adding Players:**
+1. Search and select first player - Chart displays with red/pink coloring
+2. Search and select second player - Must be same position
+3. Both players overlay on same radar with different colors
+
+**Position Validation:**
+- If second player is different position, shows alert:
+  ```
+  Players must be in the same position for comparison.
+  First player: [Position Name]
+  Selected player: [Position Name]
+  ```
+
+**Color Scheme:**
+- **Player 1 (First):** Red border (`#ef4444`), Pink fill (`rgba(239, 68, 68, 0.2)`)
+- **Player 2 (Second):** Blue border (`#3b82f6`), Blue fill (`rgba(59, 130, 246, 0.2)`)
+
+**Removing Players:**
+- Click × on player chip to remove
+- Chart updates to show remaining player(s)
+
+**Limitations:**
+- Maximum 2 players
+- Players must be same position (GKP, DEF, MID, or FWD)
+- Uses same stats for both players (position-specific)
 
 ---
 

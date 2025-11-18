@@ -3,6 +3,7 @@ const router = express.Router();
 const { loadOwnershipData, getLatestOwnershipData, loadUpdateMetadata } = require('../services/dataStorage');
 const { getBootstrapData, getCurrentGameweek } = require('../services/fplDataFetcher');
 const { generatePredictions } = require('../services/pricePredictor');
+const { loadCachedPlayerData, loadPlayerDataMetadata } = require('../services/playerDataFetcher');
 
 /**
  * GET /api/ownership/:tier/latest
@@ -160,6 +161,111 @@ router.get('/fpl-proxy/*', async (req, res) => {
         res.status(error.response?.status || 500).json({
             error: error.response?.status === 429 ? 'Rate limited by FPL API' : 'FPL API error'
         });
+    }
+});
+
+/**
+ * GET /api/player-data/full
+ * Returns the complete cached player data (bootstrap + all histories)
+ * This is a large response (~10-20MB) - use sparingly
+ */
+router.get('/player-data/full', async (req, res) => {
+    try {
+        const data = await loadCachedPlayerData();
+
+        if (!data) {
+            return res.status(404).json({
+                error: 'No cached player data available',
+                message: 'Player data is still being fetched or the cronjob has not run yet'
+            });
+        }
+
+        res.json(data);
+    } catch (error) {
+        console.error('Error fetching cached player data:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * GET /api/player-data/bootstrap
+ * Returns only the bootstrap data from cache (lighter response)
+ */
+router.get('/player-data/bootstrap', async (req, res) => {
+    try {
+        const data = await loadCachedPlayerData();
+
+        if (!data || !data.bootstrap) {
+            return res.status(404).json({
+                error: 'No cached bootstrap data available'
+            });
+        }
+
+        res.json({
+            last_updated: data.last_updated,
+            gameweek: data.gameweek,
+            bootstrap: data.bootstrap
+        });
+    } catch (error) {
+        console.error('Error fetching cached bootstrap data:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * GET /api/player-data/history/:playerId
+ * Returns a specific player's history from cache
+ */
+router.get('/player-data/history/:playerId', async (req, res) => {
+    try {
+        const playerId = req.params.playerId;
+        const data = await loadCachedPlayerData();
+
+        if (!data || !data.player_histories) {
+            return res.status(404).json({
+                error: 'No cached player data available'
+            });
+        }
+
+        const playerHistory = data.player_histories[playerId];
+
+        if (!playerHistory) {
+            return res.status(404).json({
+                error: `No history found for player ${playerId}`
+            });
+        }
+
+        res.json({
+            last_updated: data.last_updated,
+            gameweek: data.gameweek,
+            player_id: playerId,
+            history: playerHistory
+        });
+    } catch (error) {
+        console.error('Error fetching player history:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * GET /api/player-data/metadata
+ * Returns metadata about the cached player data (last update time, status, etc.)
+ */
+router.get('/player-data/metadata', async (req, res) => {
+    try {
+        const metadata = await loadPlayerDataMetadata();
+
+        if (!metadata) {
+            return res.status(404).json({
+                error: 'No player data metadata available',
+                message: 'Player data fetch has not run yet'
+            });
+        }
+
+        res.json(metadata);
+    } catch (error) {
+        console.error('Error fetching player data metadata:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 

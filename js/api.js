@@ -570,9 +570,10 @@ async function getFixturesData() {
  * Fetches detailed player history including gameweek-by-gameweek stats
  * Used for player performance charts and comparisons
  * @param {number} playerId - Player element ID
+ * @param {boolean} preferBackendCache - If true, tries to fetch from backend cache first (default: true)
  * @returns {Promise<object>} - Player history data with fixtures and history arrays
  */
-async function getPlayerHistory(playerId) {
+async function getPlayerHistory(playerId, preferBackendCache = true) {
     const cacheKey = `player_history_${playerId}`;
     const cached = getCachedData(cacheKey);
 
@@ -580,7 +581,24 @@ async function getPlayerHistory(playerId) {
         return cached;
     }
 
-    console.log(`🌐 Fetching history for player ${playerId} from API`);
+    // Try backend cache first if enabled
+    if (preferBackendCache) {
+        try {
+            console.log(`🗄️ Fetching player ${playerId} history from backend cache`);
+            const backendData = await fetch(`/api/player-data/history/${playerId}`);
+            if (backendData.ok) {
+                const result = await backendData.json();
+                // Cache locally for quick subsequent access
+                setCachedData(cacheKey, result.history, CACHE_DURATIONS.WEEK);
+                return result.history;
+            }
+        } catch (error) {
+            console.log(`⚠️ Backend cache unavailable, falling back to FPL API`);
+        }
+    }
+
+    // Fallback to direct FPL API
+    console.log(`🌐 Fetching history for player ${playerId} from FPL API`);
     const data = await fetchData(`${API_BASE_URL}element-summary/${playerId}/`);
     setCachedData(cacheKey, data, CACHE_DURATIONS.WEEK);
     return data;
@@ -848,6 +866,88 @@ async function fetchManagerPicksInBatches(managerIds, gameweekId, batchSize = 10
     return results.filter(r => r !== null);
 }
 
+// ============================================
+// BACKEND CACHE FUNCTIONS
+// ============================================
+
+/**
+ * Fetches the complete player data cache from backend (bootstrap + all histories)
+ * This is a large response (~10-20MB) and should only be used when you need all player data at once
+ * @returns {Promise<object>} - Complete player data cache
+ */
+async function getPlayerDataCache() {
+    const cacheKey = 'player_data_full_cache';
+    const cached = getCachedData(cacheKey);
+
+    if (cached) {
+        return cached;
+    }
+
+    console.log('🗄️ Fetching complete player data cache from backend');
+    try {
+        const response = await fetch('/api/player-data/full');
+        if (!response.ok) {
+            throw new Error(`Backend cache not available: ${response.status}`);
+        }
+
+        const data = await response.json();
+        // Cache for 10 minutes (backend updates every 10 mins during live gameweeks)
+        setCachedData(cacheKey, data, 10 * CACHE_DURATIONS.MINUTE);
+        console.log(`✅ Loaded player data cache (GW${data.gameweek}, updated: ${data.last_updated})`);
+        return data;
+    } catch (error) {
+        console.error('Failed to fetch player data cache:', error);
+        throw error;
+    }
+}
+
+/**
+ * Fetches only bootstrap data from backend cache
+ * Lighter than full cache (~1-2MB vs ~10-20MB)
+ * @returns {Promise<object>} - Bootstrap data
+ */
+async function getBootstrapDataFromCache() {
+    const cacheKey = 'backend_bootstrap_cache';
+    const cached = getCachedData(cacheKey);
+
+    if (cached) {
+        return cached;
+    }
+
+    console.log('🗄️ Fetching bootstrap from backend cache');
+    try {
+        const response = await fetch('/api/player-data/bootstrap');
+        if (!response.ok) {
+            throw new Error(`Backend cache not available: ${response.status}`);
+        }
+
+        const data = await response.json();
+        // Cache for 10 minutes
+        setCachedData(cacheKey, data.bootstrap, 10 * CACHE_DURATIONS.MINUTE);
+        return data.bootstrap;
+    } catch (error) {
+        console.error('Failed to fetch bootstrap from backend cache:', error);
+        throw error;
+    }
+}
+
+/**
+ * Fetches player data cache metadata (status, last update time, etc.)
+ * @returns {Promise<object>} - Metadata about cached player data
+ */
+async function getPlayerDataCacheMetadata() {
+    try {
+        const response = await fetch('/api/player-data/metadata');
+        if (!response.ok) {
+            return null;
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Failed to fetch player data metadata:', error);
+        return null;
+    }
+}
+
 // Export functions for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
@@ -862,6 +962,7 @@ if (typeof module !== 'undefined' && module.exports) {
         getManagerHistory,
         getManagerData,
         getFixturesData,
+        getPlayerHistory,
         createPlayerMap,
         createTeamMap,
         calculateLivePoints,
@@ -870,6 +971,9 @@ if (typeof module !== 'undefined' && module.exports) {
         delay,
         fetchManagerDataInBatches,
         fetchManagerPicksInBatches,
+        getPlayerDataCache,
+        getBootstrapDataFromCache,
+        getPlayerDataCacheMetadata,
         clearCache,
         clearAllCaches,
         API_BASE_URL

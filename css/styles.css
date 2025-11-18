@@ -1383,30 +1383,70 @@ select.form-input {
     margin-bottom: 1rem;
 }
 
+/* Selected Players Chips */
+.selected-players-radar {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+    min-height: 2.5rem;
+}
+
+.no-players-message {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.player-chip-radar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #2563EB;
+    color: white;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.player-chip-radar[data-player-index="0"] {
+    background: #ef4444;  /* Red for first player */
+}
+
+.player-chip-radar[data-player-index="1"] {
+    background: #3b82f6;  /* Blue for second player */
+}
+
+.player-chip-name {
+    font-weight: 500;
+}
+
+.player-chip-remove-radar {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1.3rem;
+    line-height: 1;
+    padding: 0;
+    margin-left: 0.25rem;
+    transition: transform 0.2s;
+}
+
+.player-chip-remove-radar:hover {
+    transform: scale(1.2);
+}
+
 .radar-header {
     display: flex;
     gap: 1rem;
     align-items: center;
-    margin-bottom: 0.75rem;
 }
 
 .player-search-section-radar {
     flex: 1;
     position: relative;
-}
-
-.selected-player-display-radar {
-    margin-bottom: 0.5rem;
-    padding: 0.5rem;
-    background: var(--card-bg);
-    border-radius: 8px;
-}
-
-.selected-player-info-radar {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.95rem;
 }
 
 @media (max-width: 768px) {

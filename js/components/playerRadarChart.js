@@ -1,5 +1,5 @@
 // Player Radar Chart Component
-// Shows normalized player stats on a radar chart
+// Shows normalized player stats on a radar chart - supports comparing 2 players
 
 /**
  * Initializes the player radar chart
@@ -19,7 +19,7 @@ async function initializePlayerRadarChart(containerId, canvasId) {
 
     // Initialize state
     const state = {
-        selectedPlayer: null,
+        selectedPlayers: [],  // Array of selected players (max 2)
         allPlayers: bootstrapData.elements,
         range: 'season',
         currentGw,
@@ -33,7 +33,7 @@ async function initializePlayerRadarChart(containerId, canvasId) {
     const topPlayer = [...bootstrapData.elements]
         .sort((a, b) => parseFloat(b.selected_by_percent) - parseFloat(a.selected_by_percent))[0];
 
-    await radar_selectPlayer(topPlayer.id, state, canvasId);
+    await radar_addPlayer(topPlayer.id, state, canvasId);
 }
 
 /**
@@ -42,6 +42,10 @@ async function initializePlayerRadarChart(containerId, canvasId) {
 function radar_renderUI(container, canvasId, state) {
     const html = `
         <div class="radar-chart-controls">
+            <div class="selected-players-radar" id="selected-players-radar">
+                <!-- Selected player chips will appear here -->
+            </div>
+
             <div class="radar-header">
                 <div class="player-search-section-radar">
                     <input
@@ -62,10 +66,6 @@ function radar_renderUI(container, canvasId, state) {
                         <option value="season" selected>Full Season</option>
                     </select>
                 </div>
-            </div>
-
-            <div class="selected-player-display-radar" id="selected-player-display-radar">
-                <!-- Selected player info will appear here -->
             </div>
         </div>
     `;
@@ -128,7 +128,7 @@ function radar_displaySearchResults(results, state, canvasId) {
     }
 
     const html = results.map(player => {
-        const isSelected = state.selectedPlayer && state.selectedPlayer.id === player.id;
+        const isSelected = state.selectedPlayers.some(p => p.id === player.id);
 
         return `
             <div class="player-search-result ${isSelected ? 'disabled' : ''}"
@@ -146,7 +146,7 @@ function radar_displaySearchResults(results, state, canvasId) {
     resultsContainer.querySelectorAll('.player-search-result:not(.disabled)').forEach(el => {
         el.addEventListener('click', async () => {
             const playerId = parseInt(el.dataset.playerId);
-            await radar_selectPlayer(playerId, state, canvasId);
+            await radar_addPlayer(playerId, state, canvasId);
             document.getElementById('radar-player-search-input').value = '';
             resultsContainer.classList.remove('active');
         });
@@ -154,9 +154,20 @@ function radar_displaySearchResults(results, state, canvasId) {
 }
 
 /**
- * Selects a player and updates the chart
+ * Adds a player to the radar chart
  */
-async function radar_selectPlayer(playerId, state, canvasId) {
+async function radar_addPlayer(playerId, state, canvasId) {
+    // Check if already selected
+    if (state.selectedPlayers.some(p => p.id === playerId)) {
+        return;
+    }
+
+    // Check max limit
+    if (state.selectedPlayers.length >= 2) {
+        alert('Maximum 2 players can be compared on the radar chart');
+        return;
+    }
+
     // Find player in bootstrap data
     const player = state.allPlayers.find(p => p.id === playerId);
     if (!player) {
@@ -164,35 +175,61 @@ async function radar_selectPlayer(playerId, state, canvasId) {
         return;
     }
 
-    state.selectedPlayer = player;
+    // Validate same position if adding second player
+    if (state.selectedPlayers.length === 1) {
+        const firstPlayer = state.selectedPlayers[0];
+        if (firstPlayer.element_type !== player.element_type) {
+            alert(`Players must be in the same position for comparison.\nFirst player: ${radar_getPositionName(firstPlayer.element_type)}\nSelected player: ${radar_getPositionName(player.element_type)}`);
+            return;
+        }
+    }
 
-    // Update selected player display
-    radar_renderSelectedPlayer(state);
+    // Add to selected players
+    state.selectedPlayers.push(player);
+
+    // Update UI
+    radar_renderSelectedPlayers(state, canvasId);
 
     // Update chart
     await radar_updateChart(state, canvasId);
 }
 
 /**
- * Renders selected player display
+ * Removes a player from the radar chart
  */
-function radar_renderSelectedPlayer(state) {
-    const container = document.getElementById('selected-player-display-radar');
+async function radar_removePlayer(playerId, state, canvasId) {
+    state.selectedPlayers = state.selectedPlayers.filter(p => p.id !== playerId);
+    radar_renderSelectedPlayers(state, canvasId);
+    await radar_updateChart(state, canvasId);
+}
 
-    if (!state.selectedPlayer) {
-        container.innerHTML = '';
+/**
+ * Renders selected player chips
+ */
+function radar_renderSelectedPlayers(state, canvasId) {
+    const container = document.getElementById('selected-players-radar');
+
+    if (state.selectedPlayers.length === 0) {
+        container.innerHTML = '<div class="no-players-message">Select players to compare (max 2, same position)</div>';
         return;
     }
 
-    const player = state.selectedPlayer;
-    const positionName = radar_getPositionName(player.element_type);
-
-    container.innerHTML = `
-        <div class="selected-player-info-radar">
-            <strong>${player.web_name}</strong>
-            <span class="player-meta-inline">${positionName}</span>
+    const html = state.selectedPlayers.map((player, index) => `
+        <div class="player-chip-radar" data-player-index="${index}">
+            <span class="player-chip-name">${player.web_name}</span>
+            <button class="player-chip-remove-radar" data-player-id="${player.id}">&times;</button>
         </div>
-    `;
+    `).join('');
+
+    container.innerHTML = html;
+
+    // Attach remove handlers
+    container.querySelectorAll('.player-chip-remove-radar').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const playerId = parseInt(btn.dataset.playerId);
+            radar_removePlayer(playerId, state, canvasId);
+        });
+    });
 }
 
 /**
@@ -211,7 +248,7 @@ function radar_attachRangeListener(state, canvasId) {
  * Updates the chart with current state
  */
 async function radar_updateChart(state, canvasId) {
-    if (!state.selectedPlayer) {
+    if (state.selectedPlayers.length === 0) {
         if (state.chart) {
             state.chart.destroy();
             state.chart = null;
@@ -220,40 +257,65 @@ async function radar_updateChart(state, canvasId) {
     }
 
     try {
+        // Define colors for each player
+        const playerColors = [
+            { border: '#ef4444', bg: 'rgba(239, 68, 68, 0.2)' },  // Red/Pink
+            { border: '#3b82f6', bg: 'rgba(59, 130, 246, 0.2)' }   // Blue
+        ];
+
         // Fetch player history if needed for range
-        let playerHistory = null;
-        if (state.range !== 'season') {
-            playerHistory = await getPlayerHistory(state.selectedPlayer.id);
+        const datasets = [];
+
+        for (let i = 0; i < state.selectedPlayers.length; i++) {
+            const player = state.selectedPlayers[i];
+            let playerHistory = null;
+
+            if (state.range !== 'season') {
+                playerHistory = await getPlayerHistory(player.id);
+            }
+
+            // Calculate radar data
+            const radarData = await calculateRadarData(
+                player,
+                state.allPlayers,
+                state.range,
+                state.currentGw,
+                playerHistory
+            );
+
+            if (!radarData) {
+                console.error(`Failed to calculate radar data for ${player.web_name}`);
+                continue;
+            }
+
+            // Create dataset
+            datasets.push({
+                label: player.web_name,
+                data: radarData.data,
+                rawValues: radarData.rawValues,  // For custom tooltip
+                backgroundColor: playerColors[i].bg,
+                borderColor: playerColors[i].border,
+                borderWidth: 2,
+                pointBackgroundColor: playerColors[i].border,
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: playerColors[i].border
+            });
         }
 
-        // Calculate radar data
-        const radarData = await calculateRadarData(
-            state.selectedPlayer,
+        // Use labels from first player (they'll be the same for same position)
+        const labels = datasets[0] ? (await calculateRadarData(
+            state.selectedPlayers[0],
             state.allPlayers,
             state.range,
             state.currentGw,
-            playerHistory
-        );
-
-        if (!radarData) {
-            console.error('Failed to calculate radar data');
-            return;
-        }
+            state.range !== 'season' ? await getPlayerHistory(state.selectedPlayers[0].id) : null
+        )).labels : [];
 
         // Prepare chart data
         const chartData = {
-            labels: radarData.labels,
-            datasets: [{
-                label: state.selectedPlayer.web_name,
-                data: radarData.data,
-                backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                borderColor: '#3b82f6',
-                borderWidth: 2,
-                pointBackgroundColor: '#3b82f6',
-                pointBorderColor: '#fff',
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: '#3b82f6'
-            }]
+            labels,
+            datasets
         };
 
         // Destroy existing chart
@@ -262,17 +324,7 @@ async function radar_updateChart(state, canvasId) {
         }
 
         // Create new radar chart
-        const chartInstance = createChart(canvasId, createRadarChartConfig, chartData, {
-            scales: {
-                r: {
-                    beginAtZero: true,
-                    max: 100,
-                    ticks: {
-                        stepSize: 20
-                    }
-                }
-            }
-        });
+        const chartInstance = createChart(canvasId, createRadarChartConfig, chartData);
 
         state.chart = chartInstance.chart;
 

@@ -104,7 +104,7 @@ function getRangeRadarStats(playerHistory, startGw, endGw) {
 }
 
 /**
- * Find position max and min for each stat
+ * Find position max and min for each stat (SEASON DATA)
  * @param {array} allPlayers - All players from bootstrap-static
  * @param {number} position - Position to analyze
  * @param {number} currentGw - Current gameweek
@@ -173,6 +173,96 @@ function getPositionMaxMin(allPlayers, position, currentGw) {
 }
 
 /**
+ * Find position max and min for each stat using RANGE DATA from backend cache
+ * @param {number} position - Position to analyze
+ * @param {number} startGw - Start gameweek
+ * @param {number} endGw - End gameweek
+ * @returns {Promise<object>} - Max and min values for each stat based on range
+ */
+async function getPositionMaxMinFromCache(position, startGw, endGw) {
+    try {
+        // Fetch player data cache from backend
+        const playerDataCache = await getPlayerDataCache();
+        if (!playerDataCache || !playerDataCache.bootstrap || !playerDataCache.player_histories) {
+            console.warn('Backend cache not available, falling back to season stats');
+            return null;
+        }
+
+        const allPlayers = playerDataCache.bootstrap.elements;
+        const positionPlayers = allPlayers.filter(p => p.element_type === position);
+
+        const maxMin = {
+            goals: { max: 0, min: Infinity },
+            assists: { max: 0, min: Infinity },
+            minsPerGame: { max: 0, min: Infinity },
+            weightedCards: { max: 0, min: Infinity },
+            cleanSheets: { max: 0, min: Infinity },
+            bps: { max: 0, min: Infinity },
+            ictIndex: { max: 0, min: Infinity },
+            saves: { max: 0, min: Infinity },
+            goalsConceded: { max: 0, min: Infinity },
+            penaltiesSaved: { max: 0, min: Infinity },
+            pctGamesPlayed: { max: 0, min: Infinity }
+        };
+
+        // Calculate stats for each player in the position
+        positionPlayers.forEach(player => {
+            const playerHistory = playerDataCache.player_histories[player.id];
+            if (!playerHistory) return;
+
+            const rangeStats = getRangeRadarStats(playerHistory, startGw, endGw);
+            if (!rangeStats) return;
+
+            const gamesPlayed = rangeStats.gamesPlayed || 1;
+            const minsPerGame = gamesPlayed > 0 ? rangeStats.minutes / gamesPlayed : 0;
+            const weightedCards = calculateWeightedCards(rangeStats.yellowCards, rangeStats.redCards);
+            const pctGamesPlayed = (gamesPlayed / rangeStats.totalGw) * 100;
+
+            // Update max/min
+            maxMin.goals.max = Math.max(maxMin.goals.max, rangeStats.goals);
+            maxMin.goals.min = Math.min(maxMin.goals.min, rangeStats.goals);
+
+            maxMin.assists.max = Math.max(maxMin.assists.max, rangeStats.assists);
+            maxMin.assists.min = Math.min(maxMin.assists.min, rangeStats.assists);
+
+            maxMin.minsPerGame.max = Math.max(maxMin.minsPerGame.max, minsPerGame);
+            maxMin.minsPerGame.min = Math.min(maxMin.minsPerGame.min, minsPerGame);
+
+            maxMin.weightedCards.max = Math.max(maxMin.weightedCards.max, weightedCards);
+            maxMin.weightedCards.min = Math.min(maxMin.weightedCards.min, weightedCards);
+
+            maxMin.cleanSheets.max = Math.max(maxMin.cleanSheets.max, rangeStats.cleanSheets);
+            maxMin.cleanSheets.min = Math.min(maxMin.cleanSheets.min, rangeStats.cleanSheets);
+
+            maxMin.bps.max = Math.max(maxMin.bps.max, rangeStats.bps);
+            maxMin.bps.min = Math.min(maxMin.bps.min, rangeStats.bps);
+
+            maxMin.ictIndex.max = Math.max(maxMin.ictIndex.max, rangeStats.ictIndex);
+            maxMin.ictIndex.min = Math.min(maxMin.ictIndex.min, rangeStats.ictIndex);
+
+            maxMin.saves.max = Math.max(maxMin.saves.max, rangeStats.saves);
+            maxMin.saves.min = Math.min(maxMin.saves.min, rangeStats.saves);
+
+            maxMin.goalsConceded.max = Math.max(maxMin.goalsConceded.max, rangeStats.goalsConceded);
+            maxMin.goalsConceded.min = Math.min(maxMin.goalsConceded.min, rangeStats.goalsConceded);
+
+            maxMin.penaltiesSaved.max = Math.max(maxMin.penaltiesSaved.max, rangeStats.penaltiesSaved);
+            maxMin.penaltiesSaved.min = Math.min(maxMin.penaltiesSaved.min, rangeStats.penaltiesSaved);
+
+            maxMin.pctGamesPlayed.max = Math.max(maxMin.pctGamesPlayed.max, pctGamesPlayed);
+            maxMin.pctGamesPlayed.min = Math.min(maxMin.pctGamesPlayed.min, pctGamesPlayed);
+        });
+
+        console.log(`📊 Calculated range-based max/min for position ${position} (GW${startGw}-${endGw})`);
+        return maxMin;
+
+    } catch (error) {
+        console.error('Error fetching range-based max/min:', error);
+        return null;
+    }
+}
+
+/**
  * Normalize a stat value to 0-100 scale
  * @param {number} value - Actual value
  * @param {number} max - Maximum value in position
@@ -229,8 +319,23 @@ async function calculateRadarData(player, allPlayers, range, currentGw, playerHi
         }
     }
 
-    // Get position max/min (always use season stats for normalization)
-    const maxMin = getPositionMaxMin(allPlayers, position, currentGw);
+    // Get position max/min
+    // For season: use bootstrap stats (fast, no API calls needed)
+    // For ranges: use backend cache for accurate range-based normalization
+    let maxMin;
+
+    if (range === 'season') {
+        maxMin = getPositionMaxMin(allPlayers, position, currentGw);
+    } else {
+        // Try to get range-based max/min from backend cache
+        maxMin = await getPositionMaxMinFromCache(position, startGw, endGw);
+
+        // Fallback to season stats if backend cache unavailable
+        if (!maxMin) {
+            console.warn(`Using season stats as fallback for ${range} normalization`);
+            maxMin = getPositionMaxMin(allPlayers, position, currentGw);
+        }
+    }
 
     // Calculate derived stats
     const gamesPlayed = playerStats.gamesPlayed || (playerStats.minutes > 0 ? Math.ceil(playerStats.minutes / 90) : 1);
@@ -245,15 +350,15 @@ async function calculateRadarData(player, allPlayers, range, currentGw, playerHi
 
     switch (position) {
         case 1: // GKP
-            rawValues = {
-                cleanSheets: playerStats.cleanSheets,
-                saves: playerStats.saves,
-                bps: playerStats.bps,
-                weightedCards: weightedCards,
-                pctGamesPlayed: pctGamesPlayed,
-                goalsConceded: playerStats.goalsConceded,
-                penaltiesSaved: playerStats.penaltiesSaved
-            };
+            rawValues = [
+                `${playerStats.cleanSheets} clean sheets`,
+                `${playerStats.saves} saves`,
+                `${playerStats.bps} BPS`,
+                `${weightedCards} cards`,
+                `${pctGamesPlayed.toFixed(1)}%`,
+                `${playerStats.goalsConceded} goals conceded`,
+                `${playerStats.penaltiesSaved} penalties saved`
+            ];
             data = [
                 normalizeStat(playerStats.cleanSheets, maxMin.cleanSheets.max, maxMin.cleanSheets.min),
                 normalizeStat(playerStats.saves, maxMin.saves.max, maxMin.saves.min),
@@ -267,15 +372,15 @@ async function calculateRadarData(player, allPlayers, range, currentGw, playerHi
 
         case 2: // DEF
         case 3: // MID
-            rawValues = {
-                goals: playerStats.goals,
-                assists: playerStats.assists,
-                minsPerGame: minsPerGame,
-                weightedCards: weightedCards,
-                cleanSheets: playerStats.cleanSheets,
-                bps: playerStats.bps,
-                ictIndex: playerStats.ictIndex
-            };
+            rawValues = [
+                `${playerStats.goals} goals`,
+                `${playerStats.assists} assists`,
+                `${minsPerGame.toFixed(1)} mins/game`,
+                `${weightedCards} cards`,
+                `${playerStats.cleanSheets} clean sheets`,
+                `${playerStats.bps} BPS`,
+                `${playerStats.ictIndex.toFixed(1)} ICT`
+            ];
             data = [
                 normalizeStat(playerStats.goals, maxMin.goals.max, maxMin.goals.min),
                 normalizeStat(playerStats.assists, maxMin.assists.max, maxMin.assists.min),
@@ -288,14 +393,14 @@ async function calculateRadarData(player, allPlayers, range, currentGw, playerHi
             break;
 
         case 4: // FWD
-            rawValues = {
-                goals: playerStats.goals,
-                assists: playerStats.assists,
-                minsPerGame: minsPerGame,
-                weightedCards: weightedCards,
-                bps: playerStats.bps,
-                ictIndex: playerStats.ictIndex
-            };
+            rawValues = [
+                `${playerStats.goals} goals`,
+                `${playerStats.assists} assists`,
+                `${minsPerGame.toFixed(1)} mins/game`,
+                `${weightedCards} cards`,
+                `${playerStats.bps} BPS`,
+                `${playerStats.ictIndex.toFixed(1)} ICT`
+            ];
             data = [
                 normalizeStat(playerStats.goals, maxMin.goals.max, maxMin.goals.min),
                 normalizeStat(playerStats.assists, maxMin.assists.max, maxMin.assists.min),
