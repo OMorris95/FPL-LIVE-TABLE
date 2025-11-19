@@ -1458,6 +1458,203 @@ select.form-input {
 }
 
 /* ============================================
+   MY STATS COMPONENT
+   ============================================ */
+
+/* My Stats Card spans 2 columns */
+.my-stats-card {
+    grid-column: span 2;
+}
+
+.my-stats-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.my-stats-header {
+    margin-bottom: 1rem;
+}
+
+.my-stats-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.my-stats-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.my-stats-input-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.my-stats-input {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-tertiary);
+    color: var(--text-color);
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+.my-stats-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.input-help {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.fetch-stats-btn {
+    align-self: flex-end;
+    padding: 0.5rem 1.5rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.fetch-stats-btn:hover {
+    background: #2563EB;
+    transform: translateY(-1px);
+}
+
+.my-stats-display {
+    flex: 1;
+}
+
+.my-stats-placeholder {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.my-stats-loading {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+}
+
+.my-stats-error {
+    text-align: center;
+    padding: 2rem;
+    color: var(--danger);
+}
+
+.my-stats-info {
+    margin-bottom: 1.5rem;
+}
+
+.manager-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.points-summary {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.points-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.points-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.points-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.points-divider {
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+}
+
+/* Comparison Bars */
+.comparison-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.comparison-bar-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.comparison-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.bar-track {
+    position: relative;
+    height: 40px;
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    transition: width 0.5s ease;
+    border-radius: 8px;
+}
+
+.bar-fill.above-average {
+    background: linear-gradient(90deg, #10B981, #34D399);
+}
+
+.bar-fill.below-average {
+    background: linear-gradient(90deg, #EF4444, #F87171);
+}
+
+.bar-fill.neutral {
+    background: var(--text-secondary);
+}
+
+.bar-average-marker {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.comparison-stats {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* ============================================
    CHART FULL-SCREEN EXPANDER
    ============================================ */
 

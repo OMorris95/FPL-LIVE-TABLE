@@ -46,27 +46,11 @@ function renderModernHomepage(currentGw, currentEvent) {
         <div class="home-modern-container">
             <!-- Main Chart Grid - 3 Columns -->
             <div class="chart-grid chart-grid-3col">
-                <!-- Chart 1 - Player Comparison Chart -->
-                <div class="chart-card" id="player-comparison-card">
-                    <div class="chart-card-header">
-                        <h3 class="chart-card-title">Player Performance Comparison</h3>
-                    </div>
-                    <div class="chart-container line">
-                        <canvas id="player-comparison-chart"></canvas>
-                    </div>
+                <!-- My Stats Component (spans 2 columns) -->
+                <div class="chart-card my-stats-card" id="my-stats-card">
                 </div>
 
-                <!-- Chart 2 - Expected Points Chart -->
-                <div class="chart-card" id="expected-points-card">
-                    <div class="chart-card-header">
-                        <h3 class="chart-card-title">Actual vs Expected Points</h3>
-                    </div>
-                    <div class="chart-container line">
-                        <canvas id="expected-points-chart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Chart 3 - Player Radar Chart -->
+                <!-- Chart 3 - Player Radar Chart (top right, stays in place) -->
                 <div class="chart-card square" id="player-radar-card">
                     <div class="chart-card-header">
                         <h3 class="chart-card-title">Player Stats Radar</h3>
@@ -76,27 +60,27 @@ function renderModernHomepage(currentGw, currentEvent) {
                     </div>
                 </div>
 
-                <!-- Chart 4 - Line Chart -->
-                <div class="chart-card">
+                <!-- Chart 1 - Player Comparison Chart (moved to row 2) -->
+                <div class="chart-card" id="player-comparison-card">
                     <div class="chart-card-header">
-                        <h3 class="chart-card-title">Chart.js Line Chart</h3>
+                        <h3 class="chart-card-title">Player Performance Comparison</h3>
                     </div>
                     <div class="chart-container line">
-                        <canvas id="chart-4"></canvas>
+                        <canvas id="player-comparison-chart"></canvas>
                     </div>
                 </div>
 
-                <!-- Chart 5 - Line Chart -->
-                <div class="chart-card">
+                <!-- Chart 2 - Expected Points Chart (moved to row 2) -->
+                <div class="chart-card" id="expected-points-card">
                     <div class="chart-card-header">
-                        <h3 class="chart-card-title">Chart.js Line Chart</h3>
+                        <h3 class="chart-card-title">Actual vs Expected Points</h3>
                     </div>
                     <div class="chart-container line">
-                        <canvas id="chart-5"></canvas>
+                        <canvas id="expected-points-chart"></canvas>
                     </div>
                 </div>
 
-                <!-- Chart 6 - Radar Chart -->
+                <!-- Chart 6 - Radar Chart (bottom right placeholder, stays in place) -->
                 <div class="chart-card square">
                     <div class="chart-card-header">
                         <h3 class="chart-card-title">Chart.js Radar Chart</h3>
@@ -118,48 +102,19 @@ function renderModernHomepage(currentGw, currentEvent) {
 
 // Initialize all homepage charts with placeholder data
 function initializeHomepageCharts() {
+    // My Stats Component
+    initializeMyStats('my-stats-card');
+
+    // Chart 3 - Player Radar Chart (real FPL data)
+    initializePlayerRadarChart('player-radar-card', 'player-radar-chart');
+
     // Chart 1 - Player Comparison Chart (real FPL data)
     initializePlayerComparisonChart('player-comparison-card', 'player-comparison-chart');
 
     // Chart 2 - Expected Points Chart (real FPL data)
     initializeExpectedPointsChart('expected-points-card', 'expected-points-chart');
 
-    // Chart 3 - Player Radar Chart (real FPL data)
-    initializePlayerRadarChart('player-radar-card', 'player-radar-chart');
-
-    // Chart 4 - Line Chart
-    const lineData3 = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November'],
-        datasets: [
-            {
-                label: 'Dataset 1',
-                data: generateSampleData(11, -80, 80),
-            },
-            {
-                label: 'Dataset 2',
-                data: generateSampleData(11, -80, 80),
-            }
-        ]
-    };
-    createChart('chart-4', createLineChartConfig, lineData3);
-
-    // Chart 5 - Line Chart
-    const lineData4 = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November'],
-        datasets: [
-            {
-                label: 'Dataset 1',
-                data: generateSampleData(11, -80, 80),
-            },
-            {
-                label: 'Dataset 2',
-                data: generateSampleData(11, -80, 80),
-            }
-        ]
-    };
-    createChart('chart-5', createLineChartConfig, lineData4);
-
-    // Chart 6 - Radar Chart
+    // Chart 6 - Radar Chart (placeholder)
     const radarData2 = {
         labels: ['Pace', 'Shooting', 'Passing', 'Dribbling', 'Defence', 'Physical'],
         datasets: [
