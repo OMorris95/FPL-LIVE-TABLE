@@ -24,4 +24,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Settings Button Handler
+    const settingsBtn = document.querySelector('.nav-settings-btn');
+    if (settingsBtn) {
+        settingsBtn.addEventListener('click', () => {
+            if (typeof openSettingsModal === 'function') {
+                openSettingsModal();
+            } else {
+                console.error('openSettingsModal function not found. Make sure settingsModal.js is loaded.');
+            }
+        });
+    }
 });

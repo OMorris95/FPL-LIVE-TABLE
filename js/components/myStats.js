@@ -39,39 +39,44 @@ async function initializeMyStats(containerId) {
  * Renders the My Stats UI
  */
 function myStats_renderUI(container, state) {
+    // Check if IDs are already saved
+    const hasIds = state.managerId && state.managerId.trim() !== '';
+
     const html = `
         <div class="my-stats-container">
             <div class="my-stats-header">
                 <h3 class="chart-card-title">My Stats</h3>
             </div>
 
-            <div class="my-stats-inputs">
-                <div class="my-stats-input-group">
-                    <label for="manager-id-input">Manager ID</label>
-                    <input
-                        type="text"
-                        id="manager-id-input"
-                        class="my-stats-input"
-                        placeholder="123456"
-                        value="${state.managerId}"
-                    />
-                    <span class="input-help">Find in your team URL: .../entry/123456/...</span>
-                </div>
+            ${!hasIds ? `
+                <div class="my-stats-inputs">
+                    <div class="my-stats-input-group">
+                        <label for="manager-id-input">Manager ID</label>
+                        <input
+                            type="text"
+                            id="manager-id-input"
+                            class="my-stats-input"
+                            placeholder="123456"
+                            value="${state.managerId}"
+                        />
+                        <span class="input-help">Find in your team URL: .../entry/123456/...</span>
+                    </div>
 
-                <div class="my-stats-input-group">
-                    <label for="league-id-input">League ID</label>
-                    <input
-                        type="text"
-                        id="league-id-input"
-                        class="my-stats-input"
-                        placeholder="789012"
-                        value="${state.leagueId}"
-                    />
-                    <span class="input-help">Find in league URL: .../leagues/789012/...</span>
-                </div>
+                    <div class="my-stats-input-group">
+                        <label for="league-id-input">League ID</label>
+                        <input
+                            type="text"
+                            id="league-id-input"
+                            class="my-stats-input"
+                            placeholder="789012"
+                            value="${state.leagueId}"
+                        />
+                        <span class="input-help">Find in league URL: .../leagues/789012/...</span>
+                    </div>
 
-                <button id="fetch-stats-btn" class="fetch-stats-btn">Load Stats</button>
-            </div>
+                    <button id="fetch-stats-btn" class="fetch-stats-btn">Load Stats</button>
+                </div>
+            ` : ''}
 
             <div id="my-stats-display" class="my-stats-display">
                 ${state.managerData ? myStats_renderStats(state) : myStats_renderPlaceholder()}
@@ -81,14 +86,27 @@ function myStats_renderUI(container, state) {
 
     container.innerHTML = html;
 
-    // Attach event listeners
-    myStats_attachEventListeners(state);
+    // Attach event listeners only if inputs are shown
+    if (!hasIds) {
+        myStats_attachEventListeners(state);
+    }
 }
 
 /**
  * Renders placeholder text when no data is loaded
  */
 function myStats_renderPlaceholder() {
+    const hasIds = localStorage.getItem('fpl_manager_id');
+
+    if (hasIds) {
+        return `
+            <div class="my-stats-loading">
+                <div class="spinner"></div>
+                <p>Loading your stats...</p>
+            </div>
+        `;
+    }
+
     return `
         <div class="my-stats-placeholder">
             <p>Enter your Manager ID and League ID to view your stats</p>
@@ -115,6 +133,10 @@ function myStats_renderStats(state) {
     const overallComparison = myStats_calculateComparison(lastGwPoints, overallAverage);
     const leagueComparison = myStats_calculateComparison(lastGwPoints, leagueAverage);
 
+    // Calculate marker positions (only show when above average)
+    const overallMarkerPosition = lastGwPoints > overallAverage ? (overallAverage / lastGwPoints) * 100 : null;
+    const leagueMarkerPosition = leagueAverage && lastGwPoints > leagueAverage ? (leagueAverage / lastGwPoints) * 100 : null;
+
     return `
         <div class="my-stats-info">
             <div class="manager-name">${managerData.name}</div>
@@ -136,7 +158,7 @@ function myStats_renderStats(state) {
                 <div class="comparison-label">Last GW vs Overall FPL</div>
                 <div class="bar-track">
                     <div class="bar-fill ${overallComparison.color}" style="width: ${overallComparison.percentage}%"></div>
-                    <div class="bar-average-marker"></div>
+                    ${overallMarkerPosition !== null ? `<div class="bar-average-marker" style="left: ${overallMarkerPosition}%"></div>` : ''}
                 </div>
                 <div class="comparison-stats">
                     ${lastGwPoints} pts vs ${overallAverage} avg (Overall FPL)
@@ -148,7 +170,7 @@ function myStats_renderStats(state) {
                     <div class="comparison-label">Last GW vs ${leagueData.league.name}</div>
                     <div class="bar-track">
                         <div class="bar-fill ${leagueComparison.color}" style="width: ${leagueComparison.percentage}%"></div>
-                        <div class="bar-average-marker"></div>
+                        ${leagueMarkerPosition !== null ? `<div class="bar-average-marker" style="left: ${leagueMarkerPosition}%"></div>` : ''}
                     </div>
                     <div class="comparison-stats">
                         ${lastGwPoints} pts vs ${leagueAverage} avg (${leagueData.league.name})
