@@ -44,10 +44,6 @@ function myStats_renderUI(container, state) {
 
     const html = `
         <div class="my-stats-container">
-            <div class="my-stats-header">
-                <h3 class="chart-card-title">My Stats</h3>
-            </div>
-
             ${!hasIds ? `
                 <div class="my-stats-inputs">
                     <div class="my-stats-input-group">
@@ -138,17 +134,25 @@ function myStats_renderStats(state) {
     const leagueMarkerPosition = leagueAverage && lastGwPoints > leagueAverage ? (leagueAverage / lastGwPoints) * 100 : null;
 
     return `
-        <div class="my-stats-info">
-            <div class="manager-name">${managerData.name}</div>
-            <div class="points-summary">
-                <div class="points-item">
-                    <span class="points-label">Total Points</span>
-                    <span class="points-value">${totalPoints}</span>
+        <div class="my-stats-info-row">
+            <div class="my-stats-info">
+                <div class="manager-name">${managerData.name}</div>
+                <div class="points-summary">
+                    <div class="points-item">
+                        <span class="points-label">Total Points</span>
+                        <span class="points-value">${totalPoints}</span>
+                    </div>
+                    <div class="points-divider">|</div>
+                    <div class="points-item">
+                        <span class="points-label">Last GW</span>
+                        <span class="points-value">${lastGwPoints}</span>
+                    </div>
                 </div>
-                <div class="points-divider">|</div>
-                <div class="points-item">
-                    <span class="points-label">Last GW</span>
-                    <span class="points-value">${lastGwPoints}</span>
+            </div>
+
+            <div class="rank-chart-container">
+                <div class="chart-container line">
+                    <canvas id="rank-over-time-chart"></canvas>
                 </div>
             </div>
         </div>
@@ -193,6 +197,69 @@ function myStats_calculateComparison(playerPoints, average) {
     const color = playerPoints >= average ? 'above-average' : 'below-average';
 
     return { percentage, color };
+}
+
+/**
+ * Renders the rank over time chart
+ */
+function myStats_renderRankChart(managerHistory, state) {
+    const canvas = document.getElementById('rank-over-time-chart');
+    if (!canvas) {
+        console.error('Rank chart canvas not found');
+        return;
+    }
+
+    // Destroy existing chart if it exists
+    if (state.rankChart) {
+        state.rankChart.destroy();
+    }
+
+    // Extract rank data from manager history
+    const rankData = managerHistory.current.map(gw => ({
+        gameweek: gw.event,
+        rank: gw.overall_rank
+    }));
+
+    // Prepare chart data
+    const labels = rankData.map(d => `GW${d.gameweek}`);
+    const data = rankData.map(d => d.rank);
+
+    // Create chart config with inverted Y-axis
+    const chartInstance = createChart('rank-over-time-chart', createLineChartConfig, {
+        labels,
+        datasets: [{
+            label: 'Overall Rank',
+            data,
+            borderColor: '#3b82f6',
+            backgroundColor: '#3b82f6'
+        }]
+    }, {
+        scales: {
+            y: {
+                reverse: true,  // Invert Y-axis so rank 1 is at top
+                ticks: {
+                    callback: function(value) {
+                        return value.toLocaleString();  // Format with commas
+                    }
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                display: false  // Hide legend since it's obvious what the chart shows
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return `Rank: ${context.parsed.y.toLocaleString()}`;
+                    }
+                }
+            }
+        }
+    });
+
+    // Store chart instance for cleanup
+    state.rankChart = chartInstance.chart;
 }
 
 /**
@@ -295,6 +362,11 @@ async function myStats_fetchData(state) {
             newContainer.id = displayContainer.parentElement.id;
             displayContainer.parentElement.replaceChild(newContainer, displayContainer);
             myStats_renderUI(newContainer, state);
+
+            // Render rank chart after DOM is updated
+            setTimeout(() => {
+                myStats_renderRankChart(managerHistory, state);
+            }, 0);
         }
 
     } catch (error) {

@@ -241,7 +241,7 @@ function createLineChartConfig(data, options = {}) {
             }
 
             // Default line styling
-            dataset.tension = dataset.tension ?? 0.4;
+            dataset.tension = dataset.tension ?? 0;
             dataset.borderWidth = dataset.borderWidth ?? 2;
             dataset.pointRadius = dataset.pointRadius ?? 3;
             dataset.pointHoverRadius = dataset.pointHoverRadius ?? 6;

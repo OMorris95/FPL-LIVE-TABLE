@@ -1557,8 +1557,18 @@ select.form-input {
     color: var(--danger);
 }
 
-.my-stats-info {
+.my-stats-info-row {
+    display: flex;
+    gap: 2rem;
+    align-items: stretch;
     margin-bottom: 1.5rem;
+}
+
+.my-stats-info {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .manager-name {
@@ -1593,6 +1603,12 @@ select.form-input {
 .points-divider {
     font-size: 1.5rem;
     color: var(--text-secondary);
+}
+
+/* Rank Chart */
+.rank-chart-container {
+    flex: 1;
+    min-width: 0;
 }
 
 /* Comparison Bars */
