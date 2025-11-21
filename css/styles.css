@@ -650,7 +650,7 @@ body {
 
 .btn-primary {
     background: var(--accent-gold);
-    color: var(--bg-color);
+    color: white;
     border: none;
     padding: 14px 32px;
     border-radius: var(--radius-md);
@@ -1722,9 +1722,9 @@ select.form-input {
 }
 
 .range-tab.active {
-    background: var(--primary);
+    background: var(--accent-gold);
     color: white;
-    border-color: var(--primary);
+    border-color: var(--accent-gold);
 }
 
 .squad-analysis-table {
@@ -4078,25 +4078,8 @@ select.form-input {
 
 .settings-input:focus {
     outline: none;
-    border-color: var(--primary);
+    border-color: var(--accent-gold);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.btn-primary {
-    padding: 0.75rem 1.5rem;
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: 500;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.btn-primary:hover {
-    background: #2563EB;
-    transform: translateY(-1px);
 }
 
 .btn-secondary {
