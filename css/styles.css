@@ -1671,6 +1671,379 @@ select.form-input {
 }
 
 /* ============================================
+   SQUAD VALUE ANALYSIS
+   ============================================ */
+
+.squad-analysis-section {
+    margin-top: 2rem;
+}
+
+.squad-analysis-container {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+}
+
+.squad-analysis-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.squad-analysis-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.range-tabs {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.range-tab {
+    padding: 0.5rem 1rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.range-tab:hover {
+    background: var(--bg-secondary);
+}
+
+.range-tab.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.squad-analysis-table {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.squad-table-header {
+    display: grid;
+    grid-template-columns: 2fr 0.6fr 0.8fr 0.6fr 0.8fr 1fr 1.2fr;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg-tertiary);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.squad-player-row {
+    display: grid;
+    grid-template-columns: 2fr 0.6fr 0.8fr 0.6fr 0.8fr 1fr 1.2fr;
+    gap: 1rem;
+    padding: 0.375rem 1rem;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.squad-player-row.above-average {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.squad-player-row.below-average {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.squad-player-row:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.col-player {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.player-name {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.player-team {
+    font-size: 0.6875rem;
+    color: var(--text-secondary);
+}
+
+.col-pos, .col-price, .col-points, .col-ppm {
+    color: var(--text-color);
+}
+
+.col-vs-avg {
+    display: flex;
+    align-items: center;
+}
+
+.indicator-positive {
+    color: #10B981;
+    font-weight: 600;
+}
+
+.indicator-negative {
+    color: #EF4444;
+    font-weight: 600;
+}
+
+.col-action {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.view-replacements-btn {
+    padding: 0.4rem 0.8rem;
+    background: var(--accent-gold);
+    color: var(--bg-color);
+    border: none;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.view-replacements-btn:hover {
+    background: var(--accent-gold-hover);
+    transform: translateY(-1px);
+}
+
+/* Replacements Section */
+.replacements-section {
+    margin-top: 0.5rem;
+    padding: 1rem;
+    background: var(--bg-tertiary);
+    border-radius: 6px;
+    border-left: 3px solid var(--primary);
+}
+
+.replacements-header {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 0.75rem;
+}
+
+.replacements-table {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.replacement-player-row {
+    display: grid;
+    grid-template-columns: 2fr 0.6fr 0.8fr 0.6fr 0.8fr;
+    gap: 1rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--card-bg);
+    border-radius: 6px;
+    font-size: 0.875rem;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+.replacement-player-row:hover {
+    background: var(--bg-secondary);
+    border-color: var(--primary);
+}
+
+.replacement-player-row .col-ppm.highlight {
+    font-weight: 700;
+    color: #10B981;
+}
+
+.no-replacements {
+    text-align: center;
+    padding: 1rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.squad-analysis-loading,
+.squad-analysis-error {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+}
+
+.squad-analysis-error {
+    color: var(--danger);
+}
+
+/* Info icon and tooltip */
+.info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 4px;
+    cursor: help;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.info-icon:hover {
+    opacity: 1;
+}
+
+.info-icon svg {
+    vertical-align: middle;
+}
+
+.squad-analysis-tooltip {
+    position: absolute;
+    background: var(--card-bg-elevated);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0;
+    min-width: 320px;
+    max-width: 400px;
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+.squad-analysis-tooltip .tooltip-content {
+    padding: 16px;
+}
+
+.squad-analysis-tooltip h5 {
+    margin: 0 0 12px 0;
+    font-size: 1em;
+    font-weight: 600;
+    color: var(--accent-gold);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px;
+}
+
+.squad-analysis-tooltip p {
+    margin: 8px 0;
+    font-size: 0.9em;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+.squad-analysis-tooltip strong {
+    color: var(--accent-gold);
+    font-weight: 600;
+}
+
+.squad-analysis-tooltip ul {
+    margin: 6px 0;
+    padding-left: 20px;
+    list-style-type: disc;
+}
+
+.squad-analysis-tooltip li {
+    margin: 4px 0;
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .squad-table-header,
+    .squad-player-row {
+        grid-template-columns: 2fr 0.5fr 0.7fr 0.5fr 0.7fr 0.9fr 1fr;
+        gap: 0.5rem;
+    }
+
+    .replacement-player-row {
+        grid-template-columns: 2fr 0.5fr 0.7fr 0.5fr 0.7fr;
+        gap: 0.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .squad-analysis-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .range-tabs {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .range-tab {
+        flex: 1;
+        text-align: center;
+        padding: 0.5rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .squad-table-header {
+        display: none;
+    }
+
+    .squad-player-row,
+    .replacement-player-row {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding: 1rem;
+    }
+
+    .col-player,
+    .col-pos,
+    .col-price,
+    .col-points,
+    .col-ppm,
+    .col-vs-avg,
+    .col-action {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .col-player::before { content: "Player: "; font-weight: 600; color: var(--text-secondary); }
+    .col-pos::before { content: "Position: "; font-weight: 600; color: var(--text-secondary); }
+    .col-price::before { content: "Price: "; font-weight: 600; color: var(--text-secondary); }
+    .col-points::before { content: "Points: "; font-weight: 600; color: var(--text-secondary); }
+    .col-ppm::before { content: "Pts/£m: "; font-weight: 600; color: var(--text-secondary); }
+    .col-vs-avg::before { content: "vs Avg: "; font-weight: 600; color: var(--text-secondary); }
+
+    .col-action {
+        justify-content: center;
+    }
+
+    .view-replacements-btn {
+        width: 100%;
+    }
+}
+
+/* ============================================
    CHART FULL-SCREEN EXPANDER
    ============================================ */
 

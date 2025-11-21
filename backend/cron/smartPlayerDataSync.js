@@ -1,5 +1,6 @@
 const cron = require('node-cron');
 const { fetchAndSaveAllPlayerData, getBootstrapData, loadPlayerDataMetadata } = require('../services/playerDataFetcher');
+const { generatePlayerRecentStats, savePlayerRecentStats } = require('../services/playerStatsCalculator');
 const fs = require('fs').promises;
 const path = require('path');
 
@@ -43,6 +44,21 @@ async function markAsProcessed(gameweek) {
         tracker.processed_gameweeks.push(gameweek);
         await saveFetchTracker(tracker);
         console.log(`Marked GW${gameweek} as processed (final fetch completed)`);
+    }
+}
+
+/**
+ * Loads the player data cache file
+ * @returns {Object|null} Cached player data or null if not found
+ */
+async function loadCachedPlayerData() {
+    try {
+        const filepath = path.join(__dirname, '../data/player_data_cache.json');
+        const data = await fs.readFile(filepath, 'utf8');
+        return JSON.parse(data);
+    } catch (error) {
+        console.error('Failed to load player data cache:', error.message);
+        return null;
     }
 }
 
@@ -122,6 +138,14 @@ async function smartFetchCheck() {
         if (gwStatus.live) {
             console.log(`✓ Gameweek ${gwStatus.gw} is LIVE - fetching player data...`);
             await fetchAndSaveAllPlayerData();
+
+            // Generate pre-computed stats after successful fetch
+            const cachedData = await loadCachedPlayerData();
+            if (cachedData) {
+                const recentStats = await generatePlayerRecentStats(cachedData);
+                await savePlayerRecentStats(recentStats);
+            }
+
             return;
         }
 
@@ -136,6 +160,14 @@ async function smartFetchCheck() {
 
             console.log(`✓ GW${gwStatus.gw} just finished - performing final fetch...`);
             await fetchAndSaveAllPlayerData();
+
+            // Generate pre-computed stats after final fetch
+            const cachedData = await loadCachedPlayerData();
+            if (cachedData) {
+                const recentStats = await generatePlayerRecentStats(cachedData);
+                await savePlayerRecentStats(recentStats);
+            }
+
             await markAsProcessed(gwStatus.gw);
             console.log(`✓ Final fetch complete for GW${gwStatus.gw}`);
             return;
@@ -178,6 +210,14 @@ console.log('- Skips when gameweek is not active\n');
         console.log('🚀 Performing initial data fetch (this will take ~2 minutes)...');
         console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
         await fetchAndSaveAllPlayerData();
+
+        // Generate initial pre-computed stats
+        const cachedData = await loadCachedPlayerData();
+        if (cachedData) {
+            const recentStats = await generatePlayerRecentStats(cachedData);
+            await savePlayerRecentStats(recentStats);
+        }
+
         console.log('✅ Initial cache population complete\n');
     } else {
         // Cache exists - use smart conditional logic

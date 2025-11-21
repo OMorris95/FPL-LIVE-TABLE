@@ -4,6 +4,7 @@ const { loadOwnershipData, getLatestOwnershipData, loadUpdateMetadata } = requir
 const { getBootstrapData, getCurrentGameweek } = require('../services/fplDataFetcher');
 const { generatePredictions } = require('../services/pricePredictor');
 const { loadCachedPlayerData, loadPlayerDataMetadata } = require('../services/playerDataFetcher');
+const { loadPlayerRecentStats } = require('../services/playerStatsCalculator');
 
 /**
  * GET /api/ownership/:tier/latest
@@ -265,6 +266,32 @@ router.get('/player-data/metadata', async (req, res) => {
         res.json(metadata);
     } catch (error) {
         console.error('Error fetching player data metadata:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * GET /api/player-stats/recent
+ * Returns pre-computed 5GW, 10GW, and season stats for all players
+ * Updated every 10 minutes by the cronjob during live gameweeks
+ */
+router.get('/player-stats/recent', async (req, res) => {
+    try {
+        const stats = await loadPlayerRecentStats();
+
+        if (!stats) {
+            return res.status(404).json({
+                error: 'No pre-computed stats available',
+                message: 'Stats are generated during player data sync. Please wait for the next update.'
+            });
+        }
+
+        // Add cache headers (5 minutes)
+        res.set('Cache-Control', 'public, max-age=300');
+
+        res.json(stats);
+    } catch (error) {
+        console.error('Error fetching player recent stats:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
