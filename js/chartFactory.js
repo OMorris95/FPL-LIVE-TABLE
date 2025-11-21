@@ -9,12 +9,18 @@
 const chartRegistry = new Map();
 
 /**
- * Registers a chart instance
+ * Registers a chart instance with its custom options
  * @param {string} id - Chart identifier
  * @param {object} chartInstance - Chart.js instance
+ * @param {function} configFn - Config function used to create the chart
+ * @param {object} customOptions - Custom options passed during creation
  */
-function registerChart(id, chartInstance) {
-    chartRegistry.set(id, chartInstance);
+function registerChart(id, chartInstance, configFn = null, customOptions = {}) {
+    chartRegistry.set(id, {
+        chart: chartInstance,
+        configFn: configFn,
+        customOptions: customOptions
+    });
 }
 
 /**
@@ -22,9 +28,9 @@ function registerChart(id, chartInstance) {
  * @param {string} id - Chart identifier
  */
 function unregisterChart(id) {
-    const chart = chartRegistry.get(id);
-    if (chart) {
-        chart.destroy();
+    const entry = chartRegistry.get(id);
+    if (entry) {
+        entry.chart.destroy();
         chartRegistry.delete(id);
     }
 }
@@ -33,8 +39,8 @@ function unregisterChart(id) {
  * Destroys all registered charts
  */
 function destroyAllCharts() {
-    chartRegistry.forEach((chart, id) => {
-        chart.destroy();
+    chartRegistry.forEach((entry, id) => {
+        entry.chart.destroy();
     });
     chartRegistry.clear();
 }
@@ -45,7 +51,8 @@ function destroyAllCharts() {
  * @returns {object|null} - Chart instance or null
  */
 function getChart(id) {
-    return chartRegistry.get(id) || null;
+    const entry = chartRegistry.get(id);
+    return entry ? entry.chart : null;
 }
 
 // ============================================
@@ -80,8 +87,8 @@ function createChart(canvasId, configFn, data, options = {}) {
     // Create Chart.js instance
     const chart = new Chart(ctx, config);
 
-    // Register chart
-    registerChart(canvasId, chart);
+    // Register chart with config function and custom options
+    registerChart(canvasId, chart, configFn, options);
 
     // Return chart with helper methods
     return {
@@ -166,38 +173,37 @@ function createStatefulChart(canvasId, configFn, dataFn, options = {}) {
  * Call this when switching between light/dark theme
  */
 function updateChartsForTheme() {
-    chartRegistry.forEach((chart, id) => {
+    chartRegistry.forEach((entry, id) => {
         const canvas = document.getElementById(id);
         if (!canvas) return;
 
-        // Get current data
-        const data = chart.data;
-        const type = chart.config.type;
+        // Get current data, config function, and custom options
+        const data = entry.chart.data;
+        const configFn = entry.configFn;
+        const customOptions = entry.customOptions;
 
-        // Recreate chart with new theme colors
-        chart.destroy();
+        // Destroy the old chart
+        entry.chart.destroy();
 
         const ctx = canvas.getContext('2d');
-        let config;
 
-        // Use appropriate config function based on type
-        switch (type) {
-            case 'line':
-                config = createLineChartConfig(data);
-                break;
-            case 'bar':
-                config = createBarChartConfig(data);
-                break;
-            case 'radar':
-                config = createRadarChartConfig(data);
-                break;
-            default:
-                console.warn(`Unknown chart type: ${type}`);
-                return;
+        // Recreate chart with same config function and custom options
+        // This preserves settings like reverse: true on y-axis
+        const config = configFn ? configFn(data, customOptions) : null;
+
+        if (!config) {
+            console.warn(`No config function stored for chart: ${id}`);
+            return;
         }
 
         const newChart = new Chart(ctx, config);
-        chartRegistry.set(id, newChart);
+
+        // Re-register with same config function and options
+        chartRegistry.set(id, {
+            chart: newChart,
+            configFn: configFn,
+            customOptions: customOptions
+        });
     });
 }
 
