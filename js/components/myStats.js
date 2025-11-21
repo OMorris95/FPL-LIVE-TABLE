@@ -4,8 +4,9 @@
 /**
  * Initializes the My Stats component
  * @param {string} containerId - ID of the container element
+ * @param {function} onLeagueChange - Optional callback when league changes
  */
-async function initializeMyStats(containerId) {
+async function initializeMyStats(containerId, onLeagueChange = null) {
     const container = document.getElementById(containerId);
     if (!container) {
         console.error(`Container ${containerId} not found`);
@@ -26,7 +27,8 @@ async function initializeMyStats(containerId) {
         leagueAverage: null,
         squadAnalysis: null,
         currentRange: 'season',
-        expandedPlayer: null
+        expandedPlayer: null,
+        onLeagueChange: onLeagueChange
     };
 
     // Render UI
@@ -35,6 +37,11 @@ async function initializeMyStats(containerId) {
     // If we have saved IDs, fetch data automatically
     if (savedManagerId) {
         await myStats_fetchData(state);
+
+        // Trigger league change callback on initial load if league ID exists
+        if (onLeagueChange && savedLeagueId) {
+            onLeagueChange(savedLeagueId);
+        }
     }
 }
 
@@ -509,6 +516,11 @@ function myStats_attachEventListeners(state) {
 
             // Fetch data
             await myStats_fetchData(state);
+
+            // Trigger league change callback if provided
+            if (state.onLeagueChange && leagueId) {
+                state.onLeagueChange(leagueId);
+            }
         });
     }
 

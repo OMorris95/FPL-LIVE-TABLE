@@ -1461,9 +1461,9 @@ select.form-input {
    MY STATS COMPONENT
    ============================================ */
 
-/* My Stats Card spans 2 columns */
+/* My Stats Card spans 1 column (50% width) */
 .my-stats-card {
-    grid-column: span 2;
+    grid-column: span 1;
 }
 
 .my-stats-container {
@@ -1959,6 +1959,73 @@ select.form-input {
     margin: 4px 0;
     font-size: 0.9em;
     line-height: 1.5;
+}
+
+/* ============================================
+   LEAGUE TABLE COMPONENT (Homepage)
+   ============================================ */
+
+.league-table-card {
+    grid-column: span 1;
+}
+
+.league-table-wrapper {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.league-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.league-table thead {
+    position: sticky;
+    top: 0;
+    background: var(--card-bg-elevated);
+    z-index: 10;
+}
+
+.league-table th {
+    padding: 0.75rem 0.5rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-color);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.league-table td {
+    padding: 0.75rem 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.league-table tbody tr:hover {
+    background: var(--bg-secondary);
+}
+
+.league-table .rank-cell {
+    font-weight: 600;
+    color: var(--accent-gold);
+}
+
+.league-table .manager-cell {
+    font-weight: 500;
+}
+
+.league-table .team-cell {
+    color: var(--text-secondary);
+    font-size: 0.8125rem;
+}
+
+.league-table .total-cell {
+    font-weight: 600;
+}
+
+.league-table .gw-cell {
+    color: var(--accent-gold);
+    font-weight: 500;
 }
 
 @keyframes fadeIn {
