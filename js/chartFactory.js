@@ -87,6 +87,13 @@ function createChart(canvasId, configFn, data, options = {}) {
     // Create Chart.js instance
     const chart = new Chart(ctx, config);
 
+    // Stop Chart.js's internal ResizeObserver to prevent zoom-triggered resizes
+    // Block all resize attempts to keep charts stable during zoom
+    chart.resize = function() {
+        // Do nothing - completely block resize
+        return;
+    };
+
     // Register chart with config function and custom options
     registerChart(canvasId, chart, configFn, options);
 
