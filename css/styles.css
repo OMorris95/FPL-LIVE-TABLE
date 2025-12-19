@@ -1565,16 +1565,17 @@ select.form-input {
 }
 
 .my-stats-info {
-    flex-shrink: 0;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .manager-name {
     font-size: 1.25rem;
     font-weight: 600;
-    margin-bottom: 0.75rem;
+    flex-shrink: 0;
 }
 
 .points-summary {
@@ -1585,30 +1586,31 @@ select.form-input {
 
 .points-item {
     display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.5rem;
 }
 
 .points-label {
-    font-size: 0.875rem;
+    font-size: 1rem;
     color: var(--text-secondary);
 }
 
 .points-value {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 600;
     color: var(--text-color);
 }
 
 .points-divider {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     color: var(--text-secondary);
 }
 
 /* Rank Chart */
 .rank-chart-container {
-    flex: 1;
-    min-width: 0;
+    width: 100%;
+    margin-bottom: 1.5rem;
 }
 
 /* Comparison Bars */

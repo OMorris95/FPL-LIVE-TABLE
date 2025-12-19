@@ -144,26 +144,24 @@ function myStats_renderStats(state) {
     const leagueMarkerPosition = leagueAverage && lastGwPoints > leagueAverage ? (leagueAverage / lastGwPoints) * 100 : null;
 
     return `
-        <div class="my-stats-info-row">
-            <div class="my-stats-info">
-                <div class="manager-name">${managerData.name}</div>
-                <div class="points-summary">
-                    <div class="points-item">
-                        <span class="points-label">Total Points</span>
-                        <span class="points-value">${totalPoints}</span>
-                    </div>
-                    <div class="points-divider">|</div>
-                    <div class="points-item">
-                        <span class="points-label">Last GW</span>
-                        <span class="points-value">${lastGwPoints}</span>
-                    </div>
+        <div class="my-stats-info">
+            <div class="manager-name">${managerData.name}</div>
+            <div class="points-summary">
+                <div class="points-item">
+                    <span class="points-label">Total Points:</span>
+                    <span class="points-value">${totalPoints}</span>
+                </div>
+                <div class="points-divider">|</div>
+                <div class="points-item">
+                    <span class="points-label">Last GW:</span>
+                    <span class="points-value">${lastGwPoints}</span>
                 </div>
             </div>
+        </div>
 
-            <div class="rank-chart-container">
-                <div class="chart-container line">
-                    <canvas id="rank-over-time-chart"></canvas>
-                </div>
+        <div class="rank-chart-container">
+            <div class="chart-container line">
+                <canvas id="rank-over-time-chart"></canvas>
             </div>
         </div>
 

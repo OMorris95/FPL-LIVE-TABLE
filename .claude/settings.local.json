@@ -19,7 +19,8 @@
       "WebFetch(domain:www.fplgameweek.com)",
       "WebFetch(domain:fplreview.com)",
       "Bash(scp:*)",
-      "Bash(ssh:*)"
+      "Bash(ssh:*)",
+      "Bash(git log:*)"
     ],
     "deny": [],
     "ask": []
