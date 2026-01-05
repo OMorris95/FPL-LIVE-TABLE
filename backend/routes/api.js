@@ -138,30 +138,35 @@ router.get('/price-accuracy', async (req, res) => {
  * Only used as fallback when corsproxy.io fails
  */
 router.get('/fpl-proxy/*', async (req, res) => {
+    const fetch = require('node-fetch');
+    const fplPath = req.params[0];
+    const fplUrl = `https://fantasy.premierleague.com/api/${fplPath}`;
+    const userIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+
+    console.log(`[FALLBACK PROXY] ${new Date().toISOString()} | IP: ${userIP} | Path: ${fplPath}`);
+
     try {
-        const axios = require('axios');
-        const fplPath = req.params[0];
-        const fplUrl = `https://fantasy.premierleague.com/api/${fplPath}`;
-        const userIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-
-        console.log(`[FALLBACK PROXY] ${new Date().toISOString()} | IP: ${userIP} | Path: ${fplPath}`);
-
-        const response = await axios.get(fplUrl);
-
-        console.log(`[FALLBACK SUCCESS] Status: ${response.status} | Path: ${fplPath}`);
-        res.json(response.data);
-    } catch (error) {
-        // Log rate limiting specifically
-        if (error.response && error.response.status === 429) {
-            console.error(`[RATE LIMIT DETECTED] ${new Date().toISOString()} | IP: ${userIP} | Path: ${fplPath}`);
-            console.error(`[RATE LIMIT] This means FPL is blocking your VPS IP. Consider alternative solutions.`);
-        } else {
-            console.error(`[FALLBACK ERROR] ${error.message} | Status: ${error.response?.status} | Path: ${fplPath}`);
-        }
-
-        res.status(error.response?.status || 500).json({
-            error: error.response?.status === 429 ? 'Rate limited by FPL API' : 'FPL API error'
+        const response = await fetch(fplUrl, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
+                'Accept': 'application/json',
+            }
         });
+
+        if (!response.ok) {
+            console.error(`[FALLBACK ERROR] FPL API returned ${response.status} | Path: ${fplPath}`);
+            return res.status(response.status).json({
+                error: `FPL API returned ${response.status}`
+            });
+        }
+        
+        const data = await response.json();
+        console.log(`[FALLBACK SUCCESS] Status: ${response.status} | Path: ${fplPath}`);
+        res.json(data);
+
+    } catch (error) {
+        console.error(`[FALLBACK FETCH ERROR] ${error.message} | Path: ${fplPath}`);
+        res.status(500).json({ error: 'Failed to fetch from FPL API' });
     }
 });
 
