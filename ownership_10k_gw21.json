@@ -1,0 +1,2123 @@
+{
+  "tier": "10k",
+  "gameweek": 21,
+  "updated_at": "2026-01-06T22:52:30.478Z",
+  "total_players": 423,
+  "ownership": [
+    {
+      "player_id": 430,
+      "ownership_count": 9985,
+      "ownership_percent": 99.85
+    },
+    {
+      "player_id": 414,
+      "ownership_count": 7250,
+      "ownership_percent": 72.5
+    },
+    {
+      "player_id": 470,
+      "ownership_count": 7010,
+      "ownership_percent": 70.1
+    },
+    {
+      "player_id": 5,
+      "ownership_count": 6268,
+      "ownership_percent": 62.68
+    },
+    {
+      "player_id": 136,
+      "ownership_count": 6198,
+      "ownership_percent": 61.98
+    },
+    {
+      "player_id": 16,
+      "ownership_count": 4933,
+      "ownership_percent": 49.33
+    },
+    {
+      "player_id": 450,
+      "ownership_count": 4879,
+      "ownership_percent": 48.79
+    },
+    {
+      "player_id": 47,
+      "ownership_count": 4741,
+      "ownership_percent": 47.41
+    },
+    {
+      "player_id": 661,
+      "ownership_count": 4636,
+      "ownership_percent": 46.36
+    },
+    {
+      "player_id": 21,
+      "ownership_count": 4182,
+      "ownership_percent": 41.82
+    },
+    {
+      "player_id": 1,
+      "ownership_count": 3210,
+      "ownership_percent": 32.1
+    },
+    {
+      "player_id": 329,
+      "ownership_count": 3090,
+      "ownership_percent": 30.9
+    },
+    {
+      "player_id": 8,
+      "ownership_count": 3052,
+      "ownership_percent": 30.52
+    },
+    {
+      "player_id": 684,
+      "ownership_count": 3011,
+      "ownership_percent": 30.11
+    },
+    {
+      "player_id": 488,
+      "ownership_count": 2979,
+      "ownership_percent": 29.79
+    },
+    {
+      "player_id": 260,
+      "ownership_count": 2807,
+      "ownership_percent": 28.07
+    },
+    {
+      "player_id": 411,
+      "ownership_count": 2707,
+      "ownership_percent": 27.07
+    },
+    {
+      "player_id": 291,
+      "ownership_count": 2387,
+      "ownership_percent": 23.87
+    },
+    {
+      "player_id": 317,
+      "ownership_count": 2384,
+      "ownership_percent": 23.84
+    },
+    {
+      "player_id": 417,
+      "ownership_count": 2308,
+      "ownership_percent": 23.08
+    },
+    {
+      "player_id": 575,
+      "ownership_count": 2272,
+      "ownership_percent": 22.72
+    },
+    {
+      "player_id": 82,
+      "ownership_count": 2255,
+      "ownership_percent": 22.55
+    },
+    {
+      "player_id": 694,
+      "ownership_count": 1913,
+      "ownership_percent": 19.13
+    },
+    {
+      "player_id": 295,
+      "ownership_count": 1840,
+      "ownership_percent": 18.4
+    },
+    {
+      "player_id": 139,
+      "ownership_count": 1796,
+      "ownership_percent": 17.96
+    },
+    {
+      "player_id": 373,
+      "ownership_count": 1763,
+      "ownership_percent": 17.63
+    },
+    {
+      "player_id": 441,
+      "ownership_count": 1649,
+      "ownership_percent": 16.49
+    },
+    {
+      "player_id": 485,
+      "ownership_count": 1591,
+      "ownership_percent": 15.91
+    },
+    {
+      "player_id": 252,
+      "ownership_count": 1563,
+      "ownership_percent": 15.63
+    },
+    {
+      "player_id": 624,
+      "ownership_count": 1502,
+      "ownership_percent": 15.02
+    },
+    {
+      "player_id": 382,
+      "ownership_count": 1385,
+      "ownership_percent": 13.85
+    },
+    {
+      "player_id": 287,
+      "ownership_count": 1375,
+      "ownership_percent": 13.75
+    },
+    {
+      "player_id": 226,
+      "ownership_count": 1367,
+      "ownership_percent": 13.67
+    },
+    {
+      "player_id": 101,
+      "ownership_count": 1285,
+      "ownership_percent": 12.85
+    },
+    {
+      "player_id": 220,
+      "ownership_count": 1278,
+      "ownership_percent": 12.78
+    },
+    {
+      "player_id": 691,
+      "ownership_count": 1274,
+      "ownership_percent": 12.74
+    },
+    {
+      "player_id": 64,
+      "ownership_count": 1263,
+      "ownership_percent": 12.63
+    },
+    {
+      "player_id": 683,
+      "ownership_count": 1195,
+      "ownership_percent": 11.95
+    },
+    {
+      "player_id": 72,
+      "ownership_count": 999,
+      "ownership_percent": 9.99
+    },
+    {
+      "player_id": 473,
+      "ownership_count": 952,
+      "ownership_percent": 9.52
+    },
+    {
+      "player_id": 36,
+      "ownership_count": 948,
+      "ownership_percent": 9.48
+    },
+    {
+      "player_id": 191,
+      "ownership_count": 900,
+      "ownership_percent": 9
+    },
+    {
+      "player_id": 407,
+      "ownership_count": 890,
+      "ownership_percent": 8.9
+    },
+    {
+      "player_id": 670,
+      "ownership_count": 889,
+      "ownership_percent": 8.89
+    },
+    {
+      "player_id": 517,
+      "ownership_count": 858,
+      "ownership_percent": 8.58
+    },
+    {
+      "player_id": 440,
+      "ownership_count": 842,
+      "ownership_percent": 8.42
+    },
+    {
+      "player_id": 151,
+      "ownership_count": 803,
+      "ownership_percent": 8.03
+    },
+    {
+      "player_id": 225,
+      "ownership_count": 782,
+      "ownership_percent": 7.82
+    },
+    {
+      "player_id": 714,
+      "ownership_count": 775,
+      "ownership_percent": 7.75
+    },
+    {
+      "player_id": 347,
+      "ownership_count": 704,
+      "ownership_percent": 7.04
+    },
+    {
+      "player_id": 736,
+      "ownership_count": 660,
+      "ownership_percent": 6.6
+    },
+    {
+      "player_id": 237,
+      "ownership_count": 632,
+      "ownership_percent": 6.32
+    },
+    {
+      "player_id": 235,
+      "ownership_count": 592,
+      "ownership_percent": 5.92
+    },
+    {
+      "player_id": 106,
+      "ownership_count": 586,
+      "ownership_percent": 5.86
+    },
+    {
+      "player_id": 387,
+      "ownership_count": 576,
+      "ownership_percent": 5.76
+    },
+    {
+      "player_id": 390,
+      "ownership_count": 562,
+      "ownership_percent": 5.62
+    },
+    {
+      "player_id": 668,
+      "ownership_count": 551,
+      "ownership_percent": 5.51
+    },
+    {
+      "player_id": 303,
+      "ownership_count": 539,
+      "ownership_percent": 5.39
+    },
+    {
+      "player_id": 100,
+      "ownership_count": 520,
+      "ownership_percent": 5.2
+    },
+    {
+      "player_id": 497,
+      "ownership_count": 510,
+      "ownership_percent": 5.1
+    },
+    {
+      "player_id": 447,
+      "ownership_count": 485,
+      "ownership_percent": 4.85
+    },
+    {
+      "player_id": 419,
+      "ownership_count": 475,
+      "ownership_percent": 4.75
+    },
+    {
+      "player_id": 348,
+      "ownership_count": 462,
+      "ownership_percent": 4.62
+    },
+    {
+      "player_id": 337,
+      "ownership_count": 443,
+      "ownership_percent": 4.43
+    },
+    {
+      "player_id": 242,
+      "ownership_count": 440,
+      "ownership_percent": 4.4
+    },
+    {
+      "player_id": 160,
+      "ownership_count": 429,
+      "ownership_percent": 4.29
+    },
+    {
+      "player_id": 660,
+      "ownership_count": 404,
+      "ownership_percent": 4.04
+    },
+    {
+      "player_id": 120,
+      "ownership_count": 391,
+      "ownership_percent": 3.91
+    },
+    {
+      "player_id": 67,
+      "ownership_count": 379,
+      "ownership_percent": 3.79
+    },
+    {
+      "player_id": 257,
+      "ownership_count": 360,
+      "ownership_percent": 3.6
+    },
+    {
+      "player_id": 253,
+      "ownership_count": 347,
+      "ownership_percent": 3.47
+    },
+    {
+      "player_id": 38,
+      "ownership_count": 345,
+      "ownership_percent": 3.45
+    },
+    {
+      "player_id": 612,
+      "ownership_count": 343,
+      "ownership_percent": 3.43
+    },
+    {
+      "player_id": 403,
+      "ownership_count": 337,
+      "ownership_percent": 3.37
+    },
+    {
+      "player_id": 113,
+      "ownership_count": 335,
+      "ownership_percent": 3.35
+    },
+    {
+      "player_id": 408,
+      "ownership_count": 331,
+      "ownership_percent": 3.31
+    },
+    {
+      "player_id": 725,
+      "ownership_count": 300,
+      "ownership_percent": 3
+    },
+    {
+      "player_id": 261,
+      "ownership_count": 280,
+      "ownership_percent": 2.8
+    },
+    {
+      "player_id": 283,
+      "ownership_count": 280,
+      "ownership_percent": 2.8
+    },
+    {
+      "player_id": 547,
+      "ownership_count": 271,
+      "ownership_percent": 2.71
+    },
+    {
+      "player_id": 469,
+      "ownership_count": 260,
+      "ownership_percent": 2.6
+    },
+    {
+      "player_id": 427,
+      "ownership_count": 250,
+      "ownership_percent": 2.5
+    },
+    {
+      "player_id": 107,
+      "ownership_count": 241,
+      "ownership_percent": 2.41
+    },
+    {
+      "player_id": 6,
+      "ownership_count": 239,
+      "ownership_percent": 2.39
+    },
+    {
+      "player_id": 32,
+      "ownership_count": 237,
+      "ownership_percent": 2.37
+    },
+    {
+      "player_id": 374,
+      "ownership_count": 224,
+      "ownership_percent": 2.24
+    },
+    {
+      "player_id": 467,
+      "ownership_count": 223,
+      "ownership_percent": 2.23
+    },
+    {
+      "player_id": 335,
+      "ownership_count": 217,
+      "ownership_percent": 2.17
+    },
+    {
+      "player_id": 249,
+      "ownership_count": 203,
+      "ownership_percent": 2.03
+    },
+    {
+      "player_id": 224,
+      "ownership_count": 198,
+      "ownership_percent": 1.98
+    },
+    {
+      "player_id": 370,
+      "ownership_count": 196,
+      "ownership_percent": 1.96
+    },
+    {
+      "player_id": 84,
+      "ownership_count": 179,
+      "ownership_percent": 1.79
+    },
+    {
+      "player_id": 366,
+      "ownership_count": 177,
+      "ownership_percent": 1.77
+    },
+    {
+      "player_id": 749,
+      "ownership_count": 177,
+      "ownership_percent": 1.77
+    },
+    {
+      "player_id": 74,
+      "ownership_count": 169,
+      "ownership_percent": 1.69
+    },
+    {
+      "player_id": 565,
+      "ownership_count": 166,
+      "ownership_percent": 1.66
+    },
+    {
+      "player_id": 236,
+      "ownership_count": 165,
+      "ownership_percent": 1.65
+    },
+    {
+      "player_id": 276,
+      "ownership_count": 160,
+      "ownership_percent": 1.6
+    },
+    {
+      "player_id": 568,
+      "ownership_count": 158,
+      "ownership_percent": 1.58
+    },
+    {
+      "player_id": 597,
+      "ownership_count": 147,
+      "ownership_percent": 1.47
+    },
+    {
+      "player_id": 623,
+      "ownership_count": 136,
+      "ownership_percent": 1.36
+    },
+    {
+      "player_id": 263,
+      "ownership_count": 130,
+      "ownership_percent": 1.3
+    },
+    {
+      "player_id": 241,
+      "ownership_count": 124,
+      "ownership_percent": 1.24
+    },
+    {
+      "player_id": 178,
+      "ownership_count": 122,
+      "ownership_percent": 1.22
+    },
+    {
+      "player_id": 733,
+      "ownership_count": 115,
+      "ownership_percent": 1.15
+    },
+    {
+      "player_id": 218,
+      "ownership_count": 112,
+      "ownership_percent": 1.12
+    },
+    {
+      "player_id": 449,
+      "ownership_count": 112,
+      "ownership_percent": 1.12
+    },
+    {
+      "player_id": 17,
+      "ownership_count": 111,
+      "ownership_percent": 1.11
+    },
+    {
+      "player_id": 110,
+      "ownership_count": 111,
+      "ownership_percent": 1.11
+    },
+    {
+      "player_id": 145,
+      "ownership_count": 111,
+      "ownership_percent": 1.11
+    },
+    {
+      "player_id": 531,
+      "ownership_count": 109,
+      "ownership_percent": 1.09
+    },
+    {
+      "player_id": 600,
+      "ownership_count": 104,
+      "ownership_percent": 1.04
+    },
+    {
+      "player_id": 582,
+      "ownership_count": 102,
+      "ownership_percent": 1.02
+    },
+    {
+      "player_id": 314,
+      "ownership_count": 97,
+      "ownership_percent": 0.97
+    },
+    {
+      "player_id": 341,
+      "ownership_count": 93,
+      "ownership_percent": 0.93
+    },
+    {
+      "player_id": 135,
+      "ownership_count": 89,
+      "ownership_percent": 0.89
+    },
+    {
+      "player_id": 457,
+      "ownership_count": 89,
+      "ownership_percent": 0.89
+    },
+    {
+      "player_id": 20,
+      "ownership_count": 85,
+      "ownership_percent": 0.85
+    },
+    {
+      "player_id": 715,
+      "ownership_count": 82,
+      "ownership_percent": 0.82
+    },
+    {
+      "player_id": 502,
+      "ownership_count": 79,
+      "ownership_percent": 0.79
+    },
+    {
+      "player_id": 541,
+      "ownership_count": 78,
+      "ownership_percent": 0.78
+    },
+    {
+      "player_id": 256,
+      "ownership_count": 77,
+      "ownership_percent": 0.77
+    },
+    {
+      "player_id": 292,
+      "ownership_count": 77,
+      "ownership_percent": 0.77
+    },
+    {
+      "player_id": 293,
+      "ownership_count": 77,
+      "ownership_percent": 0.77
+    },
+    {
+      "player_id": 508,
+      "ownership_count": 75,
+      "ownership_percent": 0.75
+    },
+    {
+      "player_id": 526,
+      "ownership_count": 75,
+      "ownership_percent": 0.75
+    },
+    {
+      "player_id": 228,
+      "ownership_count": 72,
+      "ownership_percent": 0.72
+    },
+    {
+      "player_id": 310,
+      "ownership_count": 72,
+      "ownership_percent": 0.72
+    },
+    {
+      "player_id": 474,
+      "ownership_count": 71,
+      "ownership_percent": 0.71
+    },
+    {
+      "player_id": 158,
+      "ownership_count": 70,
+      "ownership_percent": 0.7
+    },
+    {
+      "player_id": 7,
+      "ownership_count": 67,
+      "ownership_percent": 0.67
+    },
+    {
+      "player_id": 378,
+      "ownership_count": 67,
+      "ownership_percent": 0.67
+    },
+    {
+      "player_id": 567,
+      "ownership_count": 66,
+      "ownership_percent": 0.66
+    },
+    {
+      "player_id": 569,
+      "ownership_count": 64,
+      "ownership_percent": 0.64
+    },
+    {
+      "player_id": 322,
+      "ownership_count": 62,
+      "ownership_percent": 0.62
+    },
+    {
+      "player_id": 344,
+      "ownership_count": 62,
+      "ownership_percent": 0.62
+    },
+    {
+      "player_id": 316,
+      "ownership_count": 61,
+      "ownership_percent": 0.61
+    },
+    {
+      "player_id": 230,
+      "ownership_count": 59,
+      "ownership_percent": 0.59
+    },
+    {
+      "player_id": 273,
+      "ownership_count": 59,
+      "ownership_percent": 0.59
+    },
+    {
+      "player_id": 515,
+      "ownership_count": 54,
+      "ownership_percent": 0.54
+    },
+    {
+      "player_id": 48,
+      "ownership_count": 51,
+      "ownership_percent": 0.51
+    },
+    {
+      "player_id": 258,
+      "ownership_count": 50,
+      "ownership_percent": 0.5
+    },
+    {
+      "player_id": 192,
+      "ownership_count": 49,
+      "ownership_percent": 0.49
+    },
+    {
+      "player_id": 190,
+      "ownership_count": 42,
+      "ownership_percent": 0.42
+    },
+    {
+      "player_id": 477,
+      "ownership_count": 42,
+      "ownership_percent": 0.42
+    },
+    {
+      "player_id": 487,
+      "ownership_count": 42,
+      "ownership_percent": 0.42
+    },
+    {
+      "player_id": 233,
+      "ownership_count": 41,
+      "ownership_percent": 0.41
+    },
+    {
+      "player_id": 674,
+      "ownership_count": 37,
+      "ownership_percent": 0.37
+    },
+    {
+      "player_id": 560,
+      "ownership_count": 36,
+      "ownership_percent": 0.36
+    },
+    {
+      "player_id": 54,
+      "ownership_count": 35,
+      "ownership_percent": 0.35
+    },
+    {
+      "player_id": 311,
+      "ownership_count": 35,
+      "ownership_percent": 0.35
+    },
+    {
+      "player_id": 384,
+      "ownership_count": 35,
+      "ownership_percent": 0.35
+    },
+    {
+      "player_id": 443,
+      "ownership_count": 35,
+      "ownership_percent": 0.35
+    },
+    {
+      "player_id": 681,
+      "ownership_count": 35,
+      "ownership_percent": 0.35
+    },
+    {
+      "player_id": 573,
+      "ownership_count": 34,
+      "ownership_percent": 0.34
+    },
+    {
+      "player_id": 266,
+      "ownership_count": 33,
+      "ownership_percent": 0.33
+    },
+    {
+      "player_id": 437,
+      "ownership_count": 32,
+      "ownership_percent": 0.32
+    },
+    {
+      "player_id": 26,
+      "ownership_count": 31,
+      "ownership_percent": 0.31
+    },
+    {
+      "player_id": 97,
+      "ownership_count": 31,
+      "ownership_percent": 0.31
+    },
+    {
+      "player_id": 148,
+      "ownership_count": 31,
+      "ownership_percent": 0.31
+    },
+    {
+      "player_id": 476,
+      "ownership_count": 29,
+      "ownership_percent": 0.29
+    },
+    {
+      "player_id": 116,
+      "ownership_count": 28,
+      "ownership_percent": 0.28
+    },
+    {
+      "player_id": 626,
+      "ownership_count": 27,
+      "ownership_percent": 0.27
+    },
+    {
+      "player_id": 630,
+      "ownership_count": 27,
+      "ownership_percent": 0.27
+    },
+    {
+      "player_id": 37,
+      "ownership_count": 26,
+      "ownership_percent": 0.26
+    },
+    {
+      "player_id": 554,
+      "ownership_count": 26,
+      "ownership_percent": 0.26
+    },
+    {
+      "player_id": 169,
+      "ownership_count": 25,
+      "ownership_percent": 0.25
+    },
+    {
+      "player_id": 455,
+      "ownership_count": 25,
+      "ownership_percent": 0.25
+    },
+    {
+      "player_id": 638,
+      "ownership_count": 25,
+      "ownership_percent": 0.25
+    },
+    {
+      "player_id": 157,
+      "ownership_count": 24,
+      "ownership_percent": 0.24
+    },
+    {
+      "player_id": 505,
+      "ownership_count": 24,
+      "ownership_percent": 0.24
+    },
+    {
+      "player_id": 603,
+      "ownership_count": 24,
+      "ownership_percent": 0.24
+    },
+    {
+      "player_id": 712,
+      "ownership_count": 24,
+      "ownership_percent": 0.24
+    },
+    {
+      "player_id": 173,
+      "ownership_count": 23,
+      "ownership_percent": 0.23
+    },
+    {
+      "player_id": 146,
+      "ownership_count": 21,
+      "ownership_percent": 0.21
+    },
+    {
+      "player_id": 198,
+      "ownership_count": 21,
+      "ownership_percent": 0.21
+    },
+    {
+      "player_id": 325,
+      "ownership_count": 21,
+      "ownership_percent": 0.21
+    },
+    {
+      "player_id": 628,
+      "ownership_count": 21,
+      "ownership_percent": 0.21
+    },
+    {
+      "player_id": 506,
+      "ownership_count": 20,
+      "ownership_percent": 0.2
+    },
+    {
+      "player_id": 666,
+      "ownership_count": 19,
+      "ownership_percent": 0.19
+    },
+    {
+      "player_id": 671,
+      "ownership_count": 19,
+      "ownership_percent": 0.19
+    },
+    {
+      "player_id": 22,
+      "ownership_count": 18,
+      "ownership_percent": 0.18
+    },
+    {
+      "player_id": 215,
+      "ownership_count": 18,
+      "ownership_percent": 0.18
+    },
+    {
+      "player_id": 491,
+      "ownership_count": 18,
+      "ownership_percent": 0.18
+    },
+    {
+      "player_id": 658,
+      "ownership_count": 17,
+      "ownership_percent": 0.17
+    },
+    {
+      "player_id": 664,
+      "ownership_count": 17,
+      "ownership_percent": 0.17
+    },
+    {
+      "player_id": 693,
+      "ownership_count": 17,
+      "ownership_percent": 0.17
+    },
+    {
+      "player_id": 730,
+      "ownership_count": 17,
+      "ownership_percent": 0.17
+    },
+    {
+      "player_id": 39,
+      "ownership_count": 16,
+      "ownership_percent": 0.16
+    },
+    {
+      "player_id": 200,
+      "ownership_count": 16,
+      "ownership_percent": 0.16
+    },
+    {
+      "player_id": 516,
+      "ownership_count": 16,
+      "ownership_percent": 0.16
+    },
+    {
+      "player_id": 703,
+      "ownership_count": 16,
+      "ownership_percent": 0.16
+    },
+    {
+      "player_id": 708,
+      "ownership_count": 16,
+      "ownership_percent": 0.16
+    },
+    {
+      "player_id": 367,
+      "ownership_count": 15,
+      "ownership_percent": 0.15
+    },
+    {
+      "player_id": 418,
+      "ownership_count": 15,
+      "ownership_percent": 0.15
+    },
+    {
+      "player_id": 580,
+      "ownership_count": 15,
+      "ownership_percent": 0.15
+    },
+    {
+      "player_id": 78,
+      "ownership_count": 14,
+      "ownership_percent": 0.14
+    },
+    {
+      "player_id": 105,
+      "ownership_count": 14,
+      "ownership_percent": 0.14
+    },
+    {
+      "player_id": 365,
+      "ownership_count": 14,
+      "ownership_percent": 0.14
+    },
+    {
+      "player_id": 371,
+      "ownership_count": 14,
+      "ownership_percent": 0.14
+    },
+    {
+      "player_id": 686,
+      "ownership_count": 14,
+      "ownership_percent": 0.14
+    },
+    {
+      "player_id": 41,
+      "ownership_count": 13,
+      "ownership_percent": 0.13
+    },
+    {
+      "player_id": 53,
+      "ownership_count": 13,
+      "ownership_percent": 0.13
+    },
+    {
+      "player_id": 58,
+      "ownership_count": 13,
+      "ownership_percent": 0.13
+    },
+    {
+      "player_id": 119,
+      "ownership_count": 13,
+      "ownership_percent": 0.13
+    },
+    {
+      "player_id": 197,
+      "ownership_count": 13,
+      "ownership_percent": 0.13
+    },
+    {
+      "player_id": 336,
+      "ownership_count": 13,
+      "ownership_percent": 0.13
+    },
+    {
+      "player_id": 386,
+      "ownership_count": 13,
+      "ownership_percent": 0.13
+    },
+    {
+      "player_id": 680,
+      "ownership_count": 13,
+      "ownership_percent": 0.13
+    },
+    {
+      "player_id": 195,
+      "ownership_count": 12,
+      "ownership_percent": 0.12
+    },
+    {
+      "player_id": 652,
+      "ownership_count": 12,
+      "ownership_percent": 0.12
+    },
+    {
+      "player_id": 675,
+      "ownership_count": 12,
+      "ownership_percent": 0.12
+    },
+    {
+      "player_id": 166,
+      "ownership_count": 11,
+      "ownership_percent": 0.11
+    },
+    {
+      "player_id": 284,
+      "ownership_count": 11,
+      "ownership_percent": 0.11
+    },
+    {
+      "player_id": 444,
+      "ownership_count": 11,
+      "ownership_percent": 0.11
+    },
+    {
+      "player_id": 659,
+      "ownership_count": 11,
+      "ownership_percent": 0.11
+    },
+    {
+      "player_id": 11,
+      "ownership_count": 10,
+      "ownership_percent": 0.1
+    },
+    {
+      "player_id": 63,
+      "ownership_count": 10,
+      "ownership_percent": 0.1
+    },
+    {
+      "player_id": 121,
+      "ownership_count": 10,
+      "ownership_percent": 0.1
+    },
+    {
+      "player_id": 205,
+      "ownership_count": 10,
+      "ownership_percent": 0.1
+    },
+    {
+      "player_id": 434,
+      "ownership_count": 10,
+      "ownership_percent": 0.1
+    },
+    {
+      "player_id": 489,
+      "ownership_count": 10,
+      "ownership_percent": 0.1
+    },
+    {
+      "player_id": 610,
+      "ownership_count": 10,
+      "ownership_percent": 0.1
+    },
+    {
+      "player_id": 59,
+      "ownership_count": 9,
+      "ownership_percent": 0.09
+    },
+    {
+      "player_id": 77,
+      "ownership_count": 9,
+      "ownership_percent": 0.09
+    },
+    {
+      "player_id": 185,
+      "ownership_count": 9,
+      "ownership_percent": 0.09
+    },
+    {
+      "player_id": 299,
+      "ownership_count": 9,
+      "ownership_percent": 0.09
+    },
+    {
+      "player_id": 300,
+      "ownership_count": 9,
+      "ownership_percent": 0.09
+    },
+    {
+      "player_id": 358,
+      "ownership_count": 9,
+      "ownership_percent": 0.09
+    },
+    {
+      "player_id": 621,
+      "ownership_count": 9,
+      "ownership_percent": 0.09
+    },
+    {
+      "player_id": 43,
+      "ownership_count": 8,
+      "ownership_percent": 0.08
+    },
+    {
+      "player_id": 125,
+      "ownership_count": 8,
+      "ownership_percent": 0.08
+    },
+    {
+      "player_id": 421,
+      "ownership_count": 8,
+      "ownership_percent": 0.08
+    },
+    {
+      "player_id": 532,
+      "ownership_count": 8,
+      "ownership_percent": 0.08
+    },
+    {
+      "player_id": 543,
+      "ownership_count": 8,
+      "ownership_percent": 0.08
+    },
+    {
+      "player_id": 716,
+      "ownership_count": 8,
+      "ownership_percent": 0.08
+    },
+    {
+      "player_id": 4,
+      "ownership_count": 7,
+      "ownership_percent": 0.07
+    },
+    {
+      "player_id": 44,
+      "ownership_count": 7,
+      "ownership_percent": 0.07
+    },
+    {
+      "player_id": 68,
+      "ownership_count": 7,
+      "ownership_percent": 0.07
+    },
+    {
+      "player_id": 69,
+      "ownership_count": 7,
+      "ownership_percent": 0.07
+    },
+    {
+      "player_id": 86,
+      "ownership_count": 7,
+      "ownership_percent": 0.07
+    },
+    {
+      "player_id": 124,
+      "ownership_count": 7,
+      "ownership_percent": 0.07
+    },
+    {
+      "player_id": 396,
+      "ownership_count": 7,
+      "ownership_percent": 0.07
+    },
+    {
+      "player_id": 641,
+      "ownership_count": 7,
+      "ownership_percent": 0.07
+    },
+    {
+      "player_id": 673,
+      "ownership_count": 7,
+      "ownership_percent": 0.07
+    },
+    {
+      "player_id": 104,
+      "ownership_count": 6,
+      "ownership_percent": 0.06
+    },
+    {
+      "player_id": 109,
+      "ownership_count": 6,
+      "ownership_percent": 0.06
+    },
+    {
+      "player_id": 187,
+      "ownership_count": 6,
+      "ownership_percent": 0.06
+    },
+    {
+      "player_id": 188,
+      "ownership_count": 6,
+      "ownership_percent": 0.06
+    },
+    {
+      "player_id": 375,
+      "ownership_count": 6,
+      "ownership_percent": 0.06
+    },
+    {
+      "player_id": 466,
+      "ownership_count": 6,
+      "ownership_percent": 0.06
+    },
+    {
+      "player_id": 483,
+      "ownership_count": 6,
+      "ownership_percent": 0.06
+    },
+    {
+      "player_id": 490,
+      "ownership_count": 6,
+      "ownership_percent": 0.06
+    },
+    {
+      "player_id": 529,
+      "ownership_count": 6,
+      "ownership_percent": 0.06
+    },
+    {
+      "player_id": 629,
+      "ownership_count": 6,
+      "ownership_percent": 0.06
+    },
+    {
+      "player_id": 665,
+      "ownership_count": 6,
+      "ownership_percent": 0.06
+    },
+    {
+      "player_id": 688,
+      "ownership_count": 6,
+      "ownership_percent": 0.06
+    },
+    {
+      "player_id": 713,
+      "ownership_count": 6,
+      "ownership_percent": 0.06
+    },
+    {
+      "player_id": 50,
+      "ownership_count": 5,
+      "ownership_percent": 0.05
+    },
+    {
+      "player_id": 131,
+      "ownership_count": 5,
+      "ownership_percent": 0.05
+    },
+    {
+      "player_id": 167,
+      "ownership_count": 5,
+      "ownership_percent": 0.05
+    },
+    {
+      "player_id": 217,
+      "ownership_count": 5,
+      "ownership_percent": 0.05
+    },
+    {
+      "player_id": 250,
+      "ownership_count": 5,
+      "ownership_percent": 0.05
+    },
+    {
+      "player_id": 301,
+      "ownership_count": 5,
+      "ownership_percent": 0.05
+    },
+    {
+      "player_id": 339,
+      "ownership_count": 5,
+      "ownership_percent": 0.05
+    },
+    {
+      "player_id": 343,
+      "ownership_count": 5,
+      "ownership_percent": 0.05
+    },
+    {
+      "player_id": 388,
+      "ownership_count": 5,
+      "ownership_percent": 0.05
+    },
+    {
+      "player_id": 446,
+      "ownership_count": 5,
+      "ownership_percent": 0.05
+    },
+    {
+      "player_id": 650,
+      "ownership_count": 5,
+      "ownership_percent": 0.05
+    },
+    {
+      "player_id": 651,
+      "ownership_count": 5,
+      "ownership_percent": 0.05
+    },
+    {
+      "player_id": 83,
+      "ownership_count": 4,
+      "ownership_percent": 0.04
+    },
+    {
+      "player_id": 103,
+      "ownership_count": 4,
+      "ownership_percent": 0.04
+    },
+    {
+      "player_id": 152,
+      "ownership_count": 4,
+      "ownership_percent": 0.04
+    },
+    {
+      "player_id": 181,
+      "ownership_count": 4,
+      "ownership_percent": 0.04
+    },
+    {
+      "player_id": 221,
+      "ownership_count": 4,
+      "ownership_percent": 0.04
+    },
+    {
+      "player_id": 238,
+      "ownership_count": 4,
+      "ownership_percent": 0.04
+    },
+    {
+      "player_id": 254,
+      "ownership_count": 4,
+      "ownership_percent": 0.04
+    },
+    {
+      "player_id": 267,
+      "ownership_count": 4,
+      "ownership_percent": 0.04
+    },
+    {
+      "player_id": 342,
+      "ownership_count": 4,
+      "ownership_percent": 0.04
+    },
+    {
+      "player_id": 345,
+      "ownership_count": 4,
+      "ownership_percent": 0.04
+    },
+    {
+      "player_id": 346,
+      "ownership_count": 4,
+      "ownership_percent": 0.04
+    },
+    {
+      "player_id": 405,
+      "ownership_count": 4,
+      "ownership_percent": 0.04
+    },
+    {
+      "player_id": 406,
+      "ownership_count": 4,
+      "ownership_percent": 0.04
+    },
+    {
+      "player_id": 410,
+      "ownership_count": 4,
+      "ownership_percent": 0.04
+    },
+    {
+      "player_id": 453,
+      "ownership_count": 4,
+      "ownership_percent": 0.04
+    },
+    {
+      "player_id": 481,
+      "ownership_count": 4,
+      "ownership_percent": 0.04
+    },
+    {
+      "player_id": 558,
+      "ownership_count": 4,
+      "ownership_percent": 0.04
+    },
+    {
+      "player_id": 679,
+      "ownership_count": 4,
+      "ownership_percent": 0.04
+    },
+    {
+      "player_id": 698,
+      "ownership_count": 4,
+      "ownership_percent": 0.04
+    },
+    {
+      "player_id": 31,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 75,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 76,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 81,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 108,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 211,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 223,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 232,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 270,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 275,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 304,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 318,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 319,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 340,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 350,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 362,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 369,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 379,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 459,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 462,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 513,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 553,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 557,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 562,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 566,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 593,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 602,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 613,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 615,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 627,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 706,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 707,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 717,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 731,
+      "ownership_count": 3,
+      "ownership_percent": 0.03
+    },
+    {
+      "player_id": 10,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 33,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 90,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 102,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 129,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 137,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 140,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 193,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 194,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 246,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 255,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 286,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 354,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 385,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 504,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 528,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 530,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 561,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 563,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 591,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 599,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 601,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 609,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 640,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 654,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 669,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 685,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 700,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 719,
+      "ownership_count": 2,
+      "ownership_percent": 0.02
+    },
+    {
+      "player_id": 2,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 15,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 27,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 30,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 40,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 42,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 60,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 73,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 80,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 93,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 95,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 111,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 126,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 132,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 138,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 143,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 144,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 182,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 183,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 184,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 199,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 206,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 214,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 229,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 239,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 281,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 288,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 289,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 290,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 298,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 306,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 307,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 323,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 326,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 328,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 376,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 381,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 402,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 416,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 431,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 435,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 458,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 463,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 468,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 471,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 478,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 482,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 486,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 493,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 499,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 503,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 507,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 514,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 525,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 527,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 537,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 585,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 596,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 605,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 625,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 631,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 633,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 663,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 676,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 678,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 687,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 689,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 690,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 726,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 727,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    },
+    {
+      "player_id": 760,
+      "ownership_count": 1,
+      "ownership_percent": 0.01
+    }
+  ]
+}
