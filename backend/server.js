@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -27,9 +28,18 @@ app.listen(PORT, () => {
     console.log(`API available at http://localhost:${PORT}/api`);
 });
 
-// Start cron jobs
-require('./cron/updateOwnership');      // Top 10k ownership (1-2h after deadline)
-require('./cron/syncWeeklyData');       // Weekly static data sync (2-3h after deadline)
-// require('./cron/trackTransfers');    // Transfer tracking (Every 30 mins) - DISABLED: Needs fixing
-require('./cron/verifyPriceChanges');   // Price verification & reset (Daily 2:45 AM)
-require('./cron/smartPlayerDataSync'); // Smart player data sync (Every 10 mins during live GW)
+// Legacy cron jobs (replaced by DB-backed equivalents)
+// require('./cron/updateOwnership');      // REPLACED by managerScrapeCron + ownershipService
+// require('./cron/syncWeeklyData');       // REPLACED by bootstrapCron
+// require('./cron/trackTransfers');       // DISABLED: Needs fixing
+// require('./cron/smartPlayerDataSync');  // REPLACED by bootstrapCron + playerHistorySync
+require('./cron/verifyPriceChanges');   // Price verification & reset (Daily 2:45 AM) - still needed
+
+// New DB-backed cron jobs
+require('./cron/bootstrapCron');       // Bootstrap sync (every 6h, every 10min live)
+require('./cron/managerScrapeCron');    // Top 10k scrape (hourly after deadline)
+require('./cron/liveDataCron');         // Live player data (every 30s during live GW)
+
+// Periodic cache cleanup
+const { cleanExpiredCache } = require('./services/cacheService');
+setInterval(cleanExpiredCache, 15 * 60 * 1000); // Every 15 min

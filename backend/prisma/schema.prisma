@@ -1,0 +1,500 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// =====================================================
+// CORE FPL DATA (from bootstrap-static)
+// =====================================================
+
+model Team {
+  id              Int      @id @default(autoincrement())
+  fplId           Int      @unique @map("fpl_id")
+  name            String
+  shortName       String   @map("short_name")
+  code            Int      @unique
+  strength        Int      @default(0)
+  strengthOverallHome Int  @default(0) @map("strength_overall_home")
+  strengthOverallAway Int  @default(0) @map("strength_overall_away")
+  strengthAttackHome  Int  @default(0) @map("strength_attack_home")
+  strengthAttackAway  Int  @default(0) @map("strength_attack_away")
+  strengthDefenceHome Int  @default(0) @map("strength_defence_home")
+  strengthDefenceAway Int  @default(0) @map("strength_defence_away")
+  lastUpdated     DateTime @default(now()) @map("last_updated")
+
+  players         Player[]
+  homeFixtures    Fixture[] @relation("HomeTeam")
+  awayFixtures    Fixture[] @relation("AwayTeam")
+  seasonStats     TeamSeasonStats[]
+  gameweekStats   TeamGameweekStats[]
+
+  @@map("teams")
+}
+
+model Player {
+  id                      Int       @id @default(autoincrement())
+  fplId                   Int       @unique @map("fpl_id")
+  firstName               String    @map("first_name")
+  secondName              String    @map("second_name")
+  webName                 String    @map("web_name")
+  code                    Int       @unique
+  teamId                  Int       @map("team_id")
+  elementType             Int       @map("element_type") // 1=GKP, 2=DEF, 3=MID, 4=FWD
+  nowCost                 Int       @map("now_cost")
+  selectedByPercent       String    @default("0") @map("selected_by_percent")
+  transfersIn             Int       @default(0) @map("transfers_in")
+  transfersOut            Int       @default(0) @map("transfers_out")
+  transfersInEvent        Int       @default(0) @map("transfers_in_event")
+  transfersOutEvent       Int       @default(0) @map("transfers_out_event")
+  totalPoints             Int       @default(0) @map("total_points")
+  eventPoints             Int       @default(0) @map("event_points")
+  form                    String    @default("0")
+  pointsPerGame           String    @default("0") @map("points_per_game")
+  minutes                 Int       @default(0)
+  goalsScored             Int       @default(0) @map("goals_scored")
+  assists                 Int       @default(0)
+  cleanSheets             Int       @default(0) @map("clean_sheets")
+  goalsConceded           Int       @default(0) @map("goals_conceded")
+  ownGoals                Int       @default(0) @map("own_goals")
+  penaltiesSaved          Int       @default(0) @map("penalties_saved")
+  penaltiesMissed         Int       @default(0) @map("penalties_missed")
+  yellowCards             Int       @default(0) @map("yellow_cards")
+  redCards                Int       @default(0) @map("red_cards")
+  saves                   Int       @default(0)
+  bonus                   Int       @default(0)
+  bps                     Int       @default(0)
+  influence               String    @default("0")
+  creativity              String    @default("0")
+  threat                  String    @default("0")
+  ictIndex                String    @default("0") @map("ict_index")
+  expectedGoals           String    @default("0") @map("expected_goals")
+  expectedAssists         String    @default("0") @map("expected_assists")
+  expectedGoalInvolvements String  @default("0") @map("expected_goal_involvements")
+  expectedGoalsConceded   String    @default("0") @map("expected_goals_conceded")
+  status                  String    @default("a")
+  news                    String?
+  newsAdded               DateTime? @map("news_added")
+  chanceOfPlayingThisRound  Int?    @map("chance_of_playing_this_round")
+  chanceOfPlayingNextRound  Int?    @map("chance_of_playing_next_round")
+  lastUpdated             DateTime  @default(now()) @map("last_updated")
+
+  team                    Team      @relation(fields: [teamId], references: [fplId])
+  computedStats           PlayerComputedStats?
+  managerPicks            ManagerPick[]
+  ownershipData           OwnershipData[]
+
+  @@index([teamId])
+  @@index([elementType])
+  @@map("players")
+}
+
+model Gameweek {
+  id                    Int       @id @default(autoincrement())
+  fplId                 Int       @unique @map("fpl_id")
+  name                  String
+  deadlineTime          DateTime  @map("deadline_time")
+  finished              Boolean   @default(false)
+  dataChecked           Boolean   @default(false) @map("data_checked")
+  isCurrent             Boolean   @default(false) @map("is_current")
+  isNext                Boolean   @default(false) @map("is_next")
+  isPrevious            Boolean   @default(false) @map("is_previous")
+  highestScoringEntry   Int?      @map("highest_scoring_entry")
+  averageEntryScore     Int?      @map("average_entry_score")
+  highestScore          Int?      @map("highest_score")
+  mostSelected          Int?      @map("most_selected")
+  mostTransferredIn     Int?      @map("most_transferred_in")
+  mostCaptained         Int?      @map("most_captained")
+  mostViceCaptained     Int?      @map("most_vice_captained")
+  lastUpdated           DateTime  @default(now()) @map("last_updated")
+
+  fixtures              Fixture[]
+  managerGameweeks      ManagerGameweek[]
+  managerPicks          ManagerPick[]
+  livePlayerData        LivePlayerData[]
+  ownershipData         OwnershipData[]
+
+  @@map("gameweeks")
+}
+
+model Fixture {
+  id                    Int       @id @default(autoincrement())
+  fplId                 Int       @unique @map("fpl_id")
+  gameweekId            Int?      @map("gameweek_id")
+  kickoffTime           DateTime? @map("kickoff_time")
+  homeTeamId            Int       @map("home_team_id")
+  awayTeamId            Int       @map("away_team_id")
+  homeScore             Int?      @map("home_score")
+  awayScore             Int?      @map("away_score")
+  homeTeamDifficulty    Int?      @map("home_team_difficulty")
+  awayTeamDifficulty    Int?      @map("away_team_difficulty")
+  started               Boolean   @default(false)
+  finished              Boolean   @default(false)
+  finishedProvisional   Boolean   @default(false) @map("finished_provisional")
+  lastUpdated           DateTime  @default(now()) @map("last_updated")
+
+  gameweek              Gameweek? @relation(fields: [gameweekId], references: [fplId])
+  homeTeam              Team      @relation("HomeTeam", fields: [homeTeamId], references: [fplId])
+  awayTeam              Team      @relation("AwayTeam", fields: [awayTeamId], references: [fplId])
+
+  @@index([gameweekId])
+  @@index([homeTeamId])
+  @@index([awayTeamId])
+  @@map("fixtures")
+}
+
+// =====================================================
+// PLAYER DETAILED HISTORY (from element-summary)
+// =====================================================
+
+model PlayerGameweekStats {
+  id                    Int       @id @default(autoincrement())
+  playerId              Int       @map("player_id")
+  gameweek              Int
+  opponentTeamId        Int       @map("opponent_team_id")
+  wasHome               Boolean   @map("was_home")
+  kickoffTime           DateTime? @map("kickoff_time")
+  minutes               Int       @default(0)
+  totalPoints           Int       @default(0) @map("total_points")
+  goalsScored           Int       @default(0) @map("goals_scored")
+  assists               Int       @default(0)
+  cleanSheets           Int       @default(0) @map("clean_sheets")
+  goalsConceded         Int       @default(0) @map("goals_conceded")
+  ownGoals              Int       @default(0) @map("own_goals")
+  penaltiesSaved        Int       @default(0) @map("penalties_saved")
+  penaltiesMissed       Int       @default(0) @map("penalties_missed")
+  yellowCards           Int       @default(0) @map("yellow_cards")
+  redCards              Int       @default(0) @map("red_cards")
+  saves                 Int       @default(0)
+  bonus                 Int       @default(0)
+  bps                   Int       @default(0)
+  influence             String    @default("0")
+  creativity            String    @default("0")
+  threat                String    @default("0")
+  ictIndex              String    @default("0") @map("ict_index")
+  expectedGoals         String    @default("0") @map("expected_goals")
+  expectedAssists       String    @default("0") @map("expected_assists")
+  expectedGoalInvolvements String @default("0") @map("expected_goal_involvements")
+  expectedGoalsConceded String    @default("0") @map("expected_goals_conceded")
+  value                 Int       @default(0)
+  selected              Int       @default(0)
+
+  @@unique([playerId, gameweek])
+  @@index([playerId])
+  @@index([gameweek])
+  @@map("player_gameweek_stats")
+}
+
+// =====================================================
+// LIVE DATA (updated during active gameweeks)
+// =====================================================
+
+model LivePlayerData {
+  id                    Int       @id @default(autoincrement())
+  playerId              Int       @map("player_id")
+  gameweekId            Int       @map("gameweek_id")
+  minutes               Int       @default(0)
+  totalPoints           Int       @default(0) @map("total_points")
+  goalsScored           Int       @default(0) @map("goals_scored")
+  assists               Int       @default(0)
+  cleanSheets           Int       @default(0) @map("clean_sheets")
+  goalsConceded         Int       @default(0) @map("goals_conceded")
+  ownGoals              Int       @default(0) @map("own_goals")
+  penaltiesSaved        Int       @default(0) @map("penalties_saved")
+  penaltiesMissed       Int       @default(0) @map("penalties_missed")
+  yellowCards           Int       @default(0) @map("yellow_cards")
+  redCards              Int       @default(0) @map("red_cards")
+  saves                 Int       @default(0)
+  bonus                 Int       @default(0)
+  bps                   Int       @default(0)
+  explain               Json?     // Array of {fixture, stats} from FPL API
+  lastUpdated           DateTime  @default(now()) @map("last_updated")
+
+  gameweek              Gameweek  @relation(fields: [gameweekId], references: [fplId])
+
+  @@unique([playerId, gameweekId])
+  @@index([gameweekId])
+  @@map("live_player_data")
+}
+
+// =====================================================
+// PLAYER COMPUTED STATS (precomputed per-90, rolling avgs)
+// =====================================================
+
+model PlayerComputedStats {
+  id                    Int       @id @default(autoincrement())
+  playerId              Int       @unique @map("player_id")
+
+  // Per-90 stats
+  pointsPer90           Float     @default(0) @map("points_per_90")
+  goalsPer90            Float     @default(0) @map("goals_per_90")
+  assistsPer90          Float     @default(0) @map("assists_per_90")
+  xGPer90               Float     @default(0) @map("xg_per_90")
+  xAPer90               Float     @default(0) @map("xa_per_90")
+  xGIPer90              Float     @default(0) @map("xgi_per_90")
+
+  // Rolling 5GW averages
+  avg5gwPoints          Float     @default(0) @map("avg_5gw_points")
+  avg5gwMinutes         Float     @default(0) @map("avg_5gw_minutes")
+  avg5gwXGI             Float     @default(0) @map("avg_5gw_xgi")
+
+  // Rolling 10GW averages
+  avg10gwPoints         Float     @default(0) @map("avg_10gw_points")
+  avg10gwMinutes        Float     @default(0) @map("avg_10gw_minutes")
+  avg10gwXGI            Float     @default(0) @map("avg_10gw_xgi")
+
+  // Season averages
+  ppg                   Float     @default(0) // Points per game
+  gamesPlayed           Int       @default(0) @map("games_played")
+
+  lastUpdated           DateTime  @default(now()) @map("last_updated")
+
+  player                Player    @relation(fields: [playerId], references: [fplId])
+
+  @@map("player_computed_stats")
+}
+
+// =====================================================
+// TEAM COMPUTED STATS
+// =====================================================
+
+model TeamSeasonStats {
+  id                    Int       @id @default(autoincrement())
+  teamId                Int       @map("team_id")
+  split                 String    // 'overall', 'home', 'away'
+  played                Int       @default(0)
+  wins                  Int       @default(0)
+  draws                 Int       @default(0)
+  losses                Int       @default(0)
+  goalsFor              Int       @default(0) @map("goals_for")
+  goalsAgainst          Int       @default(0) @map("goals_against")
+  goalDifference        Int       @default(0) @map("goal_difference")
+  cleanSheets           Int       @default(0) @map("clean_sheets")
+  points                Int       @default(0)
+  xG                    Float     @default(0) @map("xg")
+  xGA                   Float     @default(0) @map("xga")
+  xPts                  Float     @default(0) @map("x_pts")
+  xGPerGame             Float     @default(0) @map("xg_per_game")
+  xGAPerGame            Float     @default(0) @map("xga_per_game")
+  goalsPerGame          Float     @default(0) @map("goals_per_game")
+  lastUpdated           DateTime  @default(now()) @map("last_updated")
+
+  team                  Team      @relation(fields: [teamId], references: [fplId])
+
+  @@unique([teamId, split])
+  @@map("team_season_stats")
+}
+
+model TeamGameweekStats {
+  id                    Int       @id @default(autoincrement())
+  teamId                Int       @map("team_id")
+  gameweek              Int
+  split                 String    // 'overall', 'home', 'away'
+  // Cumulative values up to this GW
+  wins                  Int       @default(0)
+  draws                 Int       @default(0)
+  losses                Int       @default(0)
+  goalsFor              Int       @default(0) @map("goals_for")
+  goalsAgainst          Int       @default(0) @map("goals_against")
+  cleanSheets           Int       @default(0) @map("clean_sheets")
+  points                Int       @default(0)
+  xG                    Float     @default(0) @map("xg")
+  xGA                   Float     @default(0) @map("xga")
+  xPts                  Float     @default(0) @map("x_pts")
+
+  team                  Team      @relation(fields: [teamId], references: [fplId])
+
+  @@unique([teamId, gameweek, split])
+  @@index([gameweek])
+  @@map("team_gameweek_stats")
+}
+
+// =====================================================
+// MANAGER DATA
+// =====================================================
+
+model Manager {
+  id                    Int       @id @default(autoincrement())
+  fplId                 Int       @unique @map("fpl_id")
+  playerName            String    @map("player_name")
+  teamName              String?   @map("team_name")
+  overallPoints         Int       @default(0) @map("overall_points")
+  overallRank           Int       @default(0) @map("overall_rank")
+  isTop10k              Boolean   @default(false) @map("is_top_10k")
+  isTop1k               Boolean   @default(false) @map("is_top_1k")
+  isTop100              Boolean   @default(false) @map("is_top_100")
+  lastUpdated           DateTime  @default(now()) @map("last_updated")
+  lastSyncedGameweek    Int?      @map("last_synced_gameweek")
+
+  gameweeks             ManagerGameweek[]
+  picks                 ManagerPick[]
+  transfers             ManagerTransfer[]
+  chips                 ManagerChip[]
+  computedStats         ManagerComputedStats[]
+  seasonStats           ManagerSeasonStats?
+
+  @@index([overallRank])
+  @@index([isTop10k])
+  @@map("managers")
+}
+
+model ManagerGameweek {
+  id                    Int       @id @default(autoincrement())
+  managerId             Int       @map("manager_id")
+  gameweekId            Int       @map("gameweek_id")
+  points                Int       @default(0)
+  totalPoints           Int       @default(0) @map("total_points")
+  overallRank           Int       @default(0) @map("overall_rank")
+  rank                  Int?
+  rankSort              Int?      @map("rank_sort")
+  eventTransfers        Int       @default(0) @map("event_transfers")
+  eventTransfersCost    Int       @default(0) @map("event_transfers_cost")
+  value                 Int       @default(0)
+  bank                  Int       @default(0)
+  activeChip            String?   @map("active_chip")
+  pointsOnBench         Int       @default(0) @map("points_on_bench")
+
+  manager               Manager   @relation(fields: [managerId], references: [fplId])
+  gameweek              Gameweek  @relation(fields: [gameweekId], references: [fplId])
+
+  @@unique([managerId, gameweekId])
+  @@index([managerId])
+  @@index([gameweekId])
+  @@map("manager_gameweeks")
+}
+
+model ManagerPick {
+  id                    Int       @id @default(autoincrement())
+  managerId             Int       @map("manager_id")
+  gameweekId            Int       @map("gameweek_id")
+  playerId              Int       @map("player_id")
+  position              Int       // 1-15
+  isCaptain             Boolean   @default(false) @map("is_captain")
+  isViceCaptain         Boolean   @default(false) @map("is_vice_captain")
+  multiplier            Int       @default(1)
+  createdAt             DateTime  @default(now()) @map("created_at")
+
+  manager               Manager   @relation(fields: [managerId], references: [fplId])
+  gameweek              Gameweek  @relation(fields: [gameweekId], references: [fplId])
+  player                Player    @relation(fields: [playerId], references: [fplId])
+
+  @@unique([managerId, gameweekId, position])
+  @@index([managerId, gameweekId])
+  @@index([playerId, gameweekId])
+  @@map("manager_picks")
+}
+
+model ManagerTransfer {
+  id                    Int       @id @default(autoincrement())
+  managerId             Int       @map("manager_id")
+  gameweek              Int
+  playerInId            Int       @map("player_in_id")
+  playerOutId           Int       @map("player_out_id")
+  elementInCost         Int       @default(0) @map("element_in_cost")
+  elementOutCost        Int       @default(0) @map("element_out_cost")
+  time                  DateTime
+
+  manager               Manager   @relation(fields: [managerId], references: [fplId])
+
+  @@index([managerId])
+  @@index([gameweek])
+  @@map("manager_transfers")
+}
+
+model ManagerChip {
+  id                    Int       @id @default(autoincrement())
+  managerId             Int       @map("manager_id")
+  chipName              String    @map("chip_name") // wildcard, freehit, bboost, 3xc
+  gameweek              Int
+  time                  DateTime?
+
+  manager               Manager   @relation(fields: [managerId], references: [fplId])
+
+  @@unique([managerId, chipName, gameweek])
+  @@index([managerId])
+  @@map("manager_chips")
+}
+
+// =====================================================
+// PRECOMPUTED MANAGER STATS (on-demand for visitors)
+// =====================================================
+
+model ManagerComputedStats {
+  id                    Int       @id @default(autoincrement())
+  managerId             Int       @map("manager_id")
+  gameweekId            Int       @map("gameweek_id")
+  data                  Json      // All computed stats for this GW as JSON blob
+  lastUpdated           DateTime  @default(now()) @map("last_updated")
+
+  manager               Manager   @relation(fields: [managerId], references: [fplId])
+
+  @@unique([managerId, gameweekId])
+  @@index([managerId])
+  @@map("manager_computed_stats")
+}
+
+model ManagerSeasonStats {
+  id                    Int       @id @default(autoincrement())
+  managerId             Int       @unique @map("manager_id")
+  data                  Json      // Aggregated season stats as JSON blob
+  lastUpdated           DateTime  @default(now()) @map("last_updated")
+
+  manager               Manager   @relation(fields: [managerId], references: [fplId])
+
+  @@map("manager_season_stats")
+}
+
+// =====================================================
+// OWNERSHIP DATA
+// =====================================================
+
+model OwnershipData {
+  id                    Int       @id @default(autoincrement())
+  playerId              Int       @map("player_id")
+  gameweekId            Int       @map("gameweek_id")
+  tier                  String    // '100', '1k', '10k'
+  ownership             Float     @default(0) // Ownership percentage
+  captaincy             Float     @default(0) // Captaincy percentage
+  totalManagers         Int       @default(0) @map("total_managers")
+  lastUpdated           DateTime  @default(now()) @map("last_updated")
+
+  player                Player    @relation(fields: [playerId], references: [fplId])
+  gameweek              Gameweek  @relation(fields: [gameweekId], references: [fplId])
+
+  @@unique([playerId, gameweekId, tier])
+  @@index([gameweekId, tier])
+  @@map("ownership_data")
+}
+
+// =====================================================
+// GENERIC CACHE + INFRASTRUCTURE
+// =====================================================
+
+model CacheEntry {
+  id                    Int       @id @default(autoincrement())
+  key                   String    @unique
+  data                  Json
+  expiresAt             DateTime? @map("expires_at")
+  lastUpdated           DateTime  @default(now()) @map("last_updated")
+
+  @@index([key])
+  @@index([expiresAt])
+  @@map("cache_entries")
+}
+
+model CronJobLog {
+  id                    Int       @id @default(autoincrement())
+  jobName               String    @map("job_name")
+  gameweek              Int?
+  status                String    // 'started', 'completed', 'failed'
+  startedAt             DateTime  @default(now()) @map("started_at")
+  completedAt           DateTime? @map("completed_at")
+  recordsProcessed      Int?      @map("records_processed")
+  errorMessage          String?   @map("error_message")
+
+  @@index([jobName, gameweek])
+  @@index([startedAt])
+  @@map("cron_job_logs")
+}
